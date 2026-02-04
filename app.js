@@ -9,7 +9,6 @@ const rankBody = document.getElementById("rankBody");
 let allMatches = [];
 let currentSort = { key: "ppm", direction: "desc" };
 let currentPlayers = [];
-let expandedPlayer = null;
 
 const normalize = (value) => value.toLowerCase();
 
@@ -64,7 +63,6 @@ const renderTable = (players) => {
   players.forEach((player, index) => {
     const row = document.createElement("tr");
     row.dataset.player = player.name;
-    row.classList.toggle("is-open", expandedPlayer === player.name);
 
     const flag = flagFromCountry(player.country);
     row.innerHTML = `
@@ -79,16 +77,6 @@ const renderTable = (players) => {
 
     row.addEventListener("click", () => renderPlayerDetail(player, row));
     rankBody.append(row);
-
-    if (expandedPlayer === player.name) {
-      const detailRow = document.createElement("tr");
-      detailRow.className = "detail-row";
-      const cell = document.createElement("td");
-      cell.colSpan = 7;
-      cell.innerHTML = renderPlayerDetailContent(player);
-      detailRow.append(cell);
-      rankBody.append(detailRow);
-    }
   });
 };
 
@@ -123,13 +111,25 @@ const renderPlayerDetailContent = (player) => {
   `;
 };
 
-const renderPlayerDetail = (player) => {
-  if (expandedPlayer === player.name) {
-    expandedPlayer = null;
-  } else {
-    expandedPlayer = player.name;
+const renderPlayerDetail = (player, row) => {
+  const existingDetail = row.nextElementSibling;
+  if (existingDetail && existingDetail.classList.contains("detail-row")) {
+    existingDetail.remove();
+    row.classList.remove("is-open");
+    return;
   }
-  renderTable(currentPlayers);
+
+  document.querySelectorAll(".detail-row").forEach((node) => node.remove());
+  document.querySelectorAll("tr.is-open").forEach((node) => node.classList.remove("is-open"));
+
+  const detailRow = document.createElement("tr");
+  detailRow.className = "detail-row";
+  const cell = document.createElement("td");
+  cell.colSpan = 7;
+  cell.innerHTML = renderPlayerDetailContent(player);
+  detailRow.append(cell);
+  row.after(detailRow);
+  row.classList.add("is-open");
 };
 const sortPlayers = (players) => {
   const sorted = players.slice().sort((a, b) => {
@@ -177,11 +177,8 @@ const applyFilters = () => {
   summary.textContent = `${sorted.length} players • ${matches.length} matches • Min ${minMatches}+`;
   renderTable(sorted);
 
-  if (sorted.length === 0) {
-    expandedPlayer = null;
-  } else if (!sorted.find((player) => player.name === expandedPlayer)) {
-    expandedPlayer = null;
-  }
+  document.querySelectorAll(".detail-row").forEach((node) => node.remove());
+  document.querySelectorAll("tr.is-open").forEach((node) => node.classList.remove("is-open"));
 };
 
 const populateFilters = () => {

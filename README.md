@@ -16,6 +16,12 @@ A lightweight, static MVP for browsing Ryder Cup matchplay results. This project
 ## Run Locally
 Open `index.html` in your browser.
 
+## GitHub Pages
+After the first push, enable GitHub Pages in the repo settings:
+- Settings → Pages → Source: GitHub Actions
+
+Once enabled, the site will deploy automatically on every push to `main`.
+
 ## Next Steps
 - Expand `data.json` with additional years
 - Add richer metadata (captains, courses, scores)

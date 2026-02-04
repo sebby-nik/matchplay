@@ -1,0 +1,229 @@
+{
+  "events": [
+    {
+      "year": 2018,
+      "location": "Le Golf National, France",
+      "sessions": [
+        {
+          "name": "Foursomes",
+          "matches": [
+            {
+              "match": 1,
+              "teams": {
+                "Europe": "Paul Casey / Tyrrell Hatton",
+                "USA": "Dustin Johnson / Rickie Fowler"
+              },
+              "result": "Europe 1 up",
+              "winner": "Europe"
+            },
+            {
+              "match": 2,
+              "teams": {
+                "Europe": "Tommy Fleetwood / Francesco Molinari",
+                "USA": "Brooks Koepka / Tony Finau"
+              },
+              "result": "Europe 3 & 1",
+              "winner": "Europe"
+            }
+          ]
+        },
+        {
+          "name": "Four-ball",
+          "matches": [
+            {
+              "match": 5,
+              "teams": {
+                "Europe": "Justin Rose / Jon Rahm",
+                "USA": "Jordan Spieth / Justin Thomas"
+              },
+              "result": "Europe 1 up",
+              "winner": "Europe"
+            },
+            {
+              "match": 6,
+              "teams": {
+                "Europe": "Rory McIlroy / Ian Poulter",
+                "USA": "Dustin Johnson / Rickie Fowler"
+              },
+              "result": "USA 1 up",
+              "winner": "USA"
+            }
+          ]
+        },
+        {
+          "name": "Singles",
+          "matches": [
+            {
+              "match": 25,
+              "teams": {
+                "Europe": "Francesco Molinari",
+                "USA": "Phil Mickelson"
+              },
+              "result": "Europe 4 & 2",
+              "winner": "Europe"
+            },
+            {
+              "match": 26,
+              "teams": {
+                "Europe": "Justin Rose",
+                "USA": "Jordan Spieth"
+              },
+              "result": "USA 1 up",
+              "winner": "USA"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 2021,
+      "location": "Whistling Straits, USA",
+      "sessions": [
+        {
+          "name": "Foursomes",
+          "matches": [
+            {
+              "match": 1,
+              "teams": {
+                "USA": "Justin Thomas / Jordan Spieth",
+                "Europe": "Jon Rahm / Sergio Garcia"
+              },
+              "result": "USA 3 & 1",
+              "winner": "USA"
+            },
+            {
+              "match": 2,
+              "teams": {
+                "USA": "Dustin Johnson / Collin Morikawa",
+                "Europe": "Paul Casey / Viktor Hovland"
+              },
+              "result": "USA 2 & 1",
+              "winner": "USA"
+            }
+          ]
+        },
+        {
+          "name": "Four-ball",
+          "matches": [
+            {
+              "match": 5,
+              "teams": {
+                "USA": "Patrick Cantlay / Xander Schauffele",
+                "Europe": "Rory McIlroy / Ian Poulter"
+              },
+              "result": "USA 2 up",
+              "winner": "USA"
+            },
+            {
+              "match": 6,
+              "teams": {
+                "USA": "Brooks Koepka / Daniel Berger",
+                "Europe": "Viktor Hovland / Bernd Wiesberger"
+              },
+              "result": "USA 2 up",
+              "winner": "USA"
+            }
+          ]
+        },
+        {
+          "name": "Singles",
+          "matches": [
+            {
+              "match": 25,
+              "teams": {
+                "USA": "Justin Thomas",
+                "Europe": "Jon Rahm"
+              },
+              "result": "Europe 3 & 2",
+              "winner": "Europe"
+            },
+            {
+              "match": 26,
+              "teams": {
+                "USA": "Scottie Scheffler",
+                "Europe": "Jon Rahm"
+              },
+              "result": "Europe 3 & 1",
+              "winner": "Europe"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "location": "Marco Simone GC, Italy",
+      "sessions": [
+        {
+          "name": "Foursomes",
+          "matches": [
+            {
+              "match": 1,
+              "teams": {
+                "Europe": "Jon Rahm / Tyrrell Hatton",
+                "USA": "Scottie Scheffler / Sam Burns"
+              },
+              "result": "Europe 4 & 3",
+              "winner": "Europe"
+            },
+            {
+              "match": 2,
+              "teams": {
+                "Europe": "Viktor Hovland / Ludvig Aberg",
+                "USA": "Max Homa / Brian Harman"
+              },
+              "result": "Europe 1 up",
+              "winner": "Europe"
+            }
+          ]
+        },
+        {
+          "name": "Four-ball",
+          "matches": [
+            {
+              "match": 5,
+              "teams": {
+                "Europe": "Viktor Hovland / Ludvig Aberg",
+                "USA": "Justin Thomas / Jordan Spieth"
+              },
+              "result": "Europe 2 up",
+              "winner": "Europe"
+            },
+            {
+              "match": 6,
+              "teams": {
+                "Europe": "Jon Rahm / Tyrrell Hatton",
+                "USA": "Scottie Scheffler / Brooks Koepka"
+              },
+              "result": "Europe 2 up",
+              "winner": "Europe"
+            }
+          ]
+        },
+        {
+          "name": "Singles",
+          "matches": [
+            {
+              "match": 25,
+              "teams": {
+                "Europe": "Rory McIlroy",
+                "USA": "Sam Burns"
+              },
+              "result": "Europe 3 & 1",
+              "winner": "Europe"
+            },
+            {
+              "match": 26,
+              "teams": {
+                "Europe": "Viktor Hovland",
+                "USA": "Collin Morikawa"
+              },
+              "result": "Europe 5 & 4",
+              "winner": "Europe"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

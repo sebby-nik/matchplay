@@ -1,0 +1,163 @@
+:root {
+  --ink: #151515;
+  --ink-soft: #3b3b3b;
+  --paper: #f5f0e6;
+  --accent: #1e5c4f;
+  --accent-light: #cbe4d8;
+  --highlight: #c84a2a;
+  --panel: #fffaf1;
+  --shadow: rgba(0, 0, 0, 0.08);
+  --serif: "Cormorant Garamond", "Times New Roman", serif;
+  --sans: "IBM Plex Sans", "Trebuchet MS", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--ink);
+  background: radial-gradient(circle at top left, #fff7ea 0%, #f2e8d8 50%, #efe2d0 100%);
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--serif);
+  margin: 0;
+  font-weight: 600;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+}
+
+p {
+  line-height: 1.6;
+}
+
+.hero {
+  padding: 4rem 8vw 2rem;
+}
+
+.hero__content {
+  max-width: 720px;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  font-size: 0.75rem;
+  color: var(--highlight);
+  margin-bottom: 0.75rem;
+}
+
+.lede {
+  color: var(--ink-soft);
+  font-size: 1.1rem;
+}
+
+.layout {
+  display: grid;
+  gap: 2rem;
+  padding: 0 8vw 4rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.panel {
+  background: var(--panel);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.panel__header {
+  margin-bottom: 1.5rem;
+}
+
+.panel--side {
+  border-left: 6px solid var(--accent);
+}
+
+.controls {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  gap: 0.5rem;
+}
+
+select,
+input[type="search"] {
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #d2c6b4;
+  background: #fff;
+  font-size: 0.95rem;
+}
+
+.summary {
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  margin-bottom: 1rem;
+}
+
+.match-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.match-card {
+  border-radius: 12px;
+  border: 1px solid #e5d7c4;
+  padding: 1rem 1.25rem;
+  background: #fff;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.match-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+}
+
+.match-meta {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.match-result {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.facts {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.footer {
+  padding: 0 8vw 2rem;
+  color: var(--ink-soft);
+}
+
+@media (min-width: 900px) {
+  .layout {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  }
+}

@@ -7048,18 +7048,6 @@
       "event": "Ryder Cup",
       "year": 1965,
       "round": "Singles",
-      "player": "Gary Player",
-      "player_country": "ZA",
-      "opponent": "Michael Wright",
-      "opponent_country": "GB",
-      "result": "win",
-      "score": "2 & 1",
-      "points": 1
-    },
-    {
-      "event": "Ryder Cup",
-      "year": 1965,
-      "round": "Singles",
       "player": "Gene Littler",
       "player_country": "US",
       "opponent": "Tony Jacklin",
@@ -7115,18 +7103,6 @@
       "result": "win",
       "score": "1 up",
       "points": 1
-    },
-    {
-      "event": "Ryder Cup",
-      "year": 1965,
-      "round": "Singles",
-      "player": "Michael Wright",
-      "player_country": "GB",
-      "opponent": "Gary Player",
-      "opponent_country": "ZA",
-      "result": "loss",
-      "score": "2 & 1",
-      "points": 0
     },
     {
       "event": "Ryder Cup",
@@ -7336,18 +7312,6 @@
       "event": "Ryder Cup",
       "year": 1967,
       "round": "Singles",
-      "player": "Bob Goalby",
-      "player_country": "US",
-      "opponent": "Gary Player",
-      "opponent_country": "ZA",
-      "result": "loss",
-      "score": "3 & 2",
-      "points": 0
-    },
-    {
-      "event": "Ryder Cup",
-      "year": 1967,
-      "round": "Singles",
       "player": "Bob Murphy",
       "player_country": "US",
       "opponent": "Harry Weetman",
@@ -7451,18 +7415,6 @@
       "result": "loss",
       "score": "1 up",
       "points": 0
-    },
-    {
-      "event": "Ryder Cup",
-      "year": 1967,
-      "round": "Singles",
-      "player": "Gary Player",
-      "player_country": "ZA",
-      "opponent": "Bob Goalby",
-      "opponent_country": "US",
-      "result": "win",
-      "score": "3 & 2",
-      "points": 1
     },
     {
       "event": "Ryder Cup",

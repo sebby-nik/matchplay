@@ -100,7 +100,7 @@ const renderPlayerDetailContent = (player) => {
             <div class="meta">${match.round || "Singles"}</div>
           </div>
           <div>
-            <strong>${label}</strong><br />
+            <div class="match-result">${label}</div>
             <span class="meta">${match.score || ""}</span>
           </div>
         </div>

@@ -288,26 +288,32 @@ input[type="range"] {
   font-size: 0.85rem;
 }
 
-.match-row::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: #cbd5f5;
+.match-row .match-result {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
 }
 
-.match-row.result-win::before {
-  background: #16a34a;
+.match-row.result-win .match-result {
+  background: #dcfce7;
+  color: #166534;
 }
 
-.match-row.result-halved::before {
-  background: #f59e0b;
+.match-row.result-halved .match-result {
+  background: #fef3c7;
+  color: #92400e;
 }
 
-.match-row.result-loss::before {
-  background: #dc2626;
+.match-row.result-loss .match-result {
+  background: #fee2e2;
+  color: #991b1b;
 }
 
 .badge {

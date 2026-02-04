@@ -102,6 +102,41 @@ label {
   gap: 0.5rem;
 }
 
+.country-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.country-filter__label {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.country-filter__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.5rem 0.75rem;
+  max-height: 160px;
+  overflow: auto;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.country-filter__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--ink);
+}
+
+.country-filter__item input {
+  accent-color: var(--highlight);
+}
+
 select,
 input[type="search"] {
   padding: 0.6rem 0.75rem;

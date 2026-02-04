@@ -5,10 +5,12 @@ const minMatchesInput = document.getElementById("minMatches");
 const minMatchesValue = document.getElementById("minMatchesValue");
 const summary = document.getElementById("summary");
 const rankBody = document.getElementById("rankBody");
+const countryFilter = document.getElementById("countryFilter");
 
 let allMatches = [];
 let currentSort = { key: "ppm", direction: "desc" };
 let currentPlayers = [];
+let selectedCountries = new Set();
 
 const normalize = (value) => value.toLowerCase();
 
@@ -68,7 +70,7 @@ const renderTable = (players) => {
     row.innerHTML = `
       <td>${index + 1}</td>
       <td>${player.name}</td>
-      <td>${flag ? `<span class=\"flag\">${flag}</span>` : ""}${player.country || ""}</td>
+      <td>${flag ? `<span class=\"flag\">${flag}</span>` : ""}</td>
       <td>${player.matches}</td>
       <td>${player.points.toFixed(1)}</td>
       <td>${player.wins}-${player.draws}-${player.losses}</td>
@@ -175,6 +177,10 @@ const applyFilters = () => {
     );
   }
 
+  if (selectedCountries.size > 0) {
+    matches = matches.filter((match) => selectedCountries.has(match.player_country));
+  }
+
   const players = calculatePlayers(matches);
   const filteredPlayers = players.filter((player) => player.matches >= minMatches);
   const sorted = sortPlayers(filteredPlayers);
@@ -202,6 +208,33 @@ const populateFilters = () => {
     option.value = year;
     option.textContent = year;
     yearSelect.append(option);
+  });
+
+  const countries = Array.from(new Set(allMatches.map((match) => match.player_country))).sort();
+  const sticky = ["US", "GB"].filter((code) => countries.includes(code));
+  const remaining = countries.filter((code) => !sticky.includes(code));
+  const orderedCountries = [...sticky, ...remaining];
+
+  countryFilter.innerHTML = "";
+  orderedCountries.forEach((code) => {
+    const id = `country-${code}`;
+    const item = document.createElement("label");
+    item.className = "country-filter__item";
+    const flag = flagFromCountry(code);
+    item.innerHTML = `
+      <input type="checkbox" value="${code}" id="${id}" />
+      <span>${flag ? `${flag} ` : ""}${code}</span>
+    `;
+    const checkbox = item.querySelector("input");
+    checkbox.addEventListener("change", () => {
+      if (checkbox.checked) {
+        selectedCountries.add(code);
+      } else {
+        selectedCountries.delete(code);
+      }
+      applyFilters();
+    });
+    countryFilter.append(item);
   });
 
   if (allMatches.length > 0) {

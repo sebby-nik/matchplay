@@ -46,11 +46,22 @@ const render = () => {
   events.forEach((event) => {
     const card = document.createElement("article");
     card.className = "match-card";
+    if (event.winner === "USA") {
+      card.classList.add("win-usa");
+    } else if (event.winner === "Europe") {
+      card.classList.add("win-europe");
+    }
 
     const header = document.createElement("div");
     header.className = "match-header";
     const resultLabel = event.winner === "Canceled" ? "Canceled" : event.score || "";
-    header.innerHTML = `${event.year} <span class="match-result">${resultLabel}</span>`;
+    const badge =
+      event.winner === "USA"
+        ? "<span class=\"badge badge--usa\">USA</span>"
+        : event.winner === "Europe"
+          ? "<span class=\"badge badge--europe\">Europe</span>"
+          : "";
+    header.innerHTML = `${event.year} ${badge} <span class="match-result">${resultLabel}</span>`;
 
     const meta = document.createElement("div");
     meta.className = "match-meta";

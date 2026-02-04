@@ -316,6 +316,21 @@ input[type="range"] {
   color: #991b1b;
 }
 
+.match-row.result-win {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.match-row.result-halved {
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+
+.match-row.result-loss {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
 .badge {
   font-size: 0.75rem;
   font-weight: 600;

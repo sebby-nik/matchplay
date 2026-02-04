@@ -87,8 +87,14 @@ const renderPlayerDetailContent = (player) => {
     .sort((a, b) => b.year - a.year)
     .map((match) => {
       const label = match.result === "halved" ? "Halved" : match.result.toUpperCase();
+      const resultClass =
+        match.result === "win"
+          ? "result-win"
+          : match.result === "loss"
+            ? "result-loss"
+            : "result-halved";
       return `
-        <div class="match-row">
+        <div class="match-row ${resultClass}">
           <div>
             <strong>${match.event} ${match.year}</strong> — ${match.opponent}
             <div class="meta">${match.round || "Singles"}</div>

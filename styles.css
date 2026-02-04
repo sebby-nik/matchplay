@@ -279,11 +279,35 @@ input[type="range"] {
   border-radius: 10px;
   border: 1px solid var(--line);
   background: #f8fafc;
+  position: relative;
+  overflow: hidden;
 }
 
 .match-row .meta {
   color: var(--ink-soft);
   font-size: 0.85rem;
+}
+
+.match-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #cbd5f5;
+}
+
+.match-row.result-win::before {
+  background: #16a34a;
+}
+
+.match-row.result-halved::before {
+  background: #f59e0b;
+}
+
+.match-row.result-loss::before {
+  background: #dc2626;
 }
 
 .badge {

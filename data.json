@@ -1160,9 +1160,9 @@
       "player_country": "AU",
       "opponent": "Charles Howell III",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "5 & 4",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -1172,9 +1172,9 @@
       "player_country": "US",
       "opponent": "Adam Scott",
       "opponent_country": "AU",
-      "result": "loss",
+      "result": "win",
       "score": "5 & 4",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -1184,9 +1184,9 @@
       "player_country": "US",
       "opponent": "Stuart Appleby",
       "opponent_country": "AU",
-      "result": "loss",
+      "result": "win",
       "score": "1 up",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -1220,9 +1220,9 @@
       "player_country": "ZA",
       "opponent": "Tiger Woods",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "4 & 3",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -1244,9 +1244,9 @@
       "player_country": "US",
       "opponent": "Stephen Leaney",
       "opponent_country": "AU",
-      "result": "loss",
+      "result": "win",
       "score": "4 & 3",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -1256,9 +1256,9 @@
       "player_country": "US",
       "opponent": "Tim Clark",
       "opponent_country": "ZA",
-      "result": "loss",
+      "result": "win",
       "score": "1 up",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -1268,9 +1268,9 @@
       "player_country": "US",
       "opponent": "Mike Weir",
       "opponent_country": "CA",
-      "result": "loss",
+      "result": "win",
       "score": "3 & 1",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -1304,9 +1304,9 @@
       "player_country": "US",
       "opponent": "Nick Price",
       "opponent_country": "ZW",
-      "result": "loss",
+      "result": "win",
       "score": "1 up",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -1316,9 +1316,9 @@
       "player_country": "CA",
       "opponent": "Jim Furyk",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "3 & 1",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -1328,9 +1328,9 @@
       "player_country": "ZW",
       "opponent": "Kenny Perry",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "1 up",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -1388,9 +1388,9 @@
       "player_country": "AU",
       "opponent": "Jay Haas",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "4 & 3",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -1400,9 +1400,9 @@
       "player_country": "AU",
       "opponent": "Chris DiMarco",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "1 up",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -1412,9 +1412,9 @@
       "player_country": "US",
       "opponent": "Ernie Els",
       "opponent_country": "ZA",
-      "result": "loss",
+      "result": "win",
       "score": "4 & 3",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -1424,9 +1424,9 @@
       "player_country": "ZA",
       "opponent": "Jerry Kelly",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "1 up",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -1448,9 +1448,9 @@
       "player_country": "AU",
       "opponent": "Jim Furyk",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "3 & 2",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -1472,9 +1472,9 @@
       "player_country": "US",
       "opponent": "Stuart Appleby",
       "opponent_country": "AU",
-      "result": "loss",
+      "result": "win",
       "score": "1 up",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -1484,9 +1484,9 @@
       "player_country": "US",
       "opponent": "Trevor Immelman",
       "opponent_country": "ZA",
-      "result": "loss",
+      "result": "win",
       "score": "2 & 1",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -1496,9 +1496,9 @@
       "player_country": "US",
       "opponent": "Nick O'Hern",
       "opponent_country": "AU",
-      "result": "loss",
+      "result": "win",
       "score": "4 & 3",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -1508,9 +1508,9 @@
       "player_country": "US",
       "opponent": "Vijay Singh",
       "opponent_country": "FJ",
-      "result": "loss",
+      "result": "win",
       "score": "1 up",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -1532,9 +1532,9 @@
       "player_country": "US",
       "opponent": "Adam Scott",
       "opponent_country": "AU",
-      "result": "loss",
+      "result": "win",
       "score": "3 & 2",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -1544,9 +1544,9 @@
       "player_country": "US",
       "opponent": "Tim Clark",
       "opponent_country": "ZA",
-      "result": "loss",
+      "result": "win",
       "score": "4 & 3",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -1556,9 +1556,9 @@
       "player_country": "US",
       "opponent": "Mark Hensby",
       "opponent_country": "AU",
-      "result": "loss",
+      "result": "win",
       "score": "4 & 3",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -1568,9 +1568,9 @@
       "player_country": "AU",
       "opponent": "Kenny Perry",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "4 & 3",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -1604,9 +1604,9 @@
       "player_country": "AU",
       "opponent": "Davis Love III",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "4 & 3",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -1676,9 +1676,9 @@
       "player_country": "AU",
       "opponent": "Chris DiMarco",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "1 up",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -1700,9 +1700,9 @@
       "player_country": "ZA",
       "opponent": "Justin Leonard",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "4 & 3",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -1712,9 +1712,9 @@
       "player_country": "ZA",
       "opponent": "David Toms",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "2 & 1",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -1724,9 +1724,9 @@
       "player_country": "FJ",
       "opponent": "Fred Couples",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "1 up",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -1760,9 +1760,9 @@
       "player_country": "US",
       "opponent": "Stuart Appleby",
       "opponent_country": "AU",
-      "result": "loss",
+      "result": "win",
       "score": "2 & 1",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -1772,9 +1772,9 @@
       "player_country": "US",
       "opponent": "Trevor Immelman",
       "opponent_country": "ZA",
-      "result": "loss",
+      "result": "win",
       "score": "2 up",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -1868,9 +1868,9 @@
       "player_country": "AU",
       "opponent": "Stewart Cink",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "6 & 4",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -1880,9 +1880,9 @@
       "player_country": "US",
       "opponent": "Vijay Singh",
       "opponent_country": "FJ",
-      "result": "loss",
+      "result": "win",
       "score": "5 & 4",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -1904,9 +1904,9 @@
       "player_country": "ZA",
       "opponent": "Scott Verplank",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "2 & 1",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -1916,9 +1916,9 @@
       "player_country": "US",
       "opponent": "Rory Sabbatini",
       "opponent_country": "ZA",
-      "result": "loss",
+      "result": "win",
       "score": "2 & 1",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -1940,9 +1940,9 @@
       "player_country": "US",
       "opponent": "Nick O'Hern",
       "opponent_country": "AU",
-      "result": "loss",
+      "result": "win",
       "score": "6 & 4",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -1952,9 +1952,9 @@
       "player_country": "AU",
       "opponent": "Charles Howell III",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "2 & 1",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -1976,9 +1976,9 @@
       "player_country": "ZA",
       "opponent": "David Toms",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "2 up",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -1988,9 +1988,9 @@
       "player_country": "FJ",
       "opponent": "Phil Mickelson",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "5 & 4",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -2024,9 +2024,9 @@
       "player_country": "AU",
       "opponent": "Stewart Cink",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "4 & 3",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -2048,9 +2048,9 @@
       "player_country": "US",
       "opponent": "Robert Allenby",
       "opponent_country": "AU",
-      "result": "loss",
+      "result": "win",
       "score": "5 & 3",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -2060,9 +2060,9 @@
       "player_country": "CO",
       "opponent": "Hunter Mahan",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "2 & 1",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -2072,9 +2072,9 @@
       "player_country": "ZA",
       "opponent": "Sean O'Hair",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "6 & 4",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -2096,9 +2096,9 @@
       "player_country": "US",
       "opponent": "Camilo Villegas",
       "opponent_country": "CO",
-      "result": "loss",
+      "result": "win",
       "score": "2 & 1",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -2168,9 +2168,9 @@
       "player_country": "US",
       "opponent": "Retief Goosen",
       "opponent_country": "ZA",
-      "result": "loss",
+      "result": "win",
       "score": "2 & 1",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -2180,9 +2180,9 @@
       "player_country": "ZA",
       "opponent": "Phil Mickelson",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "2 & 1",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -2192,9 +2192,9 @@
       "player_country": "AU",
       "opponent": "Anthony Kim",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "5 & 3",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -2216,9 +2216,9 @@
       "player_country": "US",
       "opponent": "Ernie Els",
       "opponent_country": "ZA",
-      "result": "loss",
+      "result": "win",
       "score": "6 & 4",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -2240,9 +2240,9 @@
       "player_country": "US",
       "opponent": "Adam Scott",
       "opponent_country": "AU",
-      "result": "loss",
+      "result": "win",
       "score": "4 & 3",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -2252,9 +2252,9 @@
       "player_country": "US",
       "opponent": "Yang Yong-eun",
       "opponent_country": "KR",
-      "result": "loss",
+      "result": "win",
       "score": "6 & 5",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -2288,9 +2288,9 @@
       "player_country": "KR",
       "opponent": "Tiger Woods",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "6 & 5",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -2372,9 +2372,9 @@
       "player_country": "US",
       "opponent": "Robert Allenby",
       "opponent_country": "AU",
-      "result": "loss",
+      "result": "win",
       "score": "7 & 5",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -2528,9 +2528,9 @@
       "player_country": "AU",
       "opponent": "David Toms",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "7 & 5",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -2900,9 +2900,9 @@
       "player_country": "IN",
       "opponent": "Chris Kirk",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "1 up",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -2912,9 +2912,9 @@
       "player_country": "US",
       "opponent": "Sang-moon Bae",
       "opponent_country": "KR",
-      "result": "loss",
+      "result": "win",
       "score": "2 up",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -2948,9 +2948,9 @@
       "player_country": "ZA",
       "opponent": "Phil Mickelson",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "5 & 4",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -2960,9 +2960,9 @@
       "player_country": "US",
       "opponent": "Anirban Lahiri",
       "opponent_country": "IN",
-      "result": "loss",
+      "result": "win",
       "score": "1 up",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -2972,9 +2972,9 @@
       "player_country": "NZ",
       "opponent": "Dustin Johnson",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "2 & 1",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -2984,9 +2984,9 @@
       "player_country": "US",
       "opponent": "Danny Lee",
       "opponent_country": "NZ",
-      "result": "loss",
+      "result": "win",
       "score": "2 & 1",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -3020,9 +3020,9 @@
       "player_country": "AU",
       "opponent": "Zach Johnson",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "3 & 2",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -3104,9 +3104,9 @@
       "player_country": "US",
       "opponent": "Charl Schwartzel",
       "opponent_country": "ZA",
-      "result": "loss",
+      "result": "win",
       "score": "5 & 4",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -3128,9 +3128,9 @@
       "player_country": "KR",
       "opponent": "Bill Haas",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "2 up",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -3164,9 +3164,9 @@
       "player_country": "US",
       "opponent": "Jason Day",
       "opponent_country": "AU",
-      "result": "loss",
+      "result": "win",
       "score": "3 & 2",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -3176,9 +3176,9 @@
       "player_country": "CA",
       "opponent": "Phil Mickelson",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "2 & 1",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -3260,9 +3260,9 @@
       "player_country": "US",
       "opponent": "Si Woo Kim",
       "opponent_country": "KR",
-      "result": "loss",
+      "result": "win",
       "score": "2 & 1",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -3284,9 +3284,9 @@
       "player_country": "AR",
       "opponent": "Rickie Fowler",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "6 & 4",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -3428,9 +3428,9 @@
       "player_country": "US",
       "opponent": "Adam Hadwin",
       "opponent_country": "CA",
-      "result": "loss",
+      "result": "win",
       "score": "2 & 1",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -3440,9 +3440,9 @@
       "player_country": "US",
       "opponent": "Emiliano Grillo",
       "opponent_country": "AR",
-      "result": "loss",
+      "result": "win",
       "score": "6 & 4",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",
@@ -3452,9 +3452,9 @@
       "player_country": "KR",
       "opponent": "Daniel Berger",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "2 & 1",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",

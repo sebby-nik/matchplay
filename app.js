@@ -46,7 +46,7 @@ const calculatePlayers = (matches) => {
     player.matches += 1;
     player.points += match.points;
     if (match.result === "win") player.wins += 1;
-    if (match.result === "draw") player.draws += 1;
+    if (match.result === "halved") player.draws += 1;
     if (match.result === "loss") player.losses += 1;
 
     player.matchList.push(match);
@@ -88,7 +88,7 @@ const renderPlayerDetail = (player) => {
     .slice()
     .sort((a, b) => b.year - a.year)
     .map((match) => {
-      const label = match.result === "draw" ? "Halved" : match.result.toUpperCase();
+      const label = match.result === "halved" ? "Halved" : match.result.toUpperCase();
       return `
         <div class="match-row">
           <div>

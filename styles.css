@@ -81,9 +81,9 @@ p {
   margin-bottom: 1.5rem;
 }
 
-.panel--side {
+ .panel--side {
   border-left: 4px solid var(--highlight);
-}
+ }
 
 .controls {
   display: grid;
@@ -299,8 +299,31 @@ input[type="range"] {
   color: var(--ink-soft);
 }
 
+.footer__content {
+  display: grid;
+  gap: 1.5rem;
+  align-items: start;
+  border-top: 1px solid var(--line);
+  padding-top: 2rem;
+  margin-top: 2rem;
+}
+
+.footer__content h3 {
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+
+.footer__note {
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+}
+
 @media (min-width: 900px) {
   .layout {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  }
+
+  .footer__content {
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
   }
 }

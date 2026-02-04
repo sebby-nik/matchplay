@@ -207,6 +207,23 @@ input[type="range"] {
   background: #f8fafc;
 }
 
+.rank-table tbody tr.is-open {
+  background: #f1f5f9;
+}
+
+.detail-row td {
+  padding: 0;
+  background: #ffffff;
+}
+
+.detail-row .player-detail {
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: #ffffff;
+}
+
 .rank-table td:last-child,
 .rank-table th:last-child {
   text-align: right;
@@ -224,11 +241,6 @@ input[type="range"] {
   border-radius: 12px;
   background: #ffffff;
   border: 1px solid var(--line);
-  display: none;
-}
-
-.player-detail.active {
-  display: block;
 }
 
 .player-detail h3 {

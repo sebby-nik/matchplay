@@ -5,11 +5,11 @@ const minMatchesInput = document.getElementById("minMatches");
 const minMatchesValue = document.getElementById("minMatchesValue");
 const summary = document.getElementById("summary");
 const rankBody = document.getElementById("rankBody");
-const playerDetail = document.getElementById("playerDetail");
 
 let allMatches = [];
 let currentSort = { key: "ppm", direction: "desc" };
 let currentPlayers = [];
+let expandedPlayer = null;
 
 const normalize = (value) => value.toLowerCase();
 
@@ -64,6 +64,7 @@ const renderTable = (players) => {
   players.forEach((player, index) => {
     const row = document.createElement("tr");
     row.dataset.player = player.name;
+    row.classList.toggle("is-open", expandedPlayer === player.name);
 
     const flag = flagFromCountry(player.country);
     row.innerHTML = `
@@ -76,13 +77,22 @@ const renderTable = (players) => {
       <td>${player.ppm.toFixed(2)}</td>
     `;
 
-    row.addEventListener("click", () => renderPlayerDetail(player));
+    row.addEventListener("click", () => renderPlayerDetail(player, row));
     rankBody.append(row);
+
+    if (expandedPlayer === player.name) {
+      const detailRow = document.createElement("tr");
+      detailRow.className = "detail-row";
+      const cell = document.createElement("td");
+      cell.colSpan = 7;
+      cell.innerHTML = renderPlayerDetailContent(player);
+      detailRow.append(cell);
+      rankBody.append(detailRow);
+    }
   });
 };
 
-const renderPlayerDetail = (player) => {
-  playerDetail.classList.add("active");
+const renderPlayerDetailContent = (player) => {
   const flag = flagFromCountry(player.country);
   const matches = player.matchList
     .slice()
@@ -104,13 +114,23 @@ const renderPlayerDetail = (player) => {
     })
     .join("");
 
-  playerDetail.innerHTML = `
-    <h3>${flag ? `${flag} ` : ""}${player.name}</h3>
-    <div class="detail-meta">${player.matches} matches • ${player.points.toFixed(1)} points • ${player.wins}-${player.draws}-${player.losses}</div>
-    <div class="match-list">${matches || "<p class=\"muted\">No matches yet.</p>"}</div>
+  return `
+    <div class="player-detail">
+      <h3>${flag ? `${flag} ` : ""}${player.name}</h3>
+      <div class="detail-meta">${player.matches} matches • ${player.points.toFixed(1)} points • ${player.wins}-${player.draws}-${player.losses}</div>
+      <div class="match-list">${matches || "<p class=\"muted\">No matches yet.</p>"}</div>
+    </div>
   `;
 };
 
+const renderPlayerDetail = (player) => {
+  if (expandedPlayer === player.name) {
+    expandedPlayer = null;
+  } else {
+    expandedPlayer = player.name;
+  }
+  renderTable(currentPlayers);
+};
 const sortPlayers = (players) => {
   const sorted = players.slice().sort((a, b) => {
     const dir = currentSort.direction === "asc" ? 1 : -1;
@@ -158,8 +178,9 @@ const applyFilters = () => {
   renderTable(sorted);
 
   if (sorted.length === 0) {
-    playerDetail.classList.remove("active");
-    playerDetail.innerHTML = "";
+    expandedPlayer = null;
+  } else if (!sorted.find((player) => player.name === expandedPlayer)) {
+    expandedPlayer = null;
   }
 };
 

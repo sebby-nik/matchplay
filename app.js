@@ -1,125 +1,221 @@
+const eventSelect = document.getElementById("eventSelect");
 const yearSelect = document.getElementById("yearSelect");
-const outcomeSelect = document.getElementById("outcomeSelect");
 const searchInput = document.getElementById("searchInput");
+const minMatchesInput = document.getElementById("minMatches");
+const minMatchesValue = document.getElementById("minMatchesValue");
 const summary = document.getElementById("summary");
-const matchesContainer = document.getElementById("matches");
+const rankBody = document.getElementById("rankBody");
+const playerDetail = document.getElementById("playerDetail");
 
-let allEvents = [];
+let allMatches = [];
+let currentSort = { key: "ppm", direction: "desc" };
+let currentPlayers = [];
 
 const normalize = (value) => value.toLowerCase();
 
-const render = () => {
+const flagFromCountry = (code) => {
+  if (!code) return "";
+  const base = 0x1f1e6;
+  return code
+    .toUpperCase()
+    .replace(/[^A-Z]/g, "")
+    .split("")
+    .map((char) => String.fromCodePoint(base + char.charCodeAt(0) - 65))
+    .join("");
+};
+
+const calculatePlayers = (matches) => {
+  const stats = new Map();
+
+  matches.forEach((match) => {
+    const key = match.player;
+    if (!stats.has(key)) {
+      stats.set(key, {
+        name: match.player,
+        country: match.player_country || "",
+        matches: 0,
+        points: 0,
+        wins: 0,
+        draws: 0,
+        losses: 0,
+        matchList: []
+      });
+    }
+
+    const player = stats.get(key);
+    player.matches += 1;
+    player.points += match.points;
+    if (match.result === "win") player.wins += 1;
+    if (match.result === "draw") player.draws += 1;
+    if (match.result === "loss") player.losses += 1;
+
+    player.matchList.push(match);
+  });
+
+  return Array.from(stats.values()).map((player) => ({
+    ...player,
+    ppm: player.matches ? player.points / player.matches : 0
+  }));
+};
+
+const renderTable = (players) => {
+  rankBody.innerHTML = "";
+
+  players.forEach((player, index) => {
+    const row = document.createElement("tr");
+    row.dataset.player = player.name;
+
+    const flag = flagFromCountry(player.country);
+    row.innerHTML = `
+      <td>${index + 1}</td>
+      <td>${player.name}</td>
+      <td>${flag ? `<span class=\"flag\">${flag}</span>` : ""}${player.country || ""}</td>
+      <td>${player.matches}</td>
+      <td>${player.points.toFixed(1)}</td>
+      <td>${player.wins}-${player.draws}-${player.losses}</td>
+      <td>${player.ppm.toFixed(2)}</td>
+    `;
+
+    row.addEventListener("click", () => renderPlayerDetail(player));
+    rankBody.append(row);
+  });
+};
+
+const renderPlayerDetail = (player) => {
+  playerDetail.classList.add("active");
+  const flag = flagFromCountry(player.country);
+  const matches = player.matchList
+    .slice()
+    .sort((a, b) => b.year - a.year)
+    .map((match) => {
+      const label = match.result === "draw" ? "Halved" : match.result.toUpperCase();
+      return `
+        <div class="match-row">
+          <div>
+            <strong>${match.event} ${match.year}</strong> — ${match.opponent}
+            <div class="meta">${match.round || "Singles"}</div>
+          </div>
+          <div>
+            <strong>${label}</strong><br />
+            <span class="meta">${match.score || ""}</span>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+
+  playerDetail.innerHTML = `
+    <h3>${flag ? `${flag} ` : ""}${player.name}</h3>
+    <div class="detail-meta">${player.matches} matches • ${player.points.toFixed(1)} points • ${player.wins}-${player.draws}-${player.losses}</div>
+    <div class="match-list">${matches || "<p class=\"muted\">No matches yet.</p>"}</div>
+  `;
+};
+
+const sortPlayers = (players) => {
+  const sorted = players.slice().sort((a, b) => {
+    const dir = currentSort.direction === "asc" ? 1 : -1;
+    if (currentSort.key === "name") return a.name.localeCompare(b.name) * dir;
+    if (currentSort.key === "country") return a.country.localeCompare(b.country) * dir;
+    if (currentSort.key === "record") {
+      const aRecord = a.wins * 3 + a.draws;
+      const bRecord = b.wins * 3 + b.draws;
+      return (aRecord - bRecord) * dir;
+    }
+    return (a[currentSort.key] - b[currentSort.key]) * dir;
+  });
+
+  return sorted;
+};
+
+const applyFilters = () => {
+  const eventValue = eventSelect.value;
   const yearValue = yearSelect.value;
-  const outcome = outcomeSelect.value;
   const query = normalize(searchInput.value.trim());
+  const minMatches = Number(minMatchesInput.value || 1);
 
-  let events = [...allEvents];
+  let matches = allMatches.slice();
 
-  if (yearValue !== "all") {
-    events = events.filter((event) => event.year === Number(yearValue));
+  if (eventValue !== "all") {
+    matches = matches.filter((match) => match.event === eventValue);
   }
 
-  if (outcome !== "all") {
-    events = events.filter((event) => event.winner === outcome);
+  if (yearValue !== "all") {
+    matches = matches.filter((match) => match.year === Number(yearValue));
   }
 
   if (query) {
-    events = events.filter((event) =>
-      [event.site, event.location, event.note]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase()
-        .includes(query)
+    matches = matches.filter((match) =>
+      match.player.toLowerCase().includes(query)
     );
   }
 
-  events.sort((a, b) => b.year - a.year);
+  const players = calculatePlayers(matches);
+  const filteredPlayers = players.filter((player) => player.matches >= minMatches);
+  const sorted = sortPlayers(filteredPlayers);
 
-  const years = allEvents.map((event) => event.year);
-  const minYear = Math.min(...years);
-  const maxYear = Math.max(...years);
-  const rangeLabel = yearValue === "all" ? `${minYear}-${maxYear}` : yearValue;
+  currentPlayers = sorted;
+  summary.textContent = `${sorted.length} players • ${matches.length} matches • Min ${minMatches}+`;
+  renderTable(sorted);
 
-  summary.textContent = `${events.length} edition${events.length === 1 ? "" : "s"} • ${rangeLabel}`;
-  matchesContainer.innerHTML = "";
-
-  events.forEach((event) => {
-    const card = document.createElement("article");
-    card.className = "match-card";
-    if (event.winner === "USA") {
-      card.classList.add("win-usa");
-    } else if (event.winner === "Europe") {
-      card.classList.add("win-europe");
-    }
-
-    const header = document.createElement("div");
-    header.className = "match-header";
-    const resultLabel = event.winner === "Canceled" ? "Canceled" : event.score || "";
-    const badge =
-      event.winner === "USA"
-        ? "<span class=\"badge badge--usa\">USA</span>"
-        : event.winner === "Europe"
-          ? "<span class=\"badge badge--europe\">Europe</span>"
-          : "";
-    header.innerHTML = `${event.year} ${badge} <span class="match-result">${resultLabel}</span>`;
-
-    const meta = document.createElement("div");
-    meta.className = "match-meta";
-    const venue = [event.site, event.location].filter(Boolean).join(" • ");
-    meta.textContent = venue || "Venue TBD";
-
-    const details = document.createElement("div");
-    if (event.winner === "Tie") {
-      details.innerHTML = `
-        <strong>Outcome:</strong> Tie<br />
-        <strong>Note:</strong> ${event.note || "Retained by previous holder"}
-      `;
-    } else if (event.winner === "Canceled") {
-      details.innerHTML = `
-        <strong>Status:</strong> Canceled<br />
-        <strong>Note:</strong> ${event.note || ""}
-      `;
-    } else {
-      details.innerHTML = `
-        <strong>Winner:</strong> ${event.winner}<br />
-        <strong>Opponent:</strong> ${event.loser || ""}
-      `;
-    }
-
-    card.append(header, meta, details);
-    matchesContainer.append(card);
-  });
-
-  if (events.length === 0) {
-    matchesContainer.innerHTML = "<p class=\"muted\">No editions for these filters.</p>";
+  if (sorted.length === 0) {
+    playerDetail.classList.remove("active");
+    playerDetail.innerHTML = "";
   }
 };
 
-const populate = () => {
-  yearSelect.innerHTML = "<option value=\"all\">All Years</option>";
-  allEvents
-    .slice()
-    .sort((a, b) => b.year - a.year)
-    .forEach((event, index) => {
-      const option = document.createElement("option");
-      option.value = event.year;
-      option.textContent = event.year;
-      if (index === 0) option.selected = true;
-      yearSelect.append(option);
-    });
+const populateFilters = () => {
+  const events = Array.from(new Set(allMatches.map((match) => match.event))).sort();
+  events.forEach((event) => {
+    const option = document.createElement("option");
+    option.value = event;
+    option.textContent = event;
+    eventSelect.append(option);
+  });
 
-  render();
+  const years = Array.from(new Set(allMatches.map((match) => match.year))).sort((a, b) => b - a);
+  years.forEach((year) => {
+    const option = document.createElement("option");
+    option.value = year;
+    option.textContent = year;
+    yearSelect.append(option);
+  });
+
+  if (allMatches.length > 0) {
+    const matchCounts = calculatePlayers(allMatches).map((player) => player.matches);
+    const maxMatches = Math.max(...matchCounts, 1);
+    minMatchesInput.max = String(maxMatches);
+  }
+};
+
+const handleSort = (key) => {
+  if (currentSort.key === key) {
+    currentSort.direction = currentSort.direction === "asc" ? "desc" : "asc";
+  } else {
+    currentSort = { key, direction: "desc" };
+  }
+
+  const sorted = sortPlayers(currentPlayers);
+  renderTable(sorted);
 };
 
 fetch("data.json")
   .then((res) => res.json())
   .then((data) => {
-    allEvents = data.events;
-    populate();
+    allMatches = data.matches || [];
+    populateFilters();
+    applyFilters();
   });
 
-[yearSelect, outcomeSelect].forEach((input) => {
-  input.addEventListener("change", render);
+[eventSelect, yearSelect].forEach((input) => {
+  input.addEventListener("change", applyFilters);
 });
 
-searchInput.addEventListener("input", render);
+searchInput.addEventListener("input", applyFilters);
+minMatchesInput.addEventListener("input", () => {
+  minMatchesValue.textContent = `${minMatchesInput.value}+`;
+  applyFilters();
+});
+
+document.querySelectorAll("th[data-sort]").forEach((th) => {
+  th.addEventListener("click", () => handleSort(th.dataset.sort));
+});

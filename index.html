@@ -12,8 +12,9 @@
         <p class="eyebrow">Matchplay Results Archive</p>
         <h1>Ryder Cup Database</h1>
         <p class="lede">
-          A living archive of Ryder Cup results. Filter by year and outcome to explore the
-          editions that shaped golf history.
+          A living archive of matchplay singles results across the Ryder Cup, Presidents
+          Cup, and WGC Match Play. Search players, compare records, and dive into every
+          match they played.
         </p>
       </div>
     </header>
@@ -21,54 +22,69 @@
     <main class="layout">
       <section class="panel">
         <div class="panel__header">
-          <h2>Browse Matches</h2>
+          <h2>Player Rankings</h2>
           <p class="muted">
-            Event-level coverage from 1927 onward, with 1939 marked as canceled.
+            Ranked by points per match by default. Click a player to view their full match
+            list.
           </p>
         </div>
 
         <div class="controls">
           <label>
-            Year
-            <select id="yearSelect"></select>
+            Player Search
+            <input id="searchInput" type="search" placeholder="Player name" />
           </label>
           <label>
-            Outcome
-            <select id="outcomeSelect">
-              <option value="all">All Outcomes</option>
-              <option value="USA">USA wins</option>
-              <option value="Europe">Europe wins</option>
-              <option value="Great Britain">Great Britain wins</option>
-              <option value="Great Britain &amp; Ireland">GB &amp; Ireland wins</option>
-              <option value="Tie">Ties</option>
-              <option value="Canceled">Canceled</option>
+            Event
+            <select id="eventSelect">
+              <option value="all">All Events</option>
             </select>
           </label>
           <label>
-            Search
-            <input id="searchInput" type="search" placeholder="Venue or location" />
+            Year
+            <select id="yearSelect">
+              <option value="all">All Years</option>
+            </select>
           </label>
-        </div>
-        <div class="legend">
-          <span class="legend__item legend__item--usa">USA win</span>
-          <span class="legend__item legend__item--europe">Europe win</span>
-          <span class="legend__item">Tie or canceled</span>
+          <label>
+            Min Matches
+            <input id="minMatches" type="range" min="1" max="10" step="1" value="1" />
+            <span id="minMatchesValue" class="range-value">1+</span>
+          </label>
         </div>
 
         <div id="summary" class="summary"></div>
-        <div id="matches" class="match-grid"></div>
+        <div class="table-wrap">
+          <table class="rank-table">
+            <thead>
+              <tr>
+                <th data-sort="rank">Rank</th>
+                <th data-sort="name">Player</th>
+                <th data-sort="country">Country</th>
+                <th data-sort="matches">Matches</th>
+                <th data-sort="points">Points</th>
+                <th data-sort="record">W-D-L</th>
+                <th data-sort="ppm">Pts/Match</th>
+              </tr>
+            </thead>
+            <tbody id="rankBody"></tbody>
+          </table>
+        </div>
+
+        <div id="playerDetail" class="player-detail"></div>
       </section>
 
       <aside class="panel panel--side">
         <h3>About This Project</h3>
         <p>
-          This MVP focuses on Ryder Cup editions. The data model is ready for expansion to
-          include captains, daily sessions, and full match cards.
+          This MVP focuses on player-level matchplay singles results from the Ryder Cup,
+          Presidents Cup, and WGC Match Play. The data model is ready for additional events
+          and formats.
         </p>
         <ul class="facts">
-          <li><strong>Scope:</strong> 1927 to present (1939 canceled)</li>
-          <li><strong>Teams:</strong> USA vs Europe</li>
-          <li><strong>Status:</strong> Event-level dataset</li>
+          <li><strong>Scope:</strong> Singles matches only</li>
+          <li><strong>Events:</strong> Ryder Cup, Presidents Cup, WGC Match Play</li>
+          <li><strong>Ranking:</strong> Points per match</li>
         </ul>
       </aside>
     </main>

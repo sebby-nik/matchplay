@@ -117,12 +117,46 @@ label {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 0.5rem 0.75rem;
-  max-height: 160px;
+  max-height: 200px;
   overflow: auto;
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--line);
   border-radius: 10px;
   background: #ffffff;
+}
+
+.country-filter__dropdown {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 0.5rem 0.75rem;
+}
+
+.country-filter__dropdown summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.country-filter__dropdown summary::-webkit-details-marker {
+  display: none;
+}
+
+.country-filter__dropdown summary::after {
+  content: "▾";
+  float: right;
+  color: var(--ink-soft);
+}
+
+.country-filter__dropdown[open] summary::after {
+  content: "▴";
+}
+
+.country-filter__dropdown .country-filter__list {
+  margin-top: 0.5rem;
+  border: 0;
+  padding: 0.5rem 0;
 }
 
 .country-filter__item {

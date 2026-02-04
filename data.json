@@ -512,9 +512,9 @@
       "player_country": "AU",
       "opponent": "Steve Stricker",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "6 & 5",
-      "points": 1
+      "points": 0
     },
     {
       "event": "Presidents Cup",
@@ -548,9 +548,9 @@
       "player_country": "US",
       "opponent": "Robert Allenby",
       "opponent_country": "AU",
-      "result": "loss",
+      "result": "win",
       "score": "6 & 5",
-      "points": 0
+      "points": 1
     },
     {
       "event": "Presidents Cup",

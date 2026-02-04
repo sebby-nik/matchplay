@@ -12,8 +12,8 @@
         <p class="eyebrow">Matchplay Results Archive</p>
         <h1>Ryder Cup Database</h1>
         <p class="lede">
-          A living archive of Ryder Cup matchplay results. Filter by year and session to
-          explore the matches that shaped golf history.
+          A living archive of Ryder Cup results. Filter by year and outcome to explore the
+          editions that shaped golf history.
         </p>
       </div>
     </header>
@@ -23,7 +23,7 @@
         <div class="panel__header">
           <h2>Browse Matches</h2>
           <p class="muted">
-            Data is seed-level for now. We can expand year-by-year or import a full dataset.
+            Event-level coverage from 1927 onward, with 1939 marked as canceled.
           </p>
         </div>
 
@@ -33,22 +33,20 @@
             <select id="yearSelect"></select>
           </label>
           <label>
-            Session
-            <select id="sessionSelect">
-              <option value="all">All Sessions</option>
-            </select>
-          </label>
-          <label>
-            Team
-            <select id="teamSelect">
-              <option value="all">All Teams</option>
-              <option value="USA">USA</option>
-              <option value="Europe">Europe</option>
+            Outcome
+            <select id="outcomeSelect">
+              <option value="all">All Outcomes</option>
+              <option value="USA">USA wins</option>
+              <option value="Europe">Europe wins</option>
+              <option value="Great Britain">Great Britain wins</option>
+              <option value="Great Britain &amp; Ireland">GB &amp; Ireland wins</option>
+              <option value="Tie">Ties</option>
+              <option value="Canceled">Canceled</option>
             </select>
           </label>
           <label>
             Search
-            <input id="searchInput" type="search" placeholder="Player name" />
+            <input id="searchInput" type="search" placeholder="Venue or location" />
           </label>
         </div>
 
@@ -59,13 +57,13 @@
       <aside class="panel panel--side">
         <h3>About This Project</h3>
         <p>
-          This MVP focuses on Ryder Cup results. The data model is ready for expansion to
-          include captain info, course details, and complete match cards.
+          This MVP focuses on Ryder Cup editions. The data model is ready for expansion to
+          include captains, daily sessions, and full match cards.
         </p>
         <ul class="facts">
-          <li><strong>Format:</strong> Foursomes, Four-ball, Singles</li>
+          <li><strong>Scope:</strong> 1927 to present (1939 canceled)</li>
           <li><strong>Teams:</strong> USA vs Europe</li>
-          <li><strong>Status:</strong> Seed dataset (expandable)</li>
+          <li><strong>Status:</strong> Event-level dataset</li>
         </ul>
       </aside>
     </main>

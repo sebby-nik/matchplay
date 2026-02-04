@@ -1,229 +1,375 @@
 {
   "events": [
     {
+      "year": 1927,
+      "site": "Worcester Country Club",
+      "location": "Worcester, Massachusetts",
+      "winner": "USA",
+      "loser": "Great Britain",
+      "score": "9.5-2.5"
+    },
+    {
+      "year": 1929,
+      "site": "Moortown Golf Club",
+      "location": "Leeds, England",
+      "winner": "Great Britain",
+      "loser": "USA",
+      "score": "7-5"
+    },
+    {
+      "year": 1931,
+      "site": "Scioto Country Club",
+      "location": "Upper Arlington, Ohio",
+      "winner": "USA",
+      "loser": "Great Britain",
+      "score": "9-3"
+    },
+    {
+      "year": 1933,
+      "site": "Southport and Ainsdale Golf Club",
+      "location": "Southport, England",
+      "winner": "Great Britain",
+      "loser": "USA",
+      "score": "6.5-5.5"
+    },
+    {
+      "year": 1935,
+      "site": "Ridgewood Country Club",
+      "location": "Paramus, New Jersey",
+      "winner": "USA",
+      "loser": "Great Britain",
+      "score": "9-3"
+    },
+    {
+      "year": 1937,
+      "site": "Southport and Ainsdale Golf Club",
+      "location": "Southport, England",
+      "winner": "USA",
+      "loser": "Great Britain",
+      "score": "8-4"
+    },
+    {
+      "year": 1939,
+      "site": "",
+      "location": "",
+      "winner": "Canceled",
+      "loser": "",
+      "score": "",
+      "note": "Canceled (World War II)"
+    },
+    {
+      "year": 1947,
+      "site": "Portland Golf Club",
+      "location": "Raleigh Hills, Oregon",
+      "winner": "USA",
+      "loser": "Great Britain",
+      "score": "11-1"
+    },
+    {
+      "year": 1949,
+      "site": "Ganton Golf Club",
+      "location": "Ganton, East Riding of Yorkshire, England",
+      "winner": "USA",
+      "loser": "Great Britain",
+      "score": "7-5"
+    },
+    {
+      "year": 1951,
+      "site": "Pinehurst Resort (No. 2)",
+      "location": "Pinehurst, North Carolina",
+      "winner": "USA",
+      "loser": "Great Britain",
+      "score": "9.5-2.5"
+    },
+    {
+      "year": 1953,
+      "site": "Wentworth Club",
+      "location": "Virginia Water, Surrey, England",
+      "winner": "USA",
+      "loser": "Great Britain",
+      "score": "6.5-5.5"
+    },
+    {
+      "year": 1955,
+      "site": "Thunderbird Country Club",
+      "location": "Rancho Mirage, California",
+      "winner": "USA",
+      "loser": "Great Britain",
+      "score": "8-4"
+    },
+    {
+      "year": 1957,
+      "site": "Lindrick Golf Club",
+      "location": "Near Sheffield, West Riding of Yorkshire, England",
+      "winner": "Great Britain",
+      "loser": "USA",
+      "score": "7.5-4.5"
+    },
+    {
+      "year": 1959,
+      "site": "Eldorado Country Club",
+      "location": "Indian Wells, California",
+      "winner": "USA",
+      "loser": "Great Britain",
+      "score": "8.5-3.5"
+    },
+    {
+      "year": 1961,
+      "site": "Royal Lytham & St Annes Golf Club",
+      "location": "Lytham St Annes, Lancashire, England",
+      "winner": "USA",
+      "loser": "Great Britain",
+      "score": "14.5-9.5"
+    },
+    {
+      "year": 1963,
+      "site": "East Lake Golf Club",
+      "location": "Atlanta, Georgia",
+      "winner": "USA",
+      "loser": "Great Britain",
+      "score": "23-9"
+    },
+    {
+      "year": 1965,
+      "site": "Royal Birkdale Golf Club",
+      "location": "Southport, Merseyside, England",
+      "winner": "USA",
+      "loser": "Great Britain",
+      "score": "19.5-12.5"
+    },
+    {
+      "year": 1967,
+      "site": "Champions Golf Club",
+      "location": "Houston, Texas",
+      "winner": "USA",
+      "loser": "Great Britain",
+      "score": "23.5-8.5"
+    },
+    {
+      "year": 1969,
+      "site": "Royal Birkdale Golf Club",
+      "location": "Southport, Merseyside, England",
+      "winner": "Tie",
+      "loser": "",
+      "score": "16-16",
+      "note": "USA retained"
+    },
+    {
+      "year": 1971,
+      "site": "Old Warson Country Club",
+      "location": "St. Louis, Missouri",
+      "winner": "USA",
+      "loser": "Great Britain",
+      "score": "18.5-13.5"
+    },
+    {
+      "year": 1973,
+      "site": "Muirfield",
+      "location": "Gullane, East Lothian, Scotland",
+      "winner": "USA",
+      "loser": "Great Britain & Ireland",
+      "score": "19-13"
+    },
+    {
+      "year": 1975,
+      "site": "Laurel Valley Golf Club",
+      "location": "Ligonier, Pennsylvania",
+      "winner": "USA",
+      "loser": "Great Britain & Ireland",
+      "score": "21-11"
+    },
+    {
+      "year": 1977,
+      "site": "Royal Lytham & St Annes Golf Club",
+      "location": "Lytham St Annes, Lancashire, England",
+      "winner": "USA",
+      "loser": "Great Britain & Ireland",
+      "score": "12.5-7.5"
+    },
+    {
+      "year": 1979,
+      "site": "The Greenbrier",
+      "location": "White Sulphur Springs, West Virginia",
+      "winner": "USA",
+      "loser": "Europe",
+      "score": "17-11"
+    },
+    {
+      "year": 1981,
+      "site": "Walton Heath Golf Club",
+      "location": "Walton-on-the-Hill, Surrey, England",
+      "winner": "USA",
+      "loser": "Europe",
+      "score": "18.5-9.5"
+    },
+    {
+      "year": 1983,
+      "site": "PGA National Golf Club",
+      "location": "Palm Beach Gardens, Florida",
+      "winner": "USA",
+      "loser": "Europe",
+      "score": "14.5-13.5"
+    },
+    {
+      "year": 1985,
+      "site": "The Belfry (Brabazon)",
+      "location": "Wishaw, Warwickshire, England",
+      "winner": "Europe",
+      "loser": "USA",
+      "score": "16.5-11.5"
+    },
+    {
+      "year": 1987,
+      "site": "Muirfield Village",
+      "location": "Dublin, Ohio",
+      "winner": "Europe",
+      "loser": "USA",
+      "score": "15-13"
+    },
+    {
+      "year": 1989,
+      "site": "The Belfry (Brabazon)",
+      "location": "Wishaw, Warwickshire, England",
+      "winner": "Tie",
+      "loser": "",
+      "score": "14-14",
+      "note": "Europe retained"
+    },
+    {
+      "year": 1991,
+      "site": "Kiawah Island Golf Resort",
+      "location": "Kiawah Island, South Carolina",
+      "winner": "USA",
+      "loser": "Europe",
+      "score": "14.5-13.5"
+    },
+    {
+      "year": 1993,
+      "site": "The Belfry (Brabazon)",
+      "location": "Wishaw, Warwickshire, England",
+      "winner": "USA",
+      "loser": "Europe",
+      "score": "15-13"
+    },
+    {
+      "year": 1995,
+      "site": "Oak Hill Country Club",
+      "location": "Pittsford, New York",
+      "winner": "Europe",
+      "loser": "USA",
+      "score": "14.5-13.5"
+    },
+    {
+      "year": 1997,
+      "site": "Real Club Valderrama",
+      "location": "Sotogrande, Andalusia, Spain",
+      "winner": "Europe",
+      "loser": "USA",
+      "score": "14.5-13.5"
+    },
+    {
+      "year": 1999,
+      "site": "The Country Club",
+      "location": "Brookline, Massachusetts",
+      "winner": "USA",
+      "loser": "Europe",
+      "score": "14.5-13.5"
+    },
+    {
+      "year": 2002,
+      "site": "The Belfry (Brabazon)",
+      "location": "Sutton Coldfield, England",
+      "winner": "Europe",
+      "loser": "USA",
+      "score": "15.5-12.5"
+    },
+    {
+      "year": 2004,
+      "site": "Oakland Hills Country Club",
+      "location": "Bloomfield Hills, Michigan",
+      "winner": "Europe",
+      "loser": "USA",
+      "score": "18.5-9.5"
+    },
+    {
+      "year": 2006,
+      "site": "K Club",
+      "location": "Straffan, County Kildare, Ireland",
+      "winner": "Europe",
+      "loser": "USA",
+      "score": "18.5-9.5"
+    },
+    {
+      "year": 2008,
+      "site": "Valhalla Golf Club",
+      "location": "Louisville, Kentucky",
+      "winner": "USA",
+      "loser": "Europe",
+      "score": "16.5-11.5"
+    },
+    {
+      "year": 2010,
+      "site": "Celtic Manor Resort",
+      "location": "Newport, Wales",
+      "winner": "Europe",
+      "loser": "USA",
+      "score": "14.5-13.5"
+    },
+    {
+      "year": 2012,
+      "site": "Medinah Country Club",
+      "location": "Medinah, Illinois",
+      "winner": "Europe",
+      "loser": "USA",
+      "score": "14.5-13.5"
+    },
+    {
+      "year": 2014,
+      "site": "Gleneagles (PGA Centenary)",
+      "location": "Auchterarder, Perth and Kinross, Scotland",
+      "winner": "Europe",
+      "loser": "USA",
+      "score": "16.5-11.5"
+    },
+    {
+      "year": 2016,
+      "site": "Hazeltine National Golf Club",
+      "location": "Chaska, Minnesota",
+      "winner": "USA",
+      "loser": "Europe",
+      "score": "17-11"
+    },
+    {
       "year": 2018,
-      "location": "Le Golf National, France",
-      "sessions": [
-        {
-          "name": "Foursomes",
-          "matches": [
-            {
-              "match": 1,
-              "teams": {
-                "Europe": "Paul Casey / Tyrrell Hatton",
-                "USA": "Dustin Johnson / Rickie Fowler"
-              },
-              "result": "Europe 1 up",
-              "winner": "Europe"
-            },
-            {
-              "match": 2,
-              "teams": {
-                "Europe": "Tommy Fleetwood / Francesco Molinari",
-                "USA": "Brooks Koepka / Tony Finau"
-              },
-              "result": "Europe 3 & 1",
-              "winner": "Europe"
-            }
-          ]
-        },
-        {
-          "name": "Four-ball",
-          "matches": [
-            {
-              "match": 5,
-              "teams": {
-                "Europe": "Justin Rose / Jon Rahm",
-                "USA": "Jordan Spieth / Justin Thomas"
-              },
-              "result": "Europe 1 up",
-              "winner": "Europe"
-            },
-            {
-              "match": 6,
-              "teams": {
-                "Europe": "Rory McIlroy / Ian Poulter",
-                "USA": "Dustin Johnson / Rickie Fowler"
-              },
-              "result": "USA 1 up",
-              "winner": "USA"
-            }
-          ]
-        },
-        {
-          "name": "Singles",
-          "matches": [
-            {
-              "match": 25,
-              "teams": {
-                "Europe": "Francesco Molinari",
-                "USA": "Phil Mickelson"
-              },
-              "result": "Europe 4 & 2",
-              "winner": "Europe"
-            },
-            {
-              "match": 26,
-              "teams": {
-                "Europe": "Justin Rose",
-                "USA": "Jordan Spieth"
-              },
-              "result": "USA 1 up",
-              "winner": "USA"
-            }
-          ]
-        }
-      ]
+      "site": "Le Golf National",
+      "location": "Saint-Quentin-en-Yvelines, Ile-de-France, France",
+      "winner": "Europe",
+      "loser": "USA",
+      "score": "17.5-10.5"
     },
     {
       "year": 2021,
-      "location": "Whistling Straits, USA",
-      "sessions": [
-        {
-          "name": "Foursomes",
-          "matches": [
-            {
-              "match": 1,
-              "teams": {
-                "USA": "Justin Thomas / Jordan Spieth",
-                "Europe": "Jon Rahm / Sergio Garcia"
-              },
-              "result": "USA 3 & 1",
-              "winner": "USA"
-            },
-            {
-              "match": 2,
-              "teams": {
-                "USA": "Dustin Johnson / Collin Morikawa",
-                "Europe": "Paul Casey / Viktor Hovland"
-              },
-              "result": "USA 2 & 1",
-              "winner": "USA"
-            }
-          ]
-        },
-        {
-          "name": "Four-ball",
-          "matches": [
-            {
-              "match": 5,
-              "teams": {
-                "USA": "Patrick Cantlay / Xander Schauffele",
-                "Europe": "Rory McIlroy / Ian Poulter"
-              },
-              "result": "USA 2 up",
-              "winner": "USA"
-            },
-            {
-              "match": 6,
-              "teams": {
-                "USA": "Brooks Koepka / Daniel Berger",
-                "Europe": "Viktor Hovland / Bernd Wiesberger"
-              },
-              "result": "USA 2 up",
-              "winner": "USA"
-            }
-          ]
-        },
-        {
-          "name": "Singles",
-          "matches": [
-            {
-              "match": 25,
-              "teams": {
-                "USA": "Justin Thomas",
-                "Europe": "Jon Rahm"
-              },
-              "result": "Europe 3 & 2",
-              "winner": "Europe"
-            },
-            {
-              "match": 26,
-              "teams": {
-                "USA": "Scottie Scheffler",
-                "Europe": "Jon Rahm"
-              },
-              "result": "Europe 3 & 1",
-              "winner": "Europe"
-            }
-          ]
-        }
-      ]
+      "site": "Whistling Straits",
+      "location": "Haven, Wisconsin",
+      "winner": "USA",
+      "loser": "Europe",
+      "score": "19-9"
     },
     {
       "year": 2023,
-      "location": "Marco Simone GC, Italy",
-      "sessions": [
-        {
-          "name": "Foursomes",
-          "matches": [
-            {
-              "match": 1,
-              "teams": {
-                "Europe": "Jon Rahm / Tyrrell Hatton",
-                "USA": "Scottie Scheffler / Sam Burns"
-              },
-              "result": "Europe 4 & 3",
-              "winner": "Europe"
-            },
-            {
-              "match": 2,
-              "teams": {
-                "Europe": "Viktor Hovland / Ludvig Aberg",
-                "USA": "Max Homa / Brian Harman"
-              },
-              "result": "Europe 1 up",
-              "winner": "Europe"
-            }
-          ]
-        },
-        {
-          "name": "Four-ball",
-          "matches": [
-            {
-              "match": 5,
-              "teams": {
-                "Europe": "Viktor Hovland / Ludvig Aberg",
-                "USA": "Justin Thomas / Jordan Spieth"
-              },
-              "result": "Europe 2 up",
-              "winner": "Europe"
-            },
-            {
-              "match": 6,
-              "teams": {
-                "Europe": "Jon Rahm / Tyrrell Hatton",
-                "USA": "Scottie Scheffler / Brooks Koepka"
-              },
-              "result": "Europe 2 up",
-              "winner": "Europe"
-            }
-          ]
-        },
-        {
-          "name": "Singles",
-          "matches": [
-            {
-              "match": 25,
-              "teams": {
-                "Europe": "Rory McIlroy",
-                "USA": "Sam Burns"
-              },
-              "result": "Europe 3 & 1",
-              "winner": "Europe"
-            },
-            {
-              "match": 26,
-              "teams": {
-                "Europe": "Viktor Hovland",
-                "USA": "Collin Morikawa"
-              },
-              "result": "Europe 5 & 4",
-              "winner": "Europe"
-            }
-          ]
-        }
-      ]
+      "site": "Marco Simone Golf and Country Club",
+      "location": "Guidonia, Rome, Italy",
+      "winner": "Europe",
+      "loser": "USA",
+      "score": "16.5-11.5"
+    },
+    {
+      "year": 2025,
+      "site": "Bethpage Black Course",
+      "location": "Farmingdale, New York",
+      "winner": "Europe",
+      "loser": "USA",
+      "score": "15-13"
     }
   ]
 }

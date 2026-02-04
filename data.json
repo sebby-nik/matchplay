@@ -2780,7 +2780,7 @@
       "player_country": "ZA",
       "opponent": "Webb Simpson",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -2864,7 +2864,7 @@
       "player_country": "US",
       "opponent": "Louis Oosthuizen",
       "opponent_country": "ZA",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -3476,7 +3476,7 @@
       "player_country": "CA",
       "opponent": "Bryson DeChambeau",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -3500,7 +3500,7 @@
       "player_country": "US",
       "opponent": "Adam Hadwin",
       "opponent_country": "CA",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -3584,7 +3584,7 @@
       "player_country": "JP",
       "opponent": "Tony Finau",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -3620,7 +3620,7 @@
       "player_country": "ZA",
       "opponent": "Matt Kuchar",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -3632,7 +3632,7 @@
       "player_country": "AU",
       "opponent": "Rickie Fowler",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -3644,7 +3644,7 @@
       "player_country": "US",
       "opponent": "Louis Oosthuizen",
       "opponent_country": "ZA",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -3680,7 +3680,7 @@
       "player_country": "US",
       "opponent": "Marc Leishman",
       "opponent_country": "AU",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -3716,7 +3716,7 @@
       "player_country": "US",
       "opponent": "Hideki Matsuyama",
       "opponent_country": "JP",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -3836,7 +3836,7 @@
       "player_country": "JP",
       "opponent": "Sam Burns",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -3932,7 +3932,7 @@
       "player_country": "US",
       "opponent": "Hideki Matsuyama",
       "opponent_country": "JP",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -4064,7 +4064,7 @@
       "player_country": "KR",
       "opponent": "Sahith Theegala",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -4172,7 +4172,7 @@
       "player_country": "AU",
       "opponent": "Wyndham Clark",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -4208,7 +4208,7 @@
       "player_country": "US",
       "opponent": "Byeong Hun An",
       "opponent_country": "KR",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -4220,7 +4220,7 @@
       "player_country": "US",
       "opponent": "Tom Kim",
       "opponent_country": "KR",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -4280,7 +4280,7 @@
       "player_country": "KR",
       "opponent": "Sam Burns",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -4304,7 +4304,7 @@
       "player_country": "US",
       "opponent": "Min Woo Lee",
       "opponent_country": "AU",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -4388,7 +4388,7 @@
       "player_country": "GB",
       "opponent": "Gene Sarazen",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -4412,7 +4412,7 @@
       "player_country": "US",
       "opponent": "Charles Whitcombe",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -4532,7 +4532,7 @@
       "player_country": "US",
       "opponent": "Ernest Whitcombe",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -4592,7 +4592,7 @@
       "player_country": "GB",
       "opponent": "Al Espinosa",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -5108,7 +5108,7 @@
       "player_country": "GB",
       "opponent": "Sam Parks",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -5120,7 +5120,7 @@
       "player_country": "GB",
       "opponent": "Horton Smith",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -5192,7 +5192,7 @@
       "player_country": "US",
       "opponent": "Bill Cox",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -5276,7 +5276,7 @@
       "player_country": "US",
       "opponent": "Alf Perry",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -5348,7 +5348,7 @@
       "player_country": "US",
       "opponent": "Sam King",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -5444,7 +5444,7 @@
       "player_country": "GB",
       "opponent": "Denny Shute",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -5624,7 +5624,7 @@
       "player_country": "US",
       "opponent": "Harry Weetman",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -5684,7 +5684,7 @@
       "player_country": "GB",
       "opponent": "Ben Hogan",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -5924,7 +5924,7 @@
       "player_country": "US",
       "opponent": "Harry Weetman",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -5972,7 +5972,7 @@
       "player_country": "GB",
       "opponent": "E. J. Harrison",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -6416,7 +6416,7 @@
       "player_country": "US",
       "opponent": "Norman Drew",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -6464,7 +6464,7 @@
       "player_country": "US",
       "opponent": "Peter Alliss",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -6500,7 +6500,7 @@
       "player_country": "GB",
       "opponent": "Doug Ford",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -6512,7 +6512,7 @@
       "player_country": "GB",
       "opponent": "Jay Hebert",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -7004,7 +7004,7 @@
       "player_country": "GB",
       "opponent": "Julius Boros",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -7016,7 +7016,7 @@
       "player_country": "GB",
       "opponent": "Miller Barber",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -7100,7 +7100,7 @@
       "player_country": "US",
       "opponent": "Brian Huggett",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -7148,7 +7148,7 @@
       "player_country": "US",
       "opponent": "Brian Huggett",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -7712,7 +7712,7 @@
       "player_country": "GB",
       "opponent": "Tommy Aaron",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -7748,7 +7748,7 @@
       "player_country": "US",
       "opponent": "Peter Oosterhuis",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -7808,7 +7808,7 @@
       "player_country": "GB",
       "opponent": "Lee Trevino",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -7820,7 +7820,7 @@
       "player_country": "US",
       "opponent": "Ken Brown",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -7868,7 +7868,7 @@
       "player_country": "GB",
       "opponent": "Raymond Floyd",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -7892,7 +7892,7 @@
       "player_country": "GB",
       "opponent": "Gardner Dickinson",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -7916,7 +7916,7 @@
       "player_country": "US",
       "opponent": "Neil Coles",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -7940,7 +7940,7 @@
       "player_country": "US",
       "opponent": "Brian Huggett",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -7976,7 +7976,7 @@
       "player_country": "US",
       "opponent": "Harry Bannerman",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -8012,7 +8012,7 @@
       "player_country": "GB",
       "opponent": "Dave Stockton",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -8084,7 +8084,7 @@
       "player_country": "US",
       "opponent": "Bernard Gallacher",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -8108,7 +8108,7 @@
       "player_country": "US",
       "opponent": "Neil Coles",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -8156,7 +8156,7 @@
       "player_country": "GB",
       "opponent": "Arnold Palmer",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -8264,7 +8264,7 @@
       "player_country": "GB",
       "opponent": "Frank Beard",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -8468,7 +8468,7 @@
       "player_country": "IE",
       "opponent": "Tom Weiskopf",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -8492,7 +8492,7 @@
       "player_country": "US",
       "opponent": "Neil Coles",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -8552,21 +8552,9 @@
       "player_country": "US",
       "opponent": "Maurice Bembridge",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
-    },
-    {
-      "event": "Ryder Cup",
-      "year": 1973,
-      "round": "Singles",
-      "player": "Jack Nicklaus",
-      "player_country": "US",
-      "opponent": "Maurice Bembridge",
-      "opponent_country": "GB",
-      "result": "win",
-      "score": "2 up",
-      "points": 1
     },
     {
       "event": "Ryder Cup",
@@ -8588,7 +8576,7 @@
       "player_country": "US",
       "opponent": "Peter Oosterhuis",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -8600,21 +8588,9 @@
       "player_country": "GB",
       "opponent": "Jack Nicklaus",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
-    },
-    {
-      "event": "Ryder Cup",
-      "year": 1973,
-      "round": "Singles",
-      "player": "Maurice Bembridge",
-      "player_country": "GB",
-      "opponent": "Jack Nicklaus",
-      "opponent_country": "US",
-      "result": "loss",
-      "score": "2 up",
-      "points": 0
     },
     {
       "event": "Ryder Cup",
@@ -8624,7 +8600,7 @@
       "player_country": "GB",
       "opponent": "Gay Brewer",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -8672,7 +8648,7 @@
       "player_country": "GB",
       "opponent": "Lee Trevino",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -8696,7 +8672,7 @@
       "player_country": "US",
       "opponent": "Christy O'Connor",
       "opponent_country": "IE",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -8744,7 +8720,7 @@
       "player_country": "US",
       "opponent": "Bernard Gallacher",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -8756,7 +8732,7 @@
       "player_country": "GB",
       "opponent": "Al Geiberger",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -8768,7 +8744,7 @@
       "player_country": "GB",
       "opponent": "Lee Trevino",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -8818,18 +8794,6 @@
       "opponent_country": "US",
       "result": "win",
       "score": "4 & 2",
-      "points": 1
-    },
-    {
-      "event": "Ryder Cup",
-      "year": 1975,
-      "round": "Singles",
-      "player": "Brian Barnes",
-      "player_country": "GB",
-      "opponent": "Jack Nicklaus",
-      "opponent_country": "US",
-      "result": "win",
-      "score": "2 & 1",
       "points": 1
     },
     {
@@ -8900,7 +8864,7 @@
       "player_country": "US",
       "opponent": "Tommy Horton",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -8926,18 +8890,6 @@
       "opponent_country": "GB",
       "result": "loss",
       "score": "4 & 2",
-      "points": 0
-    },
-    {
-      "event": "Ryder Cup",
-      "year": 1975,
-      "round": "Singles",
-      "player": "Jack Nicklaus",
-      "player_country": "US",
-      "opponent": "Brian Barnes",
-      "opponent_country": "GB",
-      "result": "loss",
-      "score": "2 & 1",
       "points": 0
     },
     {
@@ -8972,7 +8924,7 @@
       "player_country": "US",
       "opponent": "Bernard Gallacher",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -9080,7 +9032,7 @@
       "player_country": "GB",
       "opponent": "Hale Irwin",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -9440,7 +9392,7 @@
       "player_country": "US",
       "opponent": "Mark James",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -9560,7 +9512,7 @@
       "player_country": "GB",
       "opponent": "Gil Morgan",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -9668,7 +9620,7 @@
       "player_country": "GB",
       "opponent": "Bill Rogers",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -9680,7 +9632,7 @@
       "player_country": "DE",
       "opponent": "Bruce Lietzke",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -9692,7 +9644,7 @@
       "player_country": "US",
       "opponent": "Bernard Gallacher",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -9704,7 +9656,7 @@
       "player_country": "US",
       "opponent": "Bernhard Langer",
       "opponent_country": "DE",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -10040,7 +9992,7 @@
       "player_country": "US",
       "opponent": "Seve Ballesteros",
       "opponent_country": "ES",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -10100,7 +10052,7 @@
       "player_country": "ES",
       "opponent": "Lanny Wadkins",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -10124,7 +10076,7 @@
       "player_country": "US",
       "opponent": "Jos\u00e9 Mar\u00eda Ca\u00f1izares",
       "opponent_country": "ES",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -10172,7 +10124,7 @@
       "player_country": "GB",
       "opponent": "Tom Kite",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -10196,7 +10148,7 @@
       "player_country": "ES",
       "opponent": "Fuzzy Zoeller",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -10208,7 +10160,7 @@
       "player_country": "US",
       "opponent": "Sam Torrance",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -10496,7 +10448,7 @@
       "player_country": "ES",
       "opponent": "Tom Kite",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -10508,7 +10460,7 @@
       "player_country": "US",
       "opponent": "Seve Ballesteros",
       "opponent_country": "ES",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -10544,7 +10496,7 @@
       "player_country": "DE",
       "opponent": "Larry Nelson",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -10592,7 +10544,7 @@
       "player_country": "GB",
       "opponent": "Hal Sutton",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -10604,7 +10556,7 @@
       "player_country": "US",
       "opponent": "Gordon Brand Jnr",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -10688,7 +10640,7 @@
       "player_country": "US",
       "opponent": "Sam Torrance",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -10700,7 +10652,7 @@
       "player_country": "US",
       "opponent": "Bernhard Langer",
       "opponent_country": "DE",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -10748,7 +10700,7 @@
       "player_country": "GB",
       "opponent": "Larry Mize",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -11096,7 +11048,7 @@
       "player_country": "DE",
       "opponent": "Hale Irwin",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -11120,7 +11072,7 @@
       "player_country": "GB",
       "opponent": "Mark Calcavecchia",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -11156,7 +11108,7 @@
       "player_country": "GB",
       "opponent": "Steve Pate",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -11180,7 +11132,7 @@
       "player_country": "US",
       "opponent": "Bernhard Langer",
       "opponent_country": "DE",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -11228,7 +11180,7 @@
       "player_country": "US",
       "opponent": "Colin Montgomerie",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -11348,7 +11300,7 @@
       "player_country": "US",
       "opponent": "David Gilford",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -11468,7 +11420,7 @@
       "player_country": "US",
       "opponent": "Ian Woosnam",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -11480,7 +11432,7 @@
       "player_country": "GB",
       "opponent": "Fred Couples",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -11540,7 +11492,7 @@
       "player_country": "US",
       "opponent": "Sam Torrance",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -11576,7 +11528,7 @@
       "player_country": "GB",
       "opponent": "Paul Azinger",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -11588,7 +11540,7 @@
       "player_country": "US",
       "opponent": "Nick Faldo",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -11636,7 +11588,7 @@
       "player_country": "GB",
       "opponent": "Lanny Wadkins",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -11780,7 +11732,7 @@
       "player_country": "US",
       "opponent": "Ian Woosnam",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -11804,7 +11756,7 @@
       "player_country": "GB",
       "opponent": "Fred Couples",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -11984,7 +11936,7 @@
       "player_country": "GB",
       "opponent": "Scott Hoch",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -12116,7 +12068,7 @@
       "player_country": "US",
       "opponent": "Thomas Bj\u00f8rn",
       "opponent_country": "DK",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -12200,7 +12152,7 @@
       "player_country": "US",
       "opponent": "Colin Montgomerie",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -12212,7 +12164,7 @@
       "player_country": "DK",
       "opponent": "Justin Leonard",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -12392,7 +12344,7 @@
       "player_country": "ES",
       "opponent": "Justin Leonard",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -12404,7 +12356,7 @@
       "player_country": "US",
       "opponent": "Jos\u00e9 Mar\u00eda Olaz\u00e1bal",
       "opponent_country": "ES",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -12560,7 +12512,7 @@
       "player_country": "GB",
       "opponent": "David Duval",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -12572,7 +12524,7 @@
       "player_country": "US",
       "opponent": "Darren Clarke",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -12596,7 +12548,7 @@
       "player_country": "US",
       "opponent": "Pierre Fulke",
       "opponent_country": "SE",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -12620,7 +12572,7 @@
       "player_country": "SE",
       "opponent": "Tiger Woods",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -12632,7 +12584,7 @@
       "player_country": "US",
       "opponent": "Paul McGinley",
       "opponent_country": "IE",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -12668,7 +12620,7 @@
       "player_country": "SE",
       "opponent": "Paul Azinger",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -12680,7 +12632,7 @@
       "player_country": "US",
       "opponent": "Niclas Fasth",
       "opponent_country": "SE",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -12692,7 +12644,7 @@
       "player_country": "IE",
       "opponent": "Jim Furyk",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -12728,7 +12680,7 @@
       "player_country": "SE",
       "opponent": "Davis Love III",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -12812,7 +12764,7 @@
       "player_country": "US",
       "opponent": "Jesper Parnevik",
       "opponent_country": "SE",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -12872,7 +12824,7 @@
       "player_country": "GB",
       "opponent": "Davis Love III",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -12908,7 +12860,7 @@
       "player_country": "US",
       "opponent": "Darren Clarke",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -13208,7 +13160,7 @@
       "player_country": "US",
       "opponent": "Paul McGinley",
       "opponent_country": "IE",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -13280,7 +13232,7 @@
       "player_country": "IE",
       "opponent": "J. J. Henry",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -13472,7 +13424,7 @@
       "player_country": "US",
       "opponent": "Paul Casey",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -13592,7 +13544,7 @@
       "player_country": "GB",
       "opponent": "Hunter Mahan",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -13772,7 +13724,7 @@
       "player_country": "US",
       "opponent": "Ross Fisher",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -13904,7 +13856,7 @@
       "player_country": "GB",
       "opponent": "Stewart Cink",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -13916,7 +13868,7 @@
       "player_country": "GB",
       "opponent": "Jeff Overton",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -13940,7 +13892,7 @@
       "player_country": "US",
       "opponent": "Rory McIlroy",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -14012,7 +13964,7 @@
       "player_country": "IT",
       "opponent": "Tiger Woods",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -14228,7 +14180,7 @@
       "player_country": "US",
       "opponent": "Francesco Molinari",
       "opponent_country": "IT",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -14300,7 +14252,7 @@
       "player_country": "US",
       "opponent": "Justin Rose",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -14312,7 +14264,7 @@
       "player_country": "GB",
       "opponent": "Webb Simpson",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -14372,7 +14324,7 @@
       "player_country": "GB",
       "opponent": "Hunter Mahan",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -14516,7 +14468,7 @@
       "player_country": "FR",
       "opponent": "Zach Johnson",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -14528,7 +14480,7 @@
       "player_country": "US",
       "opponent": "Ian Poulter",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -14540,7 +14492,7 @@
       "player_country": "US",
       "opponent": "Victor Dubuisson",
       "opponent_country": "FR",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -14744,7 +14696,7 @@
       "player_country": "US",
       "opponent": "Sergio Garc\u00eda",
       "opponent_country": "ES",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -14804,7 +14756,7 @@
       "player_country": "ES",
       "opponent": "Phil Mickelson",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -14852,7 +14804,7 @@
       "player_country": "US",
       "opponent": "Paul Casey",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -14996,7 +14948,7 @@
       "player_country": "GB",
       "opponent": "Brooks Koepka",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -15164,7 +15116,7 @@
       "player_country": "US",
       "opponent": "Viktor Hovland",
       "opponent_country": "NO",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -15236,7 +15188,7 @@
       "player_country": "US",
       "opponent": "Tommy Fleetwood",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -15356,7 +15308,7 @@
       "player_country": "GB",
       "opponent": "Jordan Spieth",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -15392,7 +15344,7 @@
       "player_country": "NO",
       "opponent": "Collin Morikawa",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -15452,7 +15404,7 @@
       "player_country": "ES",
       "opponent": "Scottie Scheffler",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -15464,7 +15416,7 @@
       "player_country": "US",
       "opponent": "Shane Lowry",
       "opponent_country": "IE",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -15608,7 +15560,7 @@
       "player_country": "US",
       "opponent": "Jon Rahm",
       "opponent_country": "ES",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -15632,7 +15584,7 @@
       "player_country": "IE",
       "opponent": "Jordan Spieth",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -15716,7 +15668,7 @@
       "player_country": "US",
       "opponent": "Matt Fitzpatrick",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -15740,7 +15692,7 @@
       "player_country": "US",
       "opponent": "Tyrrell Hatton",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -15752,7 +15704,7 @@
       "player_country": "US",
       "opponent": "Viktor Hovland",
       "opponent_country": "NO",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -15824,7 +15776,7 @@
       "player_country": "GB",
       "opponent": "Bryson DeChambeau",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -15860,7 +15812,7 @@
       "player_country": "GB",
       "opponent": "Sam Burns",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -15884,7 +15836,7 @@
       "player_country": "US",
       "opponent": "Shane Lowry",
       "opponent_country": "IE",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -15896,7 +15848,7 @@
       "player_country": "US",
       "opponent": "Robert MacIntyre",
       "opponent_country": "GB",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -15932,7 +15884,7 @@
       "player_country": "IE",
       "opponent": "Russell Henley",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -15956,7 +15908,7 @@
       "player_country": "GB",
       "opponent": "Collin Morikawa",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },
@@ -15968,7 +15920,7 @@
       "player_country": "NO",
       "opponent": "Harris English",
       "opponent_country": "US",
-      "result": "draw",
+      "result": "halved",
       "score": "halved",
       "points": 0.5
     },

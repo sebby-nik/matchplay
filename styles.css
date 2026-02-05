@@ -316,6 +316,7 @@ input[type="search"] {
   background: #ffffff;
   font-size: 0.95rem;
   color: var(--ink);
+  min-height: 44px;
 }
 
 input[type="range"] {
@@ -323,9 +324,23 @@ input[type="range"] {
   accent-color: var(--highlight);
 }
 
+.range-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 44px;
+}
+
+.range-row input[type="range"] {
+  margin: 0;
+  height: 44px;
+}
+
 .range-value {
   font-size: 0.8rem;
   color: var(--ink-soft);
+  min-width: 2.2rem;
+  text-align: right;
 }
 
 .summary {

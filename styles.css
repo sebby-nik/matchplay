@@ -370,6 +370,7 @@ input[type="range"] {
   padding: 0 2rem 1rem;
   font-size: 0.85rem;
   color: var(--ink-soft);
+  justify-content: flex-end;
 }
 
 .ppm-swatch {

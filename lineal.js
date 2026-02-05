@@ -440,11 +440,18 @@ const renderChampionCard = (reigns, overallStats) => {
     : current.startLabel || "Champion since inaugural grant";
   linealChampionMeta.textContent = sinceText;
 
-  const defenses = Math.max(current.wins - (titleEntry ? 1 : 0), 0);
+  const championReigns = reigns.filter((reign) => reign.champion === current.champion);
+  const reignCount = championReigns.length;
+  const totalMatches = championReigns.reduce((sum, reign) => sum + reign.matches, 0);
+  const totalDefenses = championReigns.reduce((sum, reign) => {
+    const titleWinAdjustment = reign.startEntry ? 1 : 0;
+    return sum + Math.max(reign.wins - titleWinAdjustment, 0);
+  }, 0);
   const overall = overallStats.get(current.champion) || { wins: 0, draws: 0, losses: 0 };
   linealChampionStats.innerHTML = `
-    <span>${current.matches} matches</span>
-    <span>${defenses} defenses</span>
+    <span>${reignCount} reigns</span>
+    <span>${totalMatches} matches</span>
+    <span>${totalDefenses} defenses</span>
     <span>${overall.wins}-${overall.draws}-${overall.losses} W-D-L</span>
   `;
 };

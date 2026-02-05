@@ -39,18 +39,48 @@
             Player Search
             <input id="searchInput" type="search" placeholder="Player name" />
           </label>
-          <label>
-            Event
-            <select id="eventSelect">
-              <option value="all">All Events</option>
-            </select>
-          </label>
-          <label>
-            Year
-            <select id="yearSelect">
-              <option value="all">All Years</option>
-            </select>
-          </label>
+          <div class="country-filter">
+            <span class="country-filter__label">Event</span>
+            <details class="country-filter__dropdown" id="eventDropdown">
+              <summary id="eventSummary">All events</summary>
+              <div class="country-filter__panel">
+                <div class="country-filter__search">
+                  <span class="country-filter__search-icon">⌕</span>
+                  <input id="eventSearch" type="search" placeholder="Search events" />
+                </div>
+                <label class="country-filter__item country-filter__item--all">
+                  <input id="eventSelectAll" type="checkbox" />
+                  <span>Select all</span>
+                </label>
+                <div id="eventFilter" class="country-filter__list"></div>
+                <div class="country-filter__actions">
+                  <button id="eventCancel" type="button">Cancel</button>
+                  <button id="eventApply" type="button">Apply</button>
+                </div>
+              </div>
+            </details>
+          </div>
+          <div class="country-filter">
+            <span class="country-filter__label">Year</span>
+            <details class="country-filter__dropdown" id="yearDropdown">
+              <summary id="yearSummary">All years</summary>
+              <div class="country-filter__panel">
+                <div class="country-filter__search">
+                  <span class="country-filter__search-icon">⌕</span>
+                  <input id="yearSearch" type="search" placeholder="Search years" />
+                </div>
+                <label class="country-filter__item country-filter__item--all">
+                  <input id="yearSelectAll" type="checkbox" />
+                  <span>Select all</span>
+                </label>
+                <div id="yearFilter" class="country-filter__list"></div>
+                <div class="country-filter__actions">
+                  <button id="yearCancel" type="button">Cancel</button>
+                  <button id="yearApply" type="button">Apply</button>
+                </div>
+              </div>
+            </details>
+          </div>
           <label>
             Min Matches
             <input id="minMatches" type="range" min="1" max="10" step="1" value="1" />
@@ -58,7 +88,7 @@
           </label>
           <div class="country-filter">
             <span class="country-filter__label">Country</span>
-            <details class="country-filter__dropdown">
+            <details class="country-filter__dropdown" id="countryDropdown">
               <summary id="countrySummary">All countries</summary>
               <div class="country-filter__panel">
                 <div class="country-filter__search">

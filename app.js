@@ -1,5 +1,17 @@
-const eventSelect = document.getElementById("eventSelect");
-const yearSelect = document.getElementById("yearSelect");
+const eventFilter = document.getElementById("eventFilter");
+const eventSummary = document.getElementById("eventSummary");
+const eventSearch = document.getElementById("eventSearch");
+const eventSelectAll = document.getElementById("eventSelectAll");
+const eventApply = document.getElementById("eventApply");
+const eventCancel = document.getElementById("eventCancel");
+const eventDropdown = document.getElementById("eventDropdown");
+const yearFilter = document.getElementById("yearFilter");
+const yearSummary = document.getElementById("yearSummary");
+const yearSearch = document.getElementById("yearSearch");
+const yearSelectAll = document.getElementById("yearSelectAll");
+const yearApply = document.getElementById("yearApply");
+const yearCancel = document.getElementById("yearCancel");
+const yearDropdown = document.getElementById("yearDropdown");
 const searchInput = document.getElementById("searchInput");
 const minMatchesInput = document.getElementById("minMatches");
 const minMatchesValue = document.getElementById("minMatchesValue");
@@ -11,11 +23,17 @@ const countrySearch = document.getElementById("countrySearch");
 const countrySelectAll = document.getElementById("countrySelectAll");
 const countryApply = document.getElementById("countryApply");
 const countryCancel = document.getElementById("countryCancel");
-const countryDropdown = document.querySelector(".country-filter__dropdown");
+const countryDropdown = document.getElementById("countryDropdown");
 
 let allMatches = [];
 let currentSort = { key: "matches", direction: "desc" };
 let currentPlayers = [];
+let selectedEvents = new Set();
+let pendingEvents = new Set();
+let allEvents = [];
+let selectedYears = new Set();
+let pendingYears = new Set();
+let allYears = [];
 let selectedCountries = new Set();
 let pendingCountries = new Set();
 let allCountries = [];
@@ -190,19 +208,17 @@ const sortPlayers = (players) => {
 };
 
 const applyFilters = () => {
-  const eventValue = eventSelect.value;
-  const yearValue = yearSelect.value;
   const query = normalize(searchInput.value.trim());
   const minMatches = Number(minMatchesInput.value || 1);
 
   let matches = allMatches.slice();
 
-  if (eventValue !== "all") {
-    matches = matches.filter((match) => match.event === eventValue);
+  if (selectedEvents.size > 0) {
+    matches = matches.filter((match) => selectedEvents.has(match.event));
   }
 
-  if (yearValue !== "all") {
-    matches = matches.filter((match) => match.year === Number(yearValue));
+  if (selectedYears.size > 0) {
+    matches = matches.filter((match) => selectedYears.has(String(match.year)));
   }
 
   if (query) {
@@ -227,22 +243,110 @@ const applyFilters = () => {
   document.querySelectorAll("tr.is-open").forEach((node) => node.classList.remove("is-open"));
 };
 
+const updateEventSummary = () => {
+  if (selectedEvents.size === 0) {
+    eventSummary.textContent = "All events";
+    return;
+  }
+  const list = Array.from(selectedEvents);
+  const preview = list.slice(0, 2).join(", ");
+  const extra = list.length > 2 ? ` +${list.length - 2}` : "";
+  eventSummary.textContent = `${preview}${extra}`;
+};
+
+const syncEventCheckboxes = () => {
+  eventFilter.querySelectorAll("input[type=\"checkbox\"]").forEach((cb) => {
+    if (cb === eventSelectAll) return;
+    cb.checked = pendingEvents.has(cb.value);
+  });
+  eventSelectAll.checked =
+    pendingEvents.size > 0 && pendingEvents.size === allEvents.length;
+};
+
+const applyEventFilter = () => {
+  selectedEvents = new Set(pendingEvents);
+  updateEventSummary();
+  applyFilters();
+};
+
+const updateYearSummary = () => {
+  if (selectedYears.size === 0) {
+    yearSummary.textContent = "All years";
+    return;
+  }
+  const list = Array.from(selectedYears).sort((a, b) => Number(b) - Number(a));
+  const preview = list.slice(0, 2).join(", ");
+  const extra = list.length > 2 ? ` +${list.length - 2}` : "";
+  yearSummary.textContent = `${preview}${extra}`;
+};
+
+const syncYearCheckboxes = () => {
+  yearFilter.querySelectorAll("input[type=\"checkbox\"]").forEach((cb) => {
+    if (cb === yearSelectAll) return;
+    cb.checked = pendingYears.has(cb.value);
+  });
+  yearSelectAll.checked =
+    pendingYears.size > 0 && pendingYears.size === allYears.length;
+};
+
+const applyYearFilter = () => {
+  selectedYears = new Set(pendingYears);
+  updateYearSummary();
+  applyFilters();
+};
+
 const populateFilters = () => {
   const events = Array.from(new Set(allMatches.map((match) => match.event))).sort();
+  allEvents = events.slice();
+  eventFilter.innerHTML = "";
   events.forEach((event) => {
-    const option = document.createElement("option");
-    option.value = event;
-    option.textContent = event;
-    eventSelect.append(option);
+    const id = `event-${normalize(event)}`;
+    const item = document.createElement("label");
+    item.className = "country-filter__item";
+    item.innerHTML = `
+      <input type="checkbox" value="${event}" id="${id}" />
+      <span>${event}</span>
+    `;
+    const checkbox = item.querySelector("input");
+    checkbox.addEventListener("change", () => {
+      if (checkbox.checked) {
+        pendingEvents.add(event);
+      } else {
+        pendingEvents.delete(event);
+      }
+      eventSelectAll.checked =
+        pendingEvents.size > 0 && pendingEvents.size === allEvents.length;
+    });
+    eventFilter.append(item);
   });
+  updateEventSummary();
 
-  const years = Array.from(new Set(allMatches.map((match) => match.year))).sort((a, b) => b - a);
+  const years = Array.from(new Set(allMatches.map((match) => match.year)))
+    .sort((a, b) => b - a)
+    .map((year) => String(year));
+  allYears = years.slice();
+  yearFilter.innerHTML = "";
   years.forEach((year) => {
-    const option = document.createElement("option");
-    option.value = year;
-    option.textContent = year;
-    yearSelect.append(option);
+    const id = `year-${year}`;
+    const item = document.createElement("label");
+    item.className = "country-filter__item";
+    item.innerHTML = `
+      <input type="checkbox" value="${year}" id="${id}" />
+      <span>${year}</span>
+    `;
+    const checkbox = item.querySelector("input");
+    checkbox.addEventListener("change", () => {
+      if (checkbox.checked) {
+        pendingYears.add(year);
+      } else {
+        pendingYears.delete(year);
+      }
+      yearSelectAll.checked =
+        pendingYears.size > 0 && pendingYears.size === allYears.length;
+    });
+    yearFilter.append(item);
   });
+  updateYearSummary();
 
   const countries = Array.from(new Set(allMatches.map((match) => match.player_country))).sort();
   const sticky = ["US", "GB"].filter((code) => countries.includes(code));
@@ -300,17 +404,91 @@ fetch("data.json")
     applyFilters();
   });
 
-[countryDropdown].forEach((dropdown) => {
+[eventDropdown, yearDropdown, countryDropdown].forEach((dropdown) => {
   dropdown.addEventListener("toggle", () => {
     if (dropdown.open) {
-      pendingCountries = new Set(selectedCountries);
-      syncCountryCheckboxes();
-      countrySearch.value = "";
-      countryFilter.querySelectorAll(".country-filter__item").forEach((item) => {
-        item.classList.remove("is-hidden");
-      });
+      if (dropdown === eventDropdown) {
+        pendingEvents = new Set(selectedEvents);
+        syncEventCheckboxes();
+        eventSearch.value = "";
+        eventFilter.querySelectorAll(".country-filter__item").forEach((item) => {
+          item.classList.remove("is-hidden");
+        });
+      }
+      if (dropdown === yearDropdown) {
+        pendingYears = new Set(selectedYears);
+        syncYearCheckboxes();
+        yearSearch.value = "";
+        yearFilter.querySelectorAll(".country-filter__item").forEach((item) => {
+          item.classList.remove("is-hidden");
+        });
+      }
+      if (dropdown === countryDropdown) {
+        pendingCountries = new Set(selectedCountries);
+        syncCountryCheckboxes();
+        countrySearch.value = "";
+        countryFilter.querySelectorAll(".country-filter__item").forEach((item) => {
+          item.classList.remove("is-hidden");
+        });
+      }
     }
   });
+});
+
+eventSearch.addEventListener("input", () => {
+  const query = normalize(eventSearch.value.trim());
+  eventFilter.querySelectorAll(".country-filter__item").forEach((item) => {
+    const text = item.textContent.toLowerCase();
+    item.classList.toggle("is-hidden", query && !text.includes(query));
+  });
+});
+
+eventSelectAll.addEventListener("change", () => {
+  if (eventSelectAll.checked) {
+    pendingEvents = new Set(allEvents);
+  } else {
+    pendingEvents = new Set();
+  }
+  syncEventCheckboxes();
+});
+
+eventApply.addEventListener("click", () => {
+  applyEventFilter();
+  eventDropdown.open = false;
+});
+
+eventCancel.addEventListener("click", () => {
+  pendingEvents = new Set(selectedEvents);
+  syncEventCheckboxes();
+  eventDropdown.open = false;
+});
+
+yearSearch.addEventListener("input", () => {
+  const query = normalize(yearSearch.value.trim());
+  yearFilter.querySelectorAll(".country-filter__item").forEach((item) => {
+    const text = item.textContent.toLowerCase();
+    item.classList.toggle("is-hidden", query && !text.includes(query));
+  });
+});
+
+yearSelectAll.addEventListener("change", () => {
+  if (yearSelectAll.checked) {
+    pendingYears = new Set(allYears);
+  } else {
+    pendingYears = new Set();
+  }
+  syncYearCheckboxes();
+});
+
+yearApply.addEventListener("click", () => {
+  applyYearFilter();
+  yearDropdown.open = false;
+});
+
+yearCancel.addEventListener("click", () => {
+  pendingYears = new Set(selectedYears);
+  syncYearCheckboxes();
+  yearDropdown.open = false;
 });
 
 countrySearch.addEventListener("input", () => {
@@ -339,10 +517,6 @@ countryCancel.addEventListener("click", () => {
   pendingCountries = new Set(selectedCountries);
   syncCountryCheckboxes();
   countryDropdown.open = false;
-});
-
-[eventSelect, yearSelect].forEach((input) => {
-  input.addEventListener("change", applyFilters);
 });
 
 searchInput.addEventListener("input", applyFilters);

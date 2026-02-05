@@ -16,14 +16,80 @@ const ROUND_ORDER = [
   "Singles"
 ];
 
-const LINEAL_RETIREMENTS = [
-  {
-    player: "Constantino Rocca",
-    lastYear: 1997,
-    resetChampion: "Tiger Woods",
-    resetYear: 1998
-  }
+const LINEAL_PLAN = [
+  { type: "grant", year: 1997, event: "Lineal Grant", champion: "Tiger Woods" },
+  { type: "match", year: 1997, event: "WGC Match Play", champion: "Tiger Woods", opponent: "Constantino Rocca", outcome: "loss" },
+  { type: "retire", player: "Constantino Rocca", year: 1997 },
+  { type: "grant", year: 1998, event: "Presidents Cup", champion: "Tiger Woods" },
+  { type: "match", year: 1998, event: "Presidents Cup", champion: "Tiger Woods", opponent: "Greg Norman", outcome: "win" },
+  { type: "match", year: 1999, event: "WGC Match Play", champion: "Tiger Woods", opponent: "Jeff Maggert", outcome: "loss" },
+  { type: "defend", count: 2 },
+  { type: "match", year: 1999, event: "Ryder Cup", champion: "Jeff Maggert", opponent: "Paul Lawrie", outcome: "loss" },
+  { type: "match", year: 2000, event: "WGC Match Play", champion: "Paul Lawrie", opponent: "Tiger Woods", outcome: "loss" },
+  { type: "defend", count: 1 },
+  { type: "match", year: 2000, event: "WGC Match Play", champion: "Tiger Woods", opponent: "Darren Clarke", outcome: "loss" },
+  { type: "match", year: 2002, event: "WGC Match Play", champion: "Darren Clarke", opponent: "Matt Gogel", outcome: "loss" },
+  { type: "defend", count: 1 },
+  { type: "match", year: 2002, event: "WGC Match Play", champion: "Matt Gogel", opponent: "Tom Lehman", outcome: "loss" },
+  { type: "match", year: 2002, event: "WGC Match Play", champion: "Tom Lehman", opponent: "Scott McCarron", outcome: "loss" },
+  { type: "defend", count: 1 },
+  { type: "match", year: 2002, event: "WGC Match Play", champion: "Scott McCarron", opponent: "Kevin Sutherland", outcome: "loss" },
+  { type: "defend", count: 2 },
+  { type: "match", year: 2003, event: "WGC Match Play", champion: "Kevin Sutherland", opponent: "Adam Scott", outcome: "loss" },
+  { type: "defend", count: 1 },
+  { type: "match", year: 2003, event: "WGC Match Play", champion: "Adam Scott", opponent: "Tiger Woods", outcome: "loss" },
+  { type: "defend", count: 10 },
+  { type: "match", year: 2005, event: "WGC Match Play", champion: "Tiger Woods", opponent: "Nick O'Hern", outcome: "loss" },
+  { type: "defend", count: 1 },
+  { type: "match", year: 2005, event: "WGC Match Play", champion: "Nick O'Hern", opponent: "Ian Poulter", outcome: "loss" },
+  { type: "match", year: 2005, event: "WGC Match Play", champion: "Ian Poulter", opponent: "David Toms", outcome: "loss" },
+  { type: "defend", count: 4 },
+  { type: "match", year: 2006, event: "WGC Match Play", champion: "David Toms", opponent: "Tom Lehman", outcome: "loss" },
+  { type: "defend", count: 1 },
+  { type: "match", year: 2006, event: "WGC Match Play", champion: "Tom Lehman", opponent: "Geoff Ogilvy", outcome: "loss" },
+  { type: "defend", count: 6 },
+  { type: "match", year: 2007, event: "WGC Match Play", champion: "Geoff Ogilvy", opponent: "Henrik Stenson", outcome: "loss" },
+  { type: "defend", count: 4 },
+  { type: "match", year: 2008, event: "WGC Match Play", champion: "Henrik Stenson", opponent: "Tiger Woods", outcome: "loss" },
+  { type: "defend", count: 3 },
+  { type: "match", year: 2009, event: "WGC Match Play", champion: "Tiger Woods", opponent: "Tim Clark", outcome: "loss" },
+  { type: "match", year: 2009, event: "WGC Match Play", champion: "Tim Clark", opponent: "Rory McIlroy", outcome: "loss" },
+  { type: "match", year: 2009, event: "WGC Match Play", champion: "Rory McIlroy", opponent: "Geoff Ogilvy", outcome: "loss" },
+  { type: "defend", count: 3 },
+  { type: "match", year: 2010, event: "WGC Match Play", champion: "Geoff Ogilvy", opponent: "Camilo Villegas", outcome: "loss" },
+  { type: "defend", count: 2 },
+  { type: "match", year: 2010, event: "WGC Match Play", champion: "Camilo Villegas", opponent: "Paul Casey", outcome: "loss" },
+  { type: "match", year: 2010, event: "WGC Match Play", champion: "Paul Casey", opponent: "Ian Poulter", outcome: "loss" },
+  { type: "defend", count: 1 },
+  { type: "match", year: 2011, event: "WGC Match Play", champion: "Ian Poulter", opponent: "Stewart Cink", outcome: "loss" },
+  { type: "match", year: 2011, event: "WGC Match Play", champion: "Stewart Cink", opponent: "Yang Yong-eun", outcome: "loss" },
+  { type: "defend", count: 1 },
+  { type: "match", year: 2011, event: "WGC Match Play", champion: "Yang Yong-eun", opponent: "Matt Kuchar", outcome: "loss" },
+  { type: "match", year: 2011, event: "WGC Match Play", champion: "Matt Kuchar", opponent: "Luke Donald", outcome: "loss" },
+  { type: "defend", count: 1 },
+  { type: "match", year: 2012, event: "WGC Match Play", champion: "Luke Donald", opponent: "Ernie Els", outcome: "loss" }
 ];
+
+const ALIASES = {
+  "Yang Yong-eun": ["Y.E. Yang"]
+};
+
+const normalizeName = (value) =>
+  value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z0-9 ]/g, "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+
+const getNameVariants = (name) => {
+  const variants = [name];
+  if (ALIASES[name]) {
+    variants.push(...ALIASES[name]);
+  }
+  return variants.map(normalizeName);
+};
 
 const getRoundIndex = (round) => {
   const idx = ROUND_ORDER.indexOf(round);
@@ -61,8 +127,8 @@ const getChampionResult = (match, champion) => {
   return playerWon ? "Loss" : "Win";
 };
 
-const buildLinealTimeline = (matches) => {
-  const ordered = uniqueMatches(matches)
+const orderMatches = (matches) =>
+  uniqueMatches(matches)
     .slice()
     .sort((a, b) => {
       if (a.year !== b.year) return a.year - b.year;
@@ -73,74 +139,118 @@ const buildLinealTimeline = (matches) => {
       return a.player.localeCompare(b.player);
     });
 
-  let champion = "Tiger Woods";
-  const timeline = [];
-  const retirementsApplied = new Set();
-  ordered.forEach((match) => {
-    const retirement = LINEAL_RETIREMENTS.find(
-      (entry) => entry.player === champion && match.year > entry.lastYear
-    );
-    if (retirement && !retirementsApplied.has(retirement.player)) {
-      timeline.push({
-        year: retirement.resetYear,
-        event: "Lineal Reset",
-        round: "—",
-        championBefore: champion,
-        opponent: "—",
-        championResult: "Vacated",
-        score: "—",
-        championAfter: retirement.resetChampion,
-        titleChange: true,
-        isVacate: true
-      });
-      retirementsApplied.add(retirement.player);
-      champion = retirement.resetChampion;
+const matchPlayers = (match, champion, opponent) => {
+  const championVariants = new Set(getNameVariants(champion));
+  const opponentVariants = new Set(getNameVariants(opponent));
+  const playerNorm = normalizeName(match.player);
+  const opponentNorm = normalizeName(match.opponent);
+  return (
+    (championVariants.has(playerNorm) && opponentVariants.has(opponentNorm)) ||
+    (championVariants.has(opponentNorm) && opponentVariants.has(playerNorm))
+  );
+};
+
+const findMatchIndex = (orderedMatches, year, event, champion, opponent) => {
+  for (let i = 0; i < orderedMatches.length; i += 1) {
+    const match = orderedMatches[i];
+    if (match.year !== year || match.event !== event) continue;
+    if (matchPlayers(match, champion, opponent)) return i;
+  }
+  return -1;
+};
+
+const findEventStartIndex = (orderedMatches, year, event) => {
+  for (let i = 0; i < orderedMatches.length; i += 1) {
+    const match = orderedMatches[i];
+    if (match.year === year && match.event === event) return i;
+  }
+  return -1;
+};
+
+const buildLinealLog = (matches) => {
+  const orderedMatches = orderMatches(matches);
+  const log = [];
+  let currentChampion = null;
+  let currentIndex = -1;
+
+  LINEAL_PLAN.forEach((step) => {
+    if (step.type === "grant") {
+      currentChampion = step.champion;
+      if (step.year && step.event) {
+        const eventStart = findEventStartIndex(orderedMatches, step.year, step.event);
+        if (eventStart !== -1) currentIndex = eventStart - 1;
+      }
+      return;
     }
 
-    if (match.player !== champion && match.opponent !== champion) return;
+    if (step.type === "retire") {
+      currentChampion = null;
+      return;
+    }
 
-    const championBefore = champion;
-    const opponent = getOpponent(match, champion);
-    const championResult = getChampionResult(match, champion);
-    const championAfter = championResult === "Loss" ? opponent : champion;
-    const titleChange = championAfter !== championBefore;
+    if (step.type === "defend") {
+      let added = 0;
+      for (let i = currentIndex + 1; i < orderedMatches.length && added < step.count; i += 1) {
+        const match = orderedMatches[i];
+        if (match.player !== currentChampion && match.opponent !== currentChampion) continue;
+        const championResult = getChampionResult(match, currentChampion);
+        if (championResult === "Loss") continue;
+        log.push({
+          year: match.year,
+          event: match.event,
+          round: match.round || "Singles",
+          championBefore: currentChampion,
+          opponent: getOpponent(match, currentChampion),
+          championResult,
+          score: match.score || "-",
+          titleChange: false,
+          isVacate: false
+        });
+        currentIndex = i;
+        added += 1;
+      }
+      return;
+    }
 
-    timeline.push({
-      year: match.year,
-      event: match.event,
-      round: match.round || "Singles",
-      championBefore,
-      opponent,
-      championResult,
-      score: match.score || "",
-      championAfter,
-      titleChange,
-      isVacate: false
-    });
+    if (step.type === "match") {
+      currentChampion = step.champion;
+      const matchIndex = findMatchIndex(
+        orderedMatches,
+        step.year,
+        step.event,
+        step.champion,
+        step.opponent
+      );
+      const match = matchIndex >= 0 ? orderedMatches[matchIndex] : null;
+      const outcome = step.outcome === "win" ? "Win" : step.outcome === "halved" ? "Halved" : "Loss";
 
-    champion = championAfter;
+      log.push({
+        year: step.year,
+        event: step.event,
+        round: match?.round || "-",
+        championBefore: step.champion,
+        opponent: step.opponent,
+        championResult: outcome,
+        score: match?.score || "-",
+        titleChange: outcome === "Loss",
+        isVacate: false
+      });
+
+      if (matchIndex >= 0) {
+        currentIndex = matchIndex;
+      }
+
+      if (outcome === "Loss") {
+        currentChampion = step.opponent;
+      }
+    }
   });
 
-  return { champion, timeline };
+  return { log, champion: currentChampion || "" };
 };
 
 const formatMatchLabel = (entry) =>
   `${entry.year} | ${entry.event}${entry.round ? ` | ${entry.round}` : ""}`;
-
-const renderChampionCard = (reigns) => {
-  if (!linealChampionName || !linealChampionMeta || !linealChampionStats || reigns.length === 0) return;
-  const current = reigns[reigns.length - 1];
-  linealChampionName.textContent = current.champion;
-  const startLabel = current.startLabel || (current.startEntry ? formatMatchLabel(current.startEntry) : "Inaugural");
-  linealChampionMeta.textContent = `Champion since ${startLabel}`;
-  linealChampionStats.innerHTML = `
-    <span>${current.matches} matches</span>
-    <span>${current.defenses} defenses</span>
-    <span>${current.wins}-${current.halves}-${current.losses} W-H-L</span>
-  `;
-};
-
-const isRenderableMatch = (entry) => !entry.isVacate;
 
 const buildReigns = (timeline, inauguralChampion) => {
   const reigns = [];
@@ -186,10 +296,10 @@ const buildReigns = (timeline, inauguralChampion) => {
 
     if (entry.titleChange) {
       current.endEntry = entry;
-      current.lostTo = entry.isVacate ? "Vacated" : entry.opponent;
+      current.lostTo = entry.opponent;
       reigns.push(current);
       current = {
-        champion: entry.championAfter,
+        champion: entry.opponent,
         startEntry: entry,
         startLabel: null,
         endEntry: null,
@@ -207,10 +317,23 @@ const buildReigns = (timeline, inauguralChampion) => {
   return reigns;
 };
 
-const renderMatchLog = (timeline) => {
+const renderChampionCard = (reigns) => {
+  if (!linealChampionName || !linealChampionMeta || !linealChampionStats || reigns.length === 0) return;
+  const current = reigns[reigns.length - 1];
+  linealChampionName.textContent = current.champion;
+  const startLabel = current.startLabel || (current.startEntry ? formatMatchLabel(current.startEntry) : "Inaugural");
+  linealChampionMeta.textContent = `Champion since ${startLabel}`;
+  linealChampionStats.innerHTML = `
+    <span>${current.matches} matches</span>
+    <span>${current.defenses} defenses</span>
+    <span>${current.wins}-${current.halves}-${current.losses} W-H-L</span>
+  `;
+};
+
+const renderMatchLog = (entries) => {
   if (!linealMatches) return;
   linealMatches.innerHTML = "";
-  timeline.filter(isRenderableMatch).forEach((entry) => {
+  entries.forEach((entry) => {
     const row = document.createElement("tr");
     row.classList.add("lineal-row", `lineal-row--${entry.championResult.toLowerCase()}`);
     row.innerHTML = `
@@ -230,8 +353,8 @@ fetch("data.json")
   .then((res) => res.json())
   .then((data) => {
     const matches = (data.matches || []).filter((match) => match.result !== "not played");
-    const result = buildLinealTimeline(matches);
-    const reigns = buildReigns(result.timeline, "Tiger Woods");
-    renderMatchLog(result.timeline);
+    const { log } = buildLinealLog(matches);
+    const reigns = buildReigns(log, "Tiger Woods");
+    renderMatchLog(log);
     renderChampionCard(reigns);
   });

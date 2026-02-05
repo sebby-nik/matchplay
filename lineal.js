@@ -417,7 +417,8 @@ const buildReigns = (timeline, grants, retirements) => {
       current.lostTo = entry.opponent;
       reigns.push(current);
       const winLabel = `Won title at ${entry.year} ${entry.event}`;
-      current = startReign(entry.opponent, entry, winLabel);
+      const startEntry = { ...entry, defeated: entry.championBefore };
+      current = startReign(entry.opponent, startEntry, winLabel);
     }
   });
 
@@ -437,7 +438,7 @@ const renderChampionCard = (reigns, overallStats) => {
   linealChampionName.textContent = current.champion;
   const titleEntry = current.startEntry;
   const sinceText = titleEntry
-    ? `Champion since defeating ${titleEntry.opponent} at ${titleEntry.event}`
+    ? `Champion since defeating ${titleEntry.defeated || titleEntry.opponent} at ${titleEntry.event}`
     : current.startLabel || "Champion since inaugural grant";
   linealChampionMeta.textContent = sinceText;
 

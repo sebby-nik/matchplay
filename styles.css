@@ -501,10 +501,39 @@ input[type="range"] {
 
 .rank-table th {
   cursor: pointer;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #eef3f8;
+}
+
+.rank-table th.is-sorted {
+  color: var(--highlight-deep);
+}
+
+.rank-table th::after {
+  content: "↕";
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-left: 0.35rem;
+}
+
+.rank-table th.is-sorted-asc::after {
+  content: "↑";
+  color: var(--highlight-deep);
+}
+
+.rank-table th.is-sorted-desc::after {
+  content: "↓";
+  color: var(--highlight-deep);
 }
 
 .rank-table tbody tr {
   transition: background 0.2s ease;
+}
+
+.rank-table tbody tr:nth-child(even) {
+  background: #f7f9fc;
 }
 
 .rank-table tbody tr:hover {
@@ -549,6 +578,28 @@ input[type="range"] {
 .flag {
   font-size: 1.2rem;
   margin-right: 0.4rem;
+}
+
+.ppm-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+.ppm-bar {
+  width: 70px;
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.ppm-bar__fill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+  border-radius: 999px;
 }
 
 .player-detail {

@@ -134,12 +134,18 @@ const calculatePlayers = (matches) => {
 
 const renderTable = (players) => {
   rankBody.innerHTML = "";
+  const maxPpm = Math.max(
+    ...players.map((player) => (player.matches < 3 ? 0 : player.ppm)),
+    0
+  );
 
   players.forEach((player, index) => {
     const row = document.createElement("tr");
     row.dataset.player = player.name;
 
     const flag = flagFromCountry(player.country);
+    const ppmValue = player.matches < 3 ? null : player.ppm;
+    const ppmPercent = ppmValue && maxPpm ? Math.max((ppmValue / maxPpm) * 100, 8) : 0;
     row.innerHTML = `
       <td>${index + 1}</td>
       <td>${player.name}</td>
@@ -147,7 +153,14 @@ const renderTable = (players) => {
       <td>${player.matches}</td>
       <td>${player.points.toFixed(1)}</td>
       <td>${player.wins}-${player.draws}-${player.losses}</td>
-      <td>${player.matches < 3 ? "N/A" : player.ppm.toFixed(2)}</td>
+      <td>
+        <div class="ppm-cell">
+          <span>${player.matches < 3 ? "N/A" : player.ppm.toFixed(2)}</span>
+          <span class="ppm-bar">
+            <span class="ppm-bar__fill" style="width: ${ppmPercent}%"></span>
+          </span>
+        </div>
+      </td>
     `;
 
     row.addEventListener("click", () => renderPlayerDetail(player, row));
@@ -486,6 +499,7 @@ const handleSort = (key) => {
 
   const sorted = sortPlayers(currentPlayers);
   renderTable(sorted);
+  updateSortIndicators();
 };
 
 fetch("data.json")
@@ -494,6 +508,7 @@ fetch("data.json")
     allMatches = data.matches || [];
     populateFilters();
     applyFilters();
+    updateSortIndicators();
   });
 
 [eventDropdown, yearDropdown, countryDropdown].forEach((dropdown) => {
@@ -636,6 +651,16 @@ if (clearAllFilters) {
 document.querySelectorAll("th[data-sort]").forEach((th) => {
   th.addEventListener("click", () => handleSort(th.dataset.sort));
 });
+
+const updateSortIndicators = () => {
+  document.querySelectorAll("th[data-sort]").forEach((th) => {
+    th.classList.remove("is-sorted", "is-sorted-asc", "is-sorted-desc");
+    if (th.dataset.sort === currentSort.key) {
+      th.classList.add("is-sorted");
+      th.classList.add(currentSort.direction === "asc" ? "is-sorted-asc" : "is-sorted-desc");
+    }
+  });
+};
 
 const closeDropdownsOnClickOutside = (event) => {
   [eventDropdown, yearDropdown, countryDropdown].forEach((dropdown) => {

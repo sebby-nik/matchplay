@@ -41,7 +41,11 @@
         <div class="controls">
           <label>
             Player Search
-            <input id="searchInput" type="search" placeholder="Player name" />
+            <div class="player-search">
+              <div id="playerChips" class="player-search__chips"></div>
+              <input id="searchInput" type="search" placeholder="Add player" />
+              <div id="playerSuggestions" class="player-search__suggestions"></div>
+            </div>
           </label>
           <div class="country-filter">
             <span class="country-filter__label">Event</span>

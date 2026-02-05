@@ -9,6 +9,8 @@ const yearSearch = document.getElementById("yearSearch");
 const yearSelectAll = document.getElementById("yearSelectAll");
 const yearDropdown = document.getElementById("yearDropdown");
 const searchInput = document.getElementById("searchInput");
+const playerChips = document.getElementById("playerChips");
+const playerSuggestions = document.getElementById("playerSuggestions");
 const minMatchesInput = document.getElementById("minMatches");
 const minMatchesValue = document.getElementById("minMatchesValue");
 const summary = document.getElementById("summary");
@@ -30,6 +32,8 @@ let selectedYears = new Set();
 let allYears = [];
 let selectedCountries = new Set();
 let allCountries = [];
+let selectedPlayers = new Set();
+let availablePlayers = [];
 
 const normalize = (value) => value.toLowerCase();
 
@@ -277,7 +281,6 @@ const sortPlayers = (players) => {
 };
 
 const applyFilters = () => {
-  const query = normalize(searchInput.value.trim());
   const minMatches = Number(minMatchesInput.value || 1);
 
   let matches = allMatches.slice();
@@ -301,13 +304,16 @@ const applyFilters = () => {
     rank: index + 1
   }));
 
-  const searched = query
-    ? sorted.filter((player) => player.name.toLowerCase().includes(query))
-    : sorted;
+  availablePlayers = sorted.map((player) => player.name);
+  const searched =
+    selectedPlayers.size > 0
+      ? sorted.filter((player) => selectedPlayers.has(player.name))
+      : sorted;
 
   currentPlayers = searched;
   summary.textContent = `${searched.length} players • ${matches.length} matches • Min ${minMatches}+`;
   renderFilterChips();
+  renderPlayerChips();
   renderTable(searched);
 
   document.querySelectorAll(".detail-row").forEach((node) => node.remove());
@@ -647,12 +653,14 @@ if (clearAllFilters) {
     selectedEvents = new Set();
     selectedYears = new Set();
     selectedCountries = new Set();
+    selectedPlayers = new Set();
     updateEventSummary();
     updateYearSummary();
     updateCountrySummary();
     syncEventCheckboxes();
     syncYearCheckboxes();
     syncCountryCheckboxes();
+    renderPlayerChips();
     applyFilters();
   });
 }
@@ -686,4 +694,81 @@ document.addEventListener("keydown", (event) => {
   [eventDropdown, yearDropdown, countryDropdown].forEach((dropdown) => {
     dropdown.open = false;
   });
+});
+
+const renderPlayerChips = () => {
+  if (!playerChips) return;
+  playerChips.innerHTML = "";
+  selectedPlayers.forEach((name) => {
+    const chip = document.createElement("span");
+    chip.className = "player-chip";
+    chip.innerHTML = `<span>${name}</span><button type="button" aria-label="Remove ${name}">×</button>`;
+    chip.querySelector("button").addEventListener("click", () => {
+      selectedPlayers.delete(name);
+      renderPlayerChips();
+      applyFilters();
+    });
+    playerChips.append(chip);
+  });
+};
+
+const showPlayerSuggestions = (query) => {
+  if (!playerSuggestions) return;
+  if (!query) {
+    playerSuggestions.classList.remove("is-open");
+    playerSuggestions.innerHTML = "";
+    return;
+  }
+  const matches = availablePlayers
+    .filter((name) => name.toLowerCase().includes(query))
+    .filter((name) => !selectedPlayers.has(name))
+    .slice(0, 8);
+  if (matches.length === 0) {
+    playerSuggestions.classList.remove("is-open");
+    playerSuggestions.innerHTML = "";
+    return;
+  }
+  playerSuggestions.innerHTML = matches
+    .map((name) => `<div class="player-suggestion" data-name="${name}">${name}</div>`)
+    .join("");
+  playerSuggestions.classList.add("is-open");
+};
+
+const addPlayerSelection = (name) => {
+  if (!name) return;
+  selectedPlayers.add(name);
+  renderPlayerChips();
+  searchInput.value = "";
+  showPlayerSuggestions("");
+  applyFilters();
+};
+
+if (searchInput) {
+  searchInput.addEventListener("input", () => {
+    showPlayerSuggestions(normalize(searchInput.value.trim()));
+  });
+
+  searchInput.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter") return;
+    event.preventDefault();
+    const query = normalize(searchInput.value.trim());
+    const exact = availablePlayers.find((name) => name.toLowerCase() === query);
+    if (exact) {
+      addPlayerSelection(exact);
+    }
+  });
+}
+
+if (playerSuggestions) {
+  playerSuggestions.addEventListener("click", (event) => {
+    const target = event.target.closest(".player-suggestion");
+    if (!target) return;
+    addPlayerSelection(target.dataset.name);
+  });
+}
+
+document.addEventListener("click", (event) => {
+  if (!playerSuggestions) return;
+  if (event.target.closest(".player-search")) return;
+  playerSuggestions.classList.remove("is-open");
 });

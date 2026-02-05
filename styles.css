@@ -136,6 +136,12 @@ label {
   list-style: none;
   font-size: 0.95rem;
   color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .country-filter__dropdown summary::-webkit-details-marker {
@@ -144,8 +150,8 @@ label {
 
 .country-filter__dropdown summary::after {
   content: "▾";
-  float: right;
   color: var(--ink-soft);
+  margin-left: auto;
 }
 
 .country-filter__dropdown[open] summary::after {
@@ -156,6 +162,46 @@ label {
   margin-top: 0;
   border: 0;
   padding: 0.5rem 0 0.25rem;
+}
+
+.multi-summary__chips {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.4rem;
+  align-items: center;
+  overflow: hidden;
+}
+
+.multi-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  background: #1d4ed8;
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.summary-clear {
+  border: none;
+  background: #e2e8f0;
+  color: var(--ink);
+  border-radius: 999px;
+  width: 24px;
+  height: 24px;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  margin-left: 0.25rem;
+}
+
+.summary-clear:hover {
+  background: #cbd5f5;
 }
 
 .country-filter__item {

@@ -190,7 +190,14 @@ const renderTable = (players) => {
 
     const flag = flagFromCountry(player.country);
     const ppmValue = player.matches < 3 ? null : player.ppm;
-    const ppmPercent = ppmValue && maxPpm ? Math.max((ppmValue / maxPpm) * 100, 8) : 0;
+    const ppmPercent =
+      ppmValue === null
+        ? 0
+        : ppmValue === 0
+          ? 4
+          : maxPpm
+            ? Math.max((ppmValue / maxPpm) * 100, 8)
+            : 0;
     const ppmClass =
       ppmValue === null
         ? "ppm-bar__fill--na"

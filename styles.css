@@ -1048,6 +1048,41 @@ input[type="range"] {
   background: inherit;
 }
 
+.lineal-table {
+  border-collapse: separate;
+  border-spacing: 0 6px;
+}
+
+.lineal-group-row td {
+  border-left: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+  background-clip: padding-box;
+}
+
+.lineal-group-start td {
+  border-top: 1px solid var(--line);
+}
+
+.lineal-group-end td {
+  border-bottom: 1px solid var(--line);
+}
+
+.lineal-group-start td:first-child {
+  border-top-left-radius: 10px;
+}
+
+.lineal-group-start td:last-child {
+  border-top-right-radius: 10px;
+}
+
+.lineal-group-end td:first-child {
+  border-bottom-left-radius: 10px;
+}
+
+.lineal-group-end td:last-child {
+  border-bottom-right-radius: 10px;
+}
+
 .lineal-layout .panel {
   overflow: hidden;
 }

@@ -330,9 +330,13 @@ const renderChampionCard = (reigns) => {
 const renderMatchLog = (entries) => {
   if (!linealMatches) return;
   linealMatches.innerHTML = "";
-  entries.forEach((entry) => {
+  entries.forEach((entry, index) => {
+    const isStart = index === 0 || entries[index - 1].titleChange;
+    const isEnd = entry.titleChange || index === entries.length - 1;
     const row = document.createElement("tr");
-    row.classList.add("lineal-row", `lineal-row--${entry.championResult.toLowerCase()}`);
+    row.classList.add("lineal-row", "lineal-group-row", `lineal-row--${entry.championResult.toLowerCase()}`);
+    if (isStart) row.classList.add("lineal-group-start");
+    if (isEnd) row.classList.add("lineal-group-end");
     row.innerHTML = `
       <td>${entry.year}</td>
       <td>${entry.event}</td>

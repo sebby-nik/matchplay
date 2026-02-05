@@ -34,6 +34,7 @@ let selectedCountries = new Set();
 let allCountries = [];
 let selectedPlayers = new Set();
 let availablePlayers = [];
+let allPlayers = [];
 
 const normalize = (value) => value.toLowerCase();
 
@@ -521,6 +522,7 @@ fetch("data.json")
   .then((res) => res.json())
   .then((data) => {
     allMatches = data.matches || [];
+    allPlayers = Array.from(new Set(allMatches.map((match) => match.player))).sort();
     populateFilters();
     applyFilters();
     updateSortIndicators();
@@ -714,12 +716,13 @@ const renderPlayerChips = () => {
 
 const showPlayerSuggestions = (query) => {
   if (!playerSuggestions) return;
+  const source = availablePlayers.length ? availablePlayers : allPlayers;
   if (!query) {
     playerSuggestions.classList.remove("is-open");
     playerSuggestions.innerHTML = "";
     return;
   }
-  const matches = availablePlayers
+  const matches = source
     .filter((name) => name.toLowerCase().includes(query))
     .filter((name) => !selectedPlayers.has(name))
     .slice(0, 8);
@@ -748,6 +751,11 @@ if (searchInput) {
     showPlayerSuggestions(normalize(searchInput.value.trim()));
   });
 
+  searchInput.addEventListener("focus", () => {
+    const query = normalize(searchInput.value.trim());
+    showPlayerSuggestions(query);
+  });
+
   searchInput.addEventListener("keydown", (event) => {
     if (event.key !== "Enter") return;
     event.preventDefault();
@@ -760,9 +768,10 @@ if (searchInput) {
 }
 
 if (playerSuggestions) {
-  playerSuggestions.addEventListener("click", (event) => {
+  playerSuggestions.addEventListener("mousedown", (event) => {
     const target = event.target.closest(".player-suggestion");
     if (!target) return;
+    event.preventDefault();
     addPlayerSelection(target.dataset.name);
   });
 }

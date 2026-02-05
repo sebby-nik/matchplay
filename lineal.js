@@ -1,4 +1,5 @@
 const linealMatches = document.getElementById("linealMatches");
+const linealChampions = document.getElementById("linealChampions");
 const linealChampionName = document.getElementById("linealChampionName");
 const linealChampionMeta = document.getElementById("linealChampionMeta");
 const linealChampionStats = document.getElementById("linealChampionStats");
@@ -210,10 +211,13 @@ const buildLinealLog = (matches) => {
   const log = [];
   let currentChampion = null;
   let currentIndex = -1;
+  const grants = [];
+  const retirements = [];
 
   LINEAL_PLAN.forEach((step) => {
     if (step.type === "grant") {
       currentChampion = step.champion;
+      grants.push({ champion: step.champion, year: step.year, event: step.event });
       if (step.year && step.event) {
         const eventStart = findEventStartIndex(orderedMatches, step.year, step.event);
         if (eventStart !== -1) currentIndex = eventStart - 1;
@@ -223,6 +227,7 @@ const buildLinealLog = (matches) => {
 
     if (step.type === "retire") {
       currentChampion = null;
+      retirements.push({ champion: step.player, year: step.year });
       return;
     }
 
@@ -284,41 +289,66 @@ const buildLinealLog = (matches) => {
     }
   });
 
-  return { log, champion: currentChampion || "" };
+  return { log, champion: currentChampion || "", grants, retirements };
 };
 
 const formatMatchLabel = (entry) =>
   `${entry.year} | ${entry.event}${entry.round ? ` | ${entry.round}` : ""}`;
 
-const buildReigns = (timeline, inauguralChampion) => {
+const buildReigns = (timeline, grants, retirements) => {
+  const grantsByChampion = new Map();
+  grants.forEach((grant) => {
+    const list = grantsByChampion.get(grant.champion) || [];
+    list.push(grant);
+    grantsByChampion.set(grant.champion, list);
+  });
+
+  const retirementByChampion = new Map();
+  retirements.forEach((retire) => {
+    retirementByChampion.set(retire.champion, retire);
+  });
+
+  const consumeGrantLabel = (champion, year) => {
+    const list = grantsByChampion.get(champion) || [];
+    if (!list.length) return null;
+    const grant = list.find((entry) => entry.year <= year) || list[0];
+    const idx = list.indexOf(grant);
+    if (idx >= 0) list.splice(idx, 1);
+    grantsByChampion.set(champion, list);
+    return `Granted at ${grant.year} ${grant.event}`;
+  };
+
   const reigns = [];
-  let current = {
-    champion: inauguralChampion,
-    startEntry: null,
-    startLabel: "Inaugural",
+  let current = null;
+
+  const startReign = (champion, startEntry, startLabel) => ({
+    champion,
+    startEntry: startEntry || null,
+    startLabel: startLabel || null,
     endEntry: null,
+    endLabel: null,
     matches: 0,
     defenses: 0,
     wins: 0,
     halves: 0,
     losses: 0,
     lostTo: "-"
-  };
+  });
 
   timeline.forEach((entry) => {
+    if (!current) {
+      const grantLabel = consumeGrantLabel(entry.championBefore, entry.year);
+      current = startReign(entry.championBefore, null, grantLabel);
+    }
+
     if (entry.championBefore !== current.champion) {
-      current = {
-        champion: entry.championBefore,
-        startEntry: null,
-        startLabel: "Inaugural",
-        endEntry: null,
-        matches: 0,
-        defenses: 0,
-        wins: 0,
-        halves: 0,
-        losses: 0,
-        lostTo: "-"
-      };
+      const retireInfo = retirementByChampion.get(current.champion);
+      if (retireInfo) {
+        current.endLabel = `Retired (${retireInfo.year})`;
+      }
+      reigns.push(current);
+      const grantLabel = consumeGrantLabel(entry.championBefore, entry.year);
+      current = startReign(entry.championBefore, null, grantLabel);
     }
 
     current.matches += 1;
@@ -336,22 +366,18 @@ const buildReigns = (timeline, inauguralChampion) => {
       current.endEntry = entry;
       current.lostTo = entry.opponent;
       reigns.push(current);
-      current = {
-        champion: entry.opponent,
-        startEntry: entry,
-        startLabel: null,
-        endEntry: null,
-        matches: 0,
-        defenses: 0,
-        wins: 0,
-        halves: 0,
-        losses: 0,
-        lostTo: "-"
-      };
+      const winLabel = `Won title at ${entry.year} ${entry.event}`;
+      current = startReign(entry.opponent, entry, winLabel);
     }
   });
 
-  reigns.push(current);
+  if (current) {
+    const retireInfo = retirementByChampion.get(current.champion);
+    if (retireInfo) {
+      current.endLabel = `Retired (${retireInfo.year})`;
+    }
+    reigns.push(current);
+  }
   return reigns;
 };
 
@@ -359,13 +385,41 @@ const renderChampionCard = (reigns) => {
   if (!linealChampionName || !linealChampionMeta || !linealChampionStats || reigns.length === 0) return;
   const current = reigns[reigns.length - 1];
   linealChampionName.textContent = current.champion;
-  const startLabel = current.startLabel || (current.startEntry ? formatMatchLabel(current.startEntry) : "Inaugural");
+  const startLabel =
+    current.startLabel || (current.startEntry ? `Won title at ${formatMatchLabel(current.startEntry)}` : "Inaugural");
   linealChampionMeta.textContent = `Champion since ${startLabel}`;
   linealChampionStats.innerHTML = `
     <span>${current.matches} matches</span>
     <span>${current.defenses} defenses</span>
     <span>${current.wins}-${current.halves}-${current.losses} W-H-L</span>
   `;
+};
+
+const renderChampionsList = (reigns) => {
+  if (!linealChampions) return;
+  linealChampions.innerHTML = "";
+  reigns.forEach((reign, index) => {
+    const startLabel =
+      reign.startLabel || (reign.startEntry ? `Won title at ${formatMatchLabel(reign.startEntry)}` : "Inaugural");
+    const endLabel = reign.endEntry
+      ? `Lost at ${formatMatchLabel(reign.endEntry)}`
+      : reign.endLabel || "Present";
+    const detail = `${reign.matches} matches · ${reign.defenses} defenses · ${reign.wins}-${reign.halves}-${reign.losses} W-H-L`;
+
+    const item = document.createElement("li");
+    item.className = "lineal-champion";
+    item.innerHTML = `
+      <div class="lineal-champion__index">${index + 1}</div>
+      <div class="lineal-champion__body">
+        <div class="lineal-champion__header">
+          <h3>${reign.champion}</h3>
+          <span class="lineal-champion__range">${startLabel} → ${endLabel}</span>
+        </div>
+        <p class="lineal-champion__detail">${detail}</p>
+      </div>
+    `;
+    linealChampions.append(item);
+  });
 };
 
 const renderMatchLog = (entries) => {
@@ -395,8 +449,9 @@ fetch("data.json")
   .then((res) => res.json())
   .then((data) => {
     const matches = (data.matches || []).filter((match) => match.result !== "not played");
-    const { log } = buildLinealLog(matches);
-    const reigns = buildReigns(log, "Tiger Woods");
+    const { log, grants, retirements } = buildLinealLog(matches);
+    const reigns = buildReigns(log, grants, retirements);
     renderMatchLog(log);
     renderChampionCard(reigns);
+    renderChampionsList(reigns);
   });

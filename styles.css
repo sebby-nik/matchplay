@@ -332,6 +332,12 @@ input[type="range"] {
   border-bottom: 1px solid var(--line);
 }
 
+.rank-table th:nth-child(6),
+.rank-table td:nth-child(6) {
+  white-space: nowrap;
+  min-width: 90px;
+}
+
 .rank-table thead {
   background: #f1f5f9;
   font-weight: 600;

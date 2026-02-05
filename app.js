@@ -23,6 +23,12 @@ const countrySummary = document.getElementById("countrySummary");
 const countrySearch = document.getElementById("countrySearch");
 const countrySelectAll = document.getElementById("countrySelectAll");
 const countryDropdown = document.getElementById("countryDropdown");
+const mobileFilterToggle = document.getElementById("mobileFilterToggle");
+const mobileFilterToggleBar = document.getElementById("mobileFilterToggleBar");
+const mobileFilterBar = document.getElementById("mobileFilterBar");
+const mobileFilterOverlay = document.getElementById("mobileFilterOverlay");
+const controlsPanel = document.getElementById("controlsPanel");
+const controlsPanelClose = document.getElementById("controlsPanelClose");
 
 let allMatches = [];
 let currentSort = { key: "points", direction: "desc" };
@@ -280,6 +286,7 @@ const renderPlayerDetailContent = (player) => {
 
   return `
     <div class="player-detail">
+      <button class="detail-close" type="button" aria-label="Close details">×</button>
       <h3>${flag ? `${flag} ` : ""}${player.name}</h3>
       <div class="detail-meta">${player.matches} matches • ${player.points.toFixed(1)} points • ${player.wins}-${player.draws}-${player.losses}</div>
       <div class="match-list">${matches || "<p class=\"muted\">No matches yet.</p>"}</div>
@@ -306,6 +313,15 @@ const renderPlayerDetail = (player, row) => {
   detailRow.append(cell);
   row.after(detailRow);
   row.classList.add("is-open");
+
+  const closeBtn = detailRow.querySelector(".detail-close");
+  if (closeBtn) {
+    closeBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      detailRow.remove();
+      row.classList.remove("is-open");
+    });
+  }
 };
 const sortPlayers = (players) => {
   const sorted = players.slice().sort((a, b) => {
@@ -581,6 +597,42 @@ fetch("data.json")
     applyFilters();
     updateSortIndicators();
   });
+
+const toggleFilters = (open) => {
+  document.body.classList.toggle("filters-open", open);
+};
+
+const openFilters = () => toggleFilters(true);
+const closeFilters = () => toggleFilters(false);
+
+[mobileFilterToggle, mobileFilterToggleBar].forEach((btn) => {
+  if (!btn) return;
+  btn.addEventListener("click", () => openFilters());
+});
+
+if (controlsPanelClose) {
+  controlsPanelClose.addEventListener("click", () => closeFilters());
+}
+
+if (mobileFilterOverlay) {
+  mobileFilterOverlay.addEventListener("click", () => closeFilters());
+}
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeFilters();
+});
+
+const handleMobileFilterBar = () => {
+  if (!mobileFilterBar) return;
+  if (window.scrollY > 240) {
+    mobileFilterBar.classList.add("is-visible");
+  } else {
+    mobileFilterBar.classList.remove("is-visible");
+  }
+};
+
+window.addEventListener("scroll", handleMobileFilterBar);
+window.addEventListener("load", handleMobileFilterBar);
 
 [eventDropdown, yearDropdown, countryDropdown].forEach((dropdown) => {
   dropdown.addEventListener("toggle", () => {

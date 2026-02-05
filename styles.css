@@ -983,14 +983,6 @@ input[type="range"] {
   transition: background 0.2s ease;
 }
 
-.rank-table tbody tr:nth-child(even) {
-  background: #f7f9fc;
-}
-
-.rank-table tbody tr:hover {
-  background: #f3f6fb;
-}
-
 .rank-table tbody tr.is-open {
   background: #eef3f8;
 }

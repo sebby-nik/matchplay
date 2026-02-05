@@ -13,6 +13,7 @@ const playerChips = document.getElementById("playerChips");
 const playerSuggestions = document.getElementById("playerSuggestions");
 const minMatchesInput = document.getElementById("minMatches");
 const minMatchesValue = document.getElementById("minMatchesValue");
+const retiredToggle = document.getElementById("retiredToggle");
 const summary = document.getElementById("summary");
 const filterChips = document.getElementById("filterChips");
 const clearAllFilters = document.getElementById("clearAllFilters");
@@ -35,6 +36,9 @@ let allCountries = [];
 let selectedPlayers = new Set();
 let availablePlayers = [];
 let allPlayers = [];
+const retiredPlayers = new Set([
+  // Add retired player names here (exact match to dataset names).
+]);
 
 const normalize = (value) => value.toLowerCase();
 
@@ -298,7 +302,11 @@ const applyFilters = () => {
     matches = matches.filter((match) => selectedCountries.has(match.player_country));
   }
 
-  const players = calculatePlayers(matches);
+  const players = calculatePlayers(matches).filter((player) =>
+    retiredToggle && retiredToggle.checked
+      ? retiredPlayers.has(player.name)
+      : !retiredPlayers.has(player.name)
+  );
   const filteredPlayers = players.filter((player) => player.matches >= minMatches);
   const sorted = sortPlayers(filteredPlayers).map((player, index) => ({
     ...player,
@@ -649,6 +657,10 @@ minMatchesInput.addEventListener("input", () => {
   minMatchesValue.textContent = `${minMatchesInput.value}+`;
   applyFilters();
 });
+
+if (retiredToggle) {
+  retiredToggle.addEventListener("change", applyFilters);
+}
 
 if (clearAllFilters) {
   clearAllFilters.addEventListener("click", () => {

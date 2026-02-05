@@ -55,9 +55,11 @@ const normalize = (value) => {
     é: "e",
     É: "E",
     í: "i",
-    Í: "I"
+    Í: "I",
+    ß: "ss",
+    ẞ: "SS"
   };
-  const mapped = value.replace(/[øØæÆåÅñÑçÇáÁéÉíÍ]/g, (char) => map[char] || char);
+  const mapped = value.replace(/[øØæÆåÅñÑçÇáÁéÉíÍßẞ]/g, (char) => map[char] || char);
   return mapped
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")

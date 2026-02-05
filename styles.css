@@ -1044,6 +1044,10 @@ input[type="range"] {
   background: transparent;
 }
 
+.lineal-table tbody tr:hover {
+  background: inherit;
+}
+
 .lineal-layout .panel {
   overflow: hidden;
 }

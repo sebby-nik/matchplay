@@ -2,17 +2,11 @@ const eventFilter = document.getElementById("eventFilter");
 const eventSummary = document.getElementById("eventSummary");
 const eventSearch = document.getElementById("eventSearch");
 const eventSelectAll = document.getElementById("eventSelectAll");
-const eventApply = document.getElementById("eventApply");
-const eventCancel = document.getElementById("eventCancel");
-const eventClear = document.getElementById("eventClear");
 const eventDropdown = document.getElementById("eventDropdown");
 const yearFilter = document.getElementById("yearFilter");
 const yearSummary = document.getElementById("yearSummary");
 const yearSearch = document.getElementById("yearSearch");
 const yearSelectAll = document.getElementById("yearSelectAll");
-const yearApply = document.getElementById("yearApply");
-const yearCancel = document.getElementById("yearCancel");
-const yearClear = document.getElementById("yearClear");
 const yearDropdown = document.getElementById("yearDropdown");
 const searchInput = document.getElementById("searchInput");
 const minMatchesInput = document.getElementById("minMatches");
@@ -25,22 +19,16 @@ const countryFilter = document.getElementById("countryFilter");
 const countrySummary = document.getElementById("countrySummary");
 const countrySearch = document.getElementById("countrySearch");
 const countrySelectAll = document.getElementById("countrySelectAll");
-const countryApply = document.getElementById("countryApply");
-const countryCancel = document.getElementById("countryCancel");
-const countryClear = document.getElementById("countryClear");
 const countryDropdown = document.getElementById("countryDropdown");
 
 let allMatches = [];
 let currentSort = { key: "matches", direction: "desc" };
 let currentPlayers = [];
 let selectedEvents = new Set();
-let pendingEvents = new Set();
 let allEvents = [];
 let selectedYears = new Set();
-let pendingYears = new Set();
 let allYears = [];
 let selectedCountries = new Set();
-let pendingCountries = new Set();
 let allCountries = [];
 
 const normalize = (value) => value.toLowerCase();
@@ -183,16 +171,10 @@ const updateCountrySummary = () => {
 const syncCountryCheckboxes = () => {
   countryFilter.querySelectorAll("input[type=\"checkbox\"]").forEach((cb) => {
     if (cb === countrySelectAll) return;
-    cb.checked = pendingCountries.has(cb.value);
+    cb.checked = selectedCountries.has(cb.value);
   });
   countrySelectAll.checked =
-    pendingCountries.size > 0 && pendingCountries.size === allCountries.length;
-};
-
-const applyCountryFilter = () => {
-  selectedCountries = new Set(pendingCountries);
-  updateCountrySummary();
-  applyFilters();
+    selectedCountries.size > 0 && selectedCountries.size === allCountries.length;
 };
 
 const renderPlayerDetailContent = (player) => {
@@ -346,19 +328,16 @@ const renderFilterChips = () => {
     button.addEventListener("click", () => {
       if (chip.type === "event") {
         selectedEvents.delete(chip.value);
-        pendingEvents = new Set(selectedEvents);
         updateEventSummary();
         syncEventCheckboxes();
       }
       if (chip.type === "year") {
         selectedYears.delete(chip.value);
-        pendingYears = new Set(selectedYears);
         updateYearSummary();
         syncYearCheckboxes();
       }
       if (chip.type === "country") {
         selectedCountries.delete(chip.value);
-        pendingCountries = new Set(selectedCountries);
         updateCountrySummary();
         syncCountryCheckboxes();
       }
@@ -380,16 +359,10 @@ const updateEventSummary = () => {
 const syncEventCheckboxes = () => {
   eventFilter.querySelectorAll("input[type=\"checkbox\"]").forEach((cb) => {
     if (cb === eventSelectAll) return;
-    cb.checked = pendingEvents.has(cb.value);
+    cb.checked = selectedEvents.has(cb.value);
   });
   eventSelectAll.checked =
-    pendingEvents.size > 0 && pendingEvents.size === allEvents.length;
-};
-
-const applyEventFilter = () => {
-  selectedEvents = new Set(pendingEvents);
-  updateEventSummary();
-  applyFilters();
+    selectedEvents.size > 0 && selectedEvents.size === allEvents.length;
 };
 
 const updateYearSummary = () => {
@@ -404,16 +377,10 @@ const updateYearSummary = () => {
 const syncYearCheckboxes = () => {
   yearFilter.querySelectorAll("input[type=\"checkbox\"]").forEach((cb) => {
     if (cb === yearSelectAll) return;
-    cb.checked = pendingYears.has(cb.value);
+    cb.checked = selectedYears.has(cb.value);
   });
   yearSelectAll.checked =
-    pendingYears.size > 0 && pendingYears.size === allYears.length;
-};
-
-const applyYearFilter = () => {
-  selectedYears = new Set(pendingYears);
-  updateYearSummary();
-  applyFilters();
+    selectedYears.size > 0 && selectedYears.size === allYears.length;
 };
 
 const populateFilters = () => {
@@ -431,12 +398,13 @@ const populateFilters = () => {
     const checkbox = item.querySelector("input");
     checkbox.addEventListener("change", () => {
       if (checkbox.checked) {
-        pendingEvents.add(event);
+        selectedEvents.add(event);
       } else {
-        pendingEvents.delete(event);
+        selectedEvents.delete(event);
       }
-      eventSelectAll.checked =
-        pendingEvents.size > 0 && pendingEvents.size === allEvents.length;
+      updateEventSummary();
+      syncEventCheckboxes();
+      applyFilters();
     });
     eventFilter.append(item);
   });
@@ -458,12 +426,13 @@ const populateFilters = () => {
     const checkbox = item.querySelector("input");
     checkbox.addEventListener("change", () => {
       if (checkbox.checked) {
-        pendingYears.add(year);
+        selectedYears.add(year);
       } else {
-        pendingYears.delete(year);
+        selectedYears.delete(year);
       }
-      yearSelectAll.checked =
-        pendingYears.size > 0 && pendingYears.size === allYears.length;
+      updateYearSummary();
+      syncYearCheckboxes();
+      applyFilters();
     });
     yearFilter.append(item);
   });
@@ -489,12 +458,13 @@ const populateFilters = () => {
     const checkbox = item.querySelector("input");
     checkbox.addEventListener("change", () => {
       if (checkbox.checked) {
-        pendingCountries.add(code);
+        selectedCountries.add(code);
       } else {
-        pendingCountries.delete(code);
+        selectedCountries.delete(code);
       }
-      countrySelectAll.checked =
-        pendingCountries.size > 0 && pendingCountries.size === allCountries.length;
+      updateCountrySummary();
+      syncCountryCheckboxes();
+      applyFilters();
     });
     countryFilter.append(item);
   });
@@ -530,7 +500,6 @@ fetch("data.json")
   dropdown.addEventListener("toggle", () => {
     if (dropdown.open) {
       if (dropdown === eventDropdown) {
-        pendingEvents = new Set(selectedEvents);
         syncEventCheckboxes();
         eventSearch.value = "";
         eventFilter.querySelectorAll(".country-filter__item").forEach((item) => {
@@ -538,7 +507,6 @@ fetch("data.json")
         });
       }
       if (dropdown === yearDropdown) {
-        pendingYears = new Set(selectedYears);
         syncYearCheckboxes();
         yearSearch.value = "";
         yearFilter.querySelectorAll(".country-filter__item").forEach((item) => {
@@ -546,7 +514,6 @@ fetch("data.json")
         });
       }
       if (dropdown === countryDropdown) {
-        pendingCountries = new Set(selectedCountries);
         syncCountryCheckboxes();
         countrySearch.value = "";
         countryFilter.querySelectorAll(".country-filter__item").forEach((item) => {
@@ -567,31 +534,13 @@ eventSearch.addEventListener("input", () => {
 
 eventSelectAll.addEventListener("change", () => {
   if (eventSelectAll.checked) {
-    pendingEvents = new Set(allEvents);
+    selectedEvents = new Set(allEvents);
   } else {
-    pendingEvents = new Set();
+    selectedEvents = new Set();
   }
-  syncEventCheckboxes();
-});
-
-eventApply.addEventListener("click", () => {
-  applyEventFilter();
-  eventDropdown.open = false;
-});
-
-eventCancel.addEventListener("click", () => {
-  pendingEvents = new Set(selectedEvents);
-  syncEventCheckboxes();
-  eventDropdown.open = false;
-});
-
-eventClear.addEventListener("click", () => {
-  pendingEvents = new Set();
-  selectedEvents = new Set();
   syncEventCheckboxes();
   updateEventSummary();
   applyFilters();
-  eventDropdown.open = false;
 });
 
 yearSearch.addEventListener("input", () => {
@@ -604,31 +553,13 @@ yearSearch.addEventListener("input", () => {
 
 yearSelectAll.addEventListener("change", () => {
   if (yearSelectAll.checked) {
-    pendingYears = new Set(allYears);
+    selectedYears = new Set(allYears);
   } else {
-    pendingYears = new Set();
+    selectedYears = new Set();
   }
-  syncYearCheckboxes();
-});
-
-yearApply.addEventListener("click", () => {
-  applyYearFilter();
-  yearDropdown.open = false;
-});
-
-yearCancel.addEventListener("click", () => {
-  pendingYears = new Set(selectedYears);
-  syncYearCheckboxes();
-  yearDropdown.open = false;
-});
-
-yearClear.addEventListener("click", () => {
-  pendingYears = new Set();
-  selectedYears = new Set();
   syncYearCheckboxes();
   updateYearSummary();
   applyFilters();
-  yearDropdown.open = false;
 });
 
 countrySearch.addEventListener("input", () => {
@@ -641,31 +572,13 @@ countrySearch.addEventListener("input", () => {
 
 countrySelectAll.addEventListener("change", () => {
   if (countrySelectAll.checked) {
-    pendingCountries = new Set(allCountries);
+    selectedCountries = new Set(allCountries);
   } else {
-    pendingCountries = new Set();
+    selectedCountries = new Set();
   }
-  syncCountryCheckboxes();
-});
-
-countryApply.addEventListener("click", () => {
-  applyCountryFilter();
-  countryDropdown.open = false;
-});
-
-countryCancel.addEventListener("click", () => {
-  pendingCountries = new Set(selectedCountries);
-  syncCountryCheckboxes();
-  countryDropdown.open = false;
-});
-
-countryClear.addEventListener("click", () => {
-  pendingCountries = new Set();
-  selectedCountries = new Set();
   syncCountryCheckboxes();
   updateCountrySummary();
   applyFilters();
-  countryDropdown.open = false;
 });
 
 const bindSummaryClear = (summaryEl, onClear) => {
@@ -680,7 +593,6 @@ const bindSummaryClear = (summaryEl, onClear) => {
 
 bindSummaryClear(eventSummary, () => {
   selectedEvents = new Set();
-  pendingEvents = new Set();
   syncEventCheckboxes();
   updateEventSummary();
   applyFilters();
@@ -688,7 +600,6 @@ bindSummaryClear(eventSummary, () => {
 
 bindSummaryClear(yearSummary, () => {
   selectedYears = new Set();
-  pendingYears = new Set();
   syncYearCheckboxes();
   updateYearSummary();
   applyFilters();
@@ -696,7 +607,6 @@ bindSummaryClear(yearSummary, () => {
 
 bindSummaryClear(countrySummary, () => {
   selectedCountries = new Set();
-  pendingCountries = new Set();
   syncCountryCheckboxes();
   updateCountrySummary();
   applyFilters();
@@ -711,11 +621,8 @@ minMatchesInput.addEventListener("input", () => {
 if (clearAllFilters) {
   clearAllFilters.addEventListener("click", () => {
     selectedEvents = new Set();
-    pendingEvents = new Set();
     selectedYears = new Set();
-    pendingYears = new Set();
     selectedCountries = new Set();
-    pendingCountries = new Set();
     updateEventSummary();
     updateYearSummary();
     updateCountrySummary();

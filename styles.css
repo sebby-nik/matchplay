@@ -146,7 +146,7 @@ p {
 
 .layout {
   display: grid;
-  gap: 2rem;
+  gap: 2.5rem;
   padding: 0 4vw 4rem;
   grid-template-columns: minmax(0, 1fr);
 }

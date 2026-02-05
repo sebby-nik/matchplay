@@ -25,7 +25,7 @@ const countrySelectAll = document.getElementById("countrySelectAll");
 const countryDropdown = document.getElementById("countryDropdown");
 
 let allMatches = [];
-let currentSort = { key: "matches", direction: "desc" };
+let currentSort = { key: "points", direction: "desc" };
 let currentPlayers = [];
 let selectedEvents = new Set();
 let allEvents = [];

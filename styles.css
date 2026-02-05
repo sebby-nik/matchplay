@@ -566,6 +566,46 @@ input[type="range"] {
   content: "–";
 }
 
+@media (max-width: 720px) {
+  .hero {
+    padding: 3rem 6vw 2rem;
+  }
+
+  .panel__header {
+    padding: 1.5rem 1.25rem 0;
+  }
+
+  .controls {
+    padding: 0 1.25rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .summary {
+    padding: 0 1.25rem;
+  }
+
+  .rank-table {
+    min-width: 640px;
+  }
+
+  .player-detail {
+    margin: 0;
+    padding: 1rem 1.1rem;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+  }
+
+  .match-row {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .match-row .match-result {
+    margin-bottom: 0.25rem;
+  }
+}
+
 @media (min-width: 900px) {
   .footer__content {
     grid-template-columns: minmax(0, 1fr);

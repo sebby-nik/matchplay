@@ -155,7 +155,7 @@ const renderTable = (players) => {
             ? "ppm-bar__fill--mid"
             : "ppm-bar__fill--low";
     row.innerHTML = `
-      <td>${index + 1}</td>
+      <td>${player.rank ?? index + 1}</td>
       <td>${player.name}</td>
       <td>${flag ? `<span class=\"flag\">${flag}</span>` : ""}</td>
       <td>${player.matches}</td>
@@ -290,24 +290,25 @@ const applyFilters = () => {
     matches = matches.filter((match) => selectedYears.has(String(match.year)));
   }
 
-  if (query) {
-    matches = matches.filter((match) =>
-      match.player.toLowerCase().includes(query)
-    );
-  }
-
   if (selectedCountries.size > 0) {
     matches = matches.filter((match) => selectedCountries.has(match.player_country));
   }
 
   const players = calculatePlayers(matches);
   const filteredPlayers = players.filter((player) => player.matches >= minMatches);
-  const sorted = sortPlayers(filteredPlayers);
+  const sorted = sortPlayers(filteredPlayers).map((player, index) => ({
+    ...player,
+    rank: index + 1
+  }));
 
-  currentPlayers = sorted;
-  summary.textContent = `${sorted.length} players • ${matches.length} matches • Min ${minMatches}+`;
+  const searched = query
+    ? sorted.filter((player) => player.name.toLowerCase().includes(query))
+    : sorted;
+
+  currentPlayers = searched;
+  summary.textContent = `${searched.length} players • ${matches.length} matches • Min ${minMatches}+`;
   renderFilterChips();
-  renderTable(sorted);
+  renderTable(searched);
 
   document.querySelectorAll(".detail-row").forEach((node) => node.remove());
   document.querySelectorAll("tr.is-open").forEach((node) => node.classList.remove("is-open"));

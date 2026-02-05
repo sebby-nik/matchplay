@@ -636,3 +636,20 @@ if (clearAllFilters) {
 document.querySelectorAll("th[data-sort]").forEach((th) => {
   th.addEventListener("click", () => handleSort(th.dataset.sort));
 });
+
+const closeDropdownsOnClickOutside = (event) => {
+  [eventDropdown, yearDropdown, countryDropdown].forEach((dropdown) => {
+    if (!dropdown.open) return;
+    if (dropdown.contains(event.target)) return;
+    dropdown.open = false;
+  });
+};
+
+document.addEventListener("click", closeDropdownsOnClickOutside);
+
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+  [eventDropdown, yearDropdown, countryDropdown].forEach((dropdown) => {
+    dropdown.open = false;
+  });
+});

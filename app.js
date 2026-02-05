@@ -469,7 +469,7 @@ const populateFilters = () => {
     item.className = "country-filter__item";
     item.innerHTML = `
       <input type="checkbox" value="${event}" id="${id}" />
-      <span>${event}</span>
+      <span class="country-filter__text">${event}</span>
     `;
     const checkbox = item.querySelector("input");
     checkbox.addEventListener("change", () => {
@@ -497,7 +497,7 @@ const populateFilters = () => {
     item.className = "country-filter__item";
     item.innerHTML = `
       <input type="checkbox" value="${year}" id="${id}" />
-      <span>${year}</span>
+      <span class="country-filter__text">${year}</span>
     `;
     const checkbox = item.querySelector("input");
     checkbox.addEventListener("change", () => {
@@ -529,7 +529,7 @@ const populateFilters = () => {
     const name = countryNameFromCode(code);
     item.innerHTML = `
       <input type="checkbox" value="${code}" id="${id}" />
-      <span>${flag ? `${flag} ` : ""}${name}</span>
+      <span class="country-filter__text">${flag ? `${flag} ` : ""}${name}</span>
     `;
     const checkbox = item.querySelector("input");
     checkbox.addEventListener("change", () => {

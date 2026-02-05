@@ -59,14 +59,19 @@
         <div class="panel__header">
           <div class="panel__title-row">
             <h2>Champion Match Log</h2>
+            <button class="toggle-button is-collapsed" type="button" id="linealLogToggle">
+              <span>Expand</span>
+              <span class="toggle-button__icon">▾</span>
+            </button>
           </div>
           <p class="muted">
             Every singles match that involved the lineal champion at the time, including wins,
             losses, and halves.
           </p>
         </div>
-        <div class="table-wrap">
-          <table class="rank-table lineal-table">
+        <div class="lineal-log__body is-collapsed" id="linealLogBody">
+          <div class="table-wrap">
+            <table class="rank-table lineal-table">
             <thead>
               <tr>
                 <th>Year</th>
@@ -79,7 +84,8 @@
               </tr>
             </thead>
             <tbody id="linealMatches"></tbody>
-          </table>
+            </table>
+          </div>
         </div>
       </section>
     </main>

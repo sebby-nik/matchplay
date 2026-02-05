@@ -1095,6 +1095,10 @@ input[type="range"] {
   display: none;
 }
 
+.lineal-log__body.is-collapsed {
+  display: none;
+}
+
 .lineal-champion {
   display: grid;
   grid-template-columns: auto 1fr;

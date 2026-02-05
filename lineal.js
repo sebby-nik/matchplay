@@ -2,6 +2,8 @@ const linealMatches = document.getElementById("linealMatches");
 const linealChampions = document.getElementById("linealChampions");
 const linealChampionsToggle = document.getElementById("linealChampionsToggle");
 const linealChampionsBody = document.getElementById("linealChampionsBody");
+const linealLogToggle = document.getElementById("linealLogToggle");
+const linealLogBody = document.getElementById("linealLogBody");
 const linealChampionName = document.getElementById("linealChampionName");
 const linealChampionMeta = document.getElementById("linealChampionMeta");
 const linealChampionStats = document.getElementById("linealChampionStats");
@@ -530,6 +532,17 @@ if (linealChampionsToggle && linealChampionsBody) {
     const isCollapsed = linealChampionsBody.classList.toggle("is-collapsed");
     linealChampionsToggle.classList.toggle("is-collapsed", isCollapsed);
     const label = linealChampionsToggle.querySelector("span");
+    if (label) {
+      label.textContent = isCollapsed ? "Expand" : "Collapse";
+    }
+  });
+}
+
+if (linealLogToggle && linealLogBody) {
+  linealLogToggle.addEventListener("click", () => {
+    const isCollapsed = linealLogBody.classList.toggle("is-collapsed");
+    linealLogToggle.classList.toggle("is-collapsed", isCollapsed);
+    const label = linealLogToggle.querySelector("span");
     if (label) {
       label.textContent = isCollapsed ? "Expand" : "Collapse";
     }

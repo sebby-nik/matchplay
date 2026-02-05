@@ -528,6 +528,10 @@ fetch("data.json")
 if (linealChampionsToggle && linealChampionsBody) {
   linealChampionsToggle.addEventListener("click", () => {
     const isCollapsed = linealChampionsBody.classList.toggle("is-collapsed");
-    linealChampionsToggle.textContent = isCollapsed ? "Expand" : "Collapse";
+    linealChampionsToggle.classList.toggle("is-collapsed", isCollapsed);
+    const label = linealChampionsToggle.querySelector("span");
+    if (label) {
+      label.textContent = isCollapsed ? "Expand" : "Collapse";
+    }
   });
 }

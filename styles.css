@@ -1158,13 +1158,25 @@ input[type="range"] {
   background: #ffffff;
   color: var(--ink);
   font-weight: 600;
-  padding: 0.35rem 0.9rem;
+  padding: 0.35rem 0.85rem;
   border-radius: 999px;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .toggle-button:hover {
   background: #f3f6fb;
+}
+
+.toggle-button__icon {
+  font-size: 0.85rem;
+  transition: transform 0.2s ease;
+}
+
+.toggle-button.is-collapsed .toggle-button__icon {
+  transform: rotate(-90deg);
 }
 
 .lineal-champion__detail {

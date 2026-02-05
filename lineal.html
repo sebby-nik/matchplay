@@ -41,12 +41,18 @@
         <div class="panel__header">
           <div class="panel__title-row">
             <h2>Lineal Champions</h2>
+            <button class="toggle-button" type="button" id="linealChampionsToggle">
+              <span>Collapse</span>
+              <span class="toggle-button__icon">▾</span>
+            </button>
           </div>
           <p class="muted">
             A chronological record of every lineal champion, their reign, and how the title moved.
           </p>
         </div>
-        <ol class="lineal-champions" id="linealChampions"></ol>
+        <div class="lineal-champions__body" id="linealChampionsBody">
+          <ol class="lineal-champions" id="linealChampions"></ol>
+        </div>
       </section>
 
       <section class="panel panel--lineal">

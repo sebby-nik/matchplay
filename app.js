@@ -327,6 +327,7 @@ const applyFilters = () => {
   renderFilterChips();
   renderPlayerChips();
   renderTable(searched);
+  updateSortIndicators();
 
   document.querySelectorAll(".detail-row").forEach((node) => node.remove());
   document.querySelectorAll("tr.is-open").forEach((node) => node.classList.remove("is-open"));

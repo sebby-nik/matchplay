@@ -1091,6 +1091,10 @@ input[type="range"] {
   gap: 1.25rem;
 }
 
+.lineal-champions__body.is-collapsed {
+  display: none;
+}
+
 .lineal-champion {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -1118,9 +1122,19 @@ input[type="range"] {
   gap: 0.35rem;
 }
 
+.lineal-champion__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+}
+
 .lineal-champion__header h3 {
   margin: 0;
   font-size: 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .lineal-champion__range {
@@ -1130,9 +1144,37 @@ input[type="range"] {
   color: var(--ink-soft);
 }
 
+.lineal-champion__reigns {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink);
+  background: #eef2f7;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+}
+
+.toggle-button {
+  border: 1px solid var(--line);
+  background: #ffffff;
+  color: var(--ink);
+  font-weight: 600;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.toggle-button:hover {
+  background: #f3f6fb;
+}
+
 .lineal-champion__detail {
   margin: 0.6rem 0 0;
   color: var(--ink-soft);
+}
+
+.lineal-champion__flag {
+  font-size: 1.1rem;
+  line-height: 1;
 }
 
 @media (max-width: 700px) {

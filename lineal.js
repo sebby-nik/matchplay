@@ -1,5 +1,7 @@
 const linealMatches = document.getElementById("linealMatches");
 const linealChampions = document.getElementById("linealChampions");
+const linealChampionsToggle = document.getElementById("linealChampionsToggle");
+const linealChampionsBody = document.getElementById("linealChampionsBody");
 const linealChampionName = document.getElementById("linealChampionName");
 const linealChampionMeta = document.getElementById("linealChampionMeta");
 const linealChampionStats = document.getElementById("linealChampionStats");
@@ -111,6 +113,51 @@ const LINEAL_PLAN = [
 
 const ALIASES = {
   "Yang Yong-eun": ["Y.E. Yang"]
+};
+
+const flagFromCountry = (code) => {
+  if (!code) return "";
+  const base = 0x1f1e6;
+  return code
+    .toUpperCase()
+    .replace(/[^A-Z]/g, "")
+    .split("")
+    .map((char) => String.fromCodePoint(base + char.charCodeAt(0) - 65))
+    .join("");
+};
+
+const countryNameFromCode = (code) => {
+  if (!code) return "";
+  const names = {
+    US: "United States",
+    GB: "Great Britain",
+    AU: "Australia",
+    NZ: "New Zealand",
+    ZA: "South Africa",
+    ZW: "Zimbabwe",
+    JP: "Japan",
+    KR: "South Korea",
+    AR: "Argentina",
+    ES: "Spain",
+    DE: "Germany",
+    DK: "Denmark",
+    IE: "Ireland",
+    CA: "Canada",
+    FR: "France",
+    SE: "Sweden",
+    PY: "Paraguay",
+    CO: "Colombia",
+    MX: "Mexico",
+    TW: "Taiwan",
+    CN: "China",
+    VE: "Venezuela",
+    TH: "Thailand",
+    IN: "India",
+    CL: "Chile",
+    FJ: "Fiji",
+    PH: "Philippines"
+  };
+  return names[code] || code;
 };
 
 const normalizeName = (value) =>
@@ -395,9 +442,14 @@ const renderChampionCard = (reigns) => {
   `;
 };
 
-const renderChampionsList = (reigns) => {
+const renderChampionsList = (reigns, countryMap) => {
   if (!linealChampions) return;
   linealChampions.innerHTML = "";
+  const reignCounts = reigns.reduce((acc, reign) => {
+    acc[reign.champion] = (acc[reign.champion] || 0) + 1;
+    return acc;
+  }, {});
+
   reigns.forEach((reign, index) => {
     const startLabel =
       reign.startLabel || (reign.startEntry ? `Won title at ${formatMatchLabel(reign.startEntry)}` : "Inaugural");
@@ -405,6 +457,11 @@ const renderChampionsList = (reigns) => {
       ? `Lost at ${formatMatchLabel(reign.endEntry)}`
       : reign.endLabel || "Present";
     const detail = `${reign.matches} matches · ${reign.defenses} defenses · ${reign.wins}-${reign.halves}-${reign.losses} W-D-L`;
+    const reignCount = reignCounts[reign.champion] || 1;
+    const reignLabel = reignCount > 1 ? `${reignCount} reigns` : "1 reign";
+    const countryCode = countryMap.get(reign.champion) || "";
+    const flag = flagFromCountry(countryCode);
+    const countryName = countryNameFromCode(countryCode);
 
     const item = document.createElement("li");
     item.className = "lineal-champion";
@@ -412,8 +469,11 @@ const renderChampionsList = (reigns) => {
       <div class="lineal-champion__index">${index + 1}</div>
       <div class="lineal-champion__body">
         <div class="lineal-champion__header">
-          <h3>${reign.champion}</h3>
-          <span class="lineal-champion__range">${startLabel} → ${endLabel}</span>
+          <h3>${flag ? `<span class=\"lineal-champion__flag\" title=\"${countryName}\">${flag}</span>` : ""}${reign.champion}</h3>
+          <div class="lineal-champion__meta">
+            <span class="lineal-champion__range">${startLabel} → ${endLabel}</span>
+            <span class="lineal-champion__reigns">${reignLabel}</span>
+          </div>
         </div>
         <p class="lineal-champion__detail">${detail}</p>
       </div>
@@ -449,9 +509,25 @@ fetch("data.json")
   .then((res) => res.json())
   .then((data) => {
     const matches = (data.matches || []).filter((match) => match.result !== "not played");
+    const countryMap = new Map();
+    matches.forEach((match) => {
+      if (match.player && match.player_country && !countryMap.has(match.player)) {
+        countryMap.set(match.player, match.player_country);
+      }
+      if (match.opponent && match.opponent_country && !countryMap.has(match.opponent)) {
+        countryMap.set(match.opponent, match.opponent_country);
+      }
+    });
     const { log, grants, retirements } = buildLinealLog(matches);
     const reigns = buildReigns(log, grants, retirements);
     renderMatchLog(log);
     renderChampionCard(reigns);
-    renderChampionsList(reigns);
+    renderChampionsList(reigns, countryMap);
   });
+
+if (linealChampionsToggle && linealChampionsBody) {
+  linealChampionsToggle.addEventListener("click", () => {
+    const isCollapsed = linealChampionsBody.classList.toggle("is-collapsed");
+    linealChampionsToggle.textContent = isCollapsed ? "Expand" : "Collapse";
+  });
+}

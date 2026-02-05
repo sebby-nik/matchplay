@@ -31,7 +31,15 @@
     <main class="layout">
       <section class="panel">
         <div class="panel__header">
-          <h2>Player Rankings</h2>
+          <div class="panel__title-row">
+            <h2>Player Rankings</h2>
+            <div class="status-toggle">
+              <span class="status-toggle__label">All-time</span>
+              <input id="activeOnlyToggle" type="checkbox" />
+              <span class="status-toggle__slider"></span>
+              <span class="status-toggle__label">Active</span>
+            </div>
+          </div>
           <p class="muted">
             Ranked by matches played by default. Click a player to view their full match
             list.
@@ -88,15 +96,6 @@
             </span>
             <div class="range-row">
               <input id="minMatches" type="range" min="1" max="10" step="1" value="1" />
-            </div>
-          </label>
-          <label>
-            Status
-            <div class="status-toggle">
-              <span class="status-toggle__label">Active</span>
-              <input id="retiredToggle" type="checkbox" />
-              <span class="status-toggle__slider"></span>
-              <span class="status-toggle__label">Retired</span>
             </div>
           </label>
           <div class="country-filter">

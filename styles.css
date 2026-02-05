@@ -101,6 +101,14 @@ p {
   margin-bottom: 1.5rem;
 }
 
+.panel__title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
  .panel--side {
   border-left: 4px solid var(--highlight);
  }
@@ -941,6 +949,10 @@ input[type="range"] {
 
   .panel__header {
     padding: 1.5rem 1.25rem 0;
+  }
+
+  .panel__title-row {
+    align-items: flex-start;
   }
 
   .controls {

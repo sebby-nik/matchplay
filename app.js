@@ -13,7 +13,7 @@ const playerChips = document.getElementById("playerChips");
 const playerSuggestions = document.getElementById("playerSuggestions");
 const minMatchesInput = document.getElementById("minMatches");
 const minMatchesValue = document.getElementById("minMatchesValue");
-const retiredToggle = document.getElementById("retiredToggle");
+const activeOnlyToggle = document.getElementById("activeOnlyToggle");
 const summary = document.getElementById("summary");
 const filterChips = document.getElementById("filterChips");
 const clearAllFilters = document.getElementById("clearAllFilters");
@@ -36,9 +36,6 @@ let allCountries = [];
 let selectedPlayers = new Set();
 let availablePlayers = [];
 let allPlayers = [];
-const retiredPlayers = new Set([
-  // Add retired player names here (exact match to dataset names).
-]);
 
 const normalize = (value) => value.toLowerCase();
 
@@ -137,7 +134,11 @@ const calculatePlayers = (matches) => {
 
   return Array.from(stats.values()).map((player) => ({
     ...player,
-    ppm: player.matches ? player.points / player.matches : 0
+    ppm: player.matches ? player.points / player.matches : 0,
+    lastYear: player.matchList.reduce(
+      (max, match) => (match.year > max ? match.year : max),
+      0
+    )
   }));
 };
 
@@ -302,10 +303,12 @@ const applyFilters = () => {
     matches = matches.filter((match) => selectedCountries.has(match.player_country));
   }
 
+  const currentYear = new Date().getFullYear();
+  const activeCutoff = currentYear - 5;
   const players = calculatePlayers(matches).filter((player) =>
-    retiredToggle && retiredToggle.checked
-      ? retiredPlayers.has(player.name)
-      : !retiredPlayers.has(player.name)
+    activeOnlyToggle && activeOnlyToggle.checked
+      ? player.lastYear >= activeCutoff
+      : true
   );
   const filteredPlayers = players.filter((player) => player.matches >= minMatches);
   const sorted = sortPlayers(filteredPlayers).map((player, index) => ({
@@ -658,8 +661,8 @@ minMatchesInput.addEventListener("input", () => {
   applyFilters();
 });
 
-if (retiredToggle) {
-  retiredToggle.addEventListener("change", applyFilters);
+if (activeOnlyToggle) {
+  activeOnlyToggle.addEventListener("change", applyFilters);
 }
 
 if (clearAllFilters) {

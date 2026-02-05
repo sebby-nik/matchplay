@@ -1040,6 +1040,10 @@ input[type="range"] {
   background: #f1f5f9;
 }
 
+.lineal-table tbody tr:nth-child(even) {
+  background: transparent;
+}
+
 .lineal-layout .panel {
   overflow: hidden;
 }

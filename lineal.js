@@ -17,9 +17,6 @@ const ROUND_ORDER = [
 ];
 
 const LINEAL_PLAN = [
-  { type: "grant", year: 1997, event: "Lineal Grant", champion: "Tiger Woods" },
-  { type: "match", year: 1997, event: "WGC Match Play", champion: "Tiger Woods", opponent: "Constantino Rocca", outcome: "loss" },
-  { type: "retire", player: "Constantino Rocca", year: 1997 },
   { type: "grant", year: 1998, event: "Presidents Cup", champion: "Tiger Woods" },
   { type: "match", year: 1998, event: "Presidents Cup", champion: "Tiger Woods", opponent: "Greg Norman", outcome: "win" },
   { type: "match", year: 1999, event: "WGC Match Play", champion: "Tiger Woods", opponent: "Jeff Maggert", outcome: "loss" },

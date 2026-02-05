@@ -1025,15 +1025,17 @@ input[type="range"] {
 }
 
 .lineal-row--win {
-  background: #f0fdf4;
+  background: #16a34a;
+  color: #f8fafc;
 }
 
 .lineal-row--halved {
-  background: #fffbeb;
+  background: #fef3c7;
 }
 
 .lineal-row--loss {
-  background: #fff1f2;
+  background: #dc2626;
+  color: #fef2f2;
 }
 
 .lineal-row--vacated {

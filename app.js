@@ -92,7 +92,11 @@ const countryNameFromCode = (code) => {
 
 const renderSummaryChips = (items, type) => {
   if (items.length === 0) return "";
-  const chips = items.map((item) => `<span class="multi-pill">${item}</span>`).join("");
+  const chips = items
+    .map(
+      (item) => `<span class="multi-pill" title="${item.replace(/\"/g, "&quot;")}">${item}</span>`
+    )
+    .join("");
   return `
     <span class="multi-summary__chips">${chips}</span>
     <button class="summary-clear" type="button" data-clear="${type}">×</button>

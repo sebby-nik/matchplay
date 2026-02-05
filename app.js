@@ -162,7 +162,7 @@ const renderTable = (players) => {
 
 const updateCountrySummary = () => {
   if (selectedCountries.size === 0) {
-    countrySummary.textContent = "All countries";
+    countrySummary.textContent = "All nationalities";
     return;
   }
   const list = Array.from(selectedCountries).map((code) => {

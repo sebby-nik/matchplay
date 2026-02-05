@@ -1,5 +1,10 @@
 const linealBody = document.getElementById("linealBody");
 const linealSummary = document.getElementById("linealSummary");
+const linealReigns = document.getElementById("linealReigns");
+const linealMatches = document.getElementById("linealMatches");
+const linealChampionName = document.getElementById("linealChampionName");
+const linealChampionMeta = document.getElementById("linealChampionMeta");
+const linealChampionStats = document.getElementById("linealChampionStats");
 
 const EVENT_ORDER = ["WGC Match Play", "Presidents Cup", "Ryder Cup"];
 const ROUND_ORDER = [
@@ -37,6 +42,19 @@ const uniqueMatches = (matches) => {
   return result;
 };
 
+const getOpponent = (match, champion) =>
+  match.player === champion ? match.opponent : match.player;
+
+const getChampionResult = (match, champion) => {
+  if (match.result === "halved") return "Halved";
+  const championIsPlayer = match.player === champion;
+  const playerWon = match.result === "win";
+  if (championIsPlayer) {
+    return playerWon ? "Win" : "Loss";
+  }
+  return playerWon ? "Loss" : "Win";
+};
+
 const buildLinealTimeline = (matches) => {
   const ordered = uniqueMatches(matches)
     .slice()
@@ -55,27 +73,21 @@ const buildLinealTimeline = (matches) => {
     if (match.player !== champion && match.opponent !== champion) return;
 
     const championBefore = champion;
-    let championAfter = champion;
-
-    if (match.result === "win" && match.player === champion) {
-      championAfter = champion;
-    } else if (match.result === "loss" && match.player === champion) {
-      championAfter = match.opponent;
-    } else if (match.result === "win" && match.opponent === champion) {
-      championAfter = match.player;
-    } else if (match.result === "loss" && match.opponent === champion) {
-      championAfter = champion;
-    }
+    const opponent = getOpponent(match, champion);
+    const championResult = getChampionResult(match, champion);
+    const championAfter = championResult === "Loss" ? opponent : champion;
+    const titleChange = championAfter !== championBefore;
 
     timeline.push({
       year: match.year,
       event: match.event,
       round: match.round || "Singles",
       championBefore,
-      opponent: match.player === champion ? match.opponent : match.player,
-      result: match.result === "halved" ? "Halved" : match.result === "win" ? "Win" : "Loss",
+      opponent,
+      championResult,
       score: match.score || "",
-      championAfter
+      championAfter,
+      titleChange
     });
 
     champion = championAfter;
@@ -84,10 +96,31 @@ const buildLinealTimeline = (matches) => {
   return { champion, timeline };
 };
 
+const formatMatchLabel = (entry) =>
+  `${entry.year} | ${entry.event}${entry.round ? ` | ${entry.round}` : ""}`;
+
+const renderSummary = ({ champion, timeline }) => {
+  if (!linealSummary) return;
+  const titleChanges = timeline.filter((entry) => entry.titleChange).length;
+  const champions = new Set([champion, ...timeline.map((entry) => entry.championBefore)]);
+  linealSummary.textContent = `Current champion: ${champion} | ${timeline.length} champion matches | ${titleChanges} title changes | ${champions.size} champions`;
+};
+
+const renderChampionCard = (reigns) => {
+  if (!linealChampionName || !linealChampionMeta || !linealChampionStats || reigns.length === 0) return;
+  const current = reigns[reigns.length - 1];
+  linealChampionName.textContent = current.champion;
+  const startLabel = current.startLabel || (current.startEntry ? formatMatchLabel(current.startEntry) : "Inaugural");
+  linealChampionMeta.textContent = `Champion since ${startLabel}`;
+  linealChampionStats.innerHTML = `
+    <span>${current.matches} matches</span>
+    <span>${current.defenses} defenses</span>
+    <span>${current.wins}-${current.halves}-${current.losses} W-H-L</span>
+  `;
+};
+
 const renderTimeline = ({ champion, timeline }) => {
-  if (linealSummary) {
-    linealSummary.textContent = `Current lineal champion: ${champion} • ${timeline.length} title matches tracked`;
-  }
+  renderSummary({ champion, timeline });
 
   if (!linealBody) return;
   linealBody.innerHTML = "";
@@ -99,11 +132,115 @@ const renderTimeline = ({ champion, timeline }) => {
       <td>${entry.round}</td>
       <td>${entry.championBefore}</td>
       <td>${entry.opponent}</td>
-      <td>${entry.result}</td>
-      <td>${entry.score}</td>
+      <td><span class="lineal-result lineal-result--${entry.championResult.toLowerCase()}">${entry.championResult}</span></td>
+      <td>${entry.score || "-"}</td>
+      <td><span class="lineal-status lineal-status--${entry.titleChange ? "change" : "retain"}">${entry.titleChange ? "Title Change" : "Retained"}</span></td>
       <td>${entry.championAfter}</td>
     `;
     linealBody.append(row);
+  });
+};
+
+const buildReigns = (timeline, inauguralChampion) => {
+  const reigns = [];
+  let current = {
+    champion: inauguralChampion,
+    startEntry: null,
+    startLabel: "Inaugural",
+    endEntry: null,
+    matches: 0,
+    defenses: 0,
+    wins: 0,
+    halves: 0,
+    losses: 0,
+    lostTo: "-"
+  };
+
+  timeline.forEach((entry) => {
+    if (entry.championBefore !== current.champion) {
+      current = {
+        champion: entry.championBefore,
+        startEntry: null,
+        startLabel: "Inaugural",
+        endEntry: null,
+        matches: 0,
+        defenses: 0,
+        wins: 0,
+        halves: 0,
+        losses: 0,
+        lostTo: "-"
+      };
+    }
+
+    current.matches += 1;
+    if (entry.championResult === "Win") {
+      current.wins += 1;
+      current.defenses += 1;
+    } else if (entry.championResult === "Halved") {
+      current.halves += 1;
+      current.defenses += 1;
+    } else {
+      current.losses += 1;
+    }
+
+    if (entry.titleChange) {
+      current.endEntry = entry;
+      current.lostTo = entry.opponent;
+      reigns.push(current);
+      current = {
+        champion: entry.championAfter,
+        startEntry: entry,
+        startLabel: null,
+        endEntry: null,
+        matches: 0,
+        defenses: 0,
+        wins: 0,
+        halves: 0,
+        losses: 0,
+        lostTo: "-"
+      };
+    }
+  });
+
+  reigns.push(current);
+  return reigns;
+};
+
+const renderReigns = (reigns) => {
+  if (!linealReigns) return;
+  linealReigns.innerHTML = "";
+  reigns.forEach((reign) => {
+    const startLabel = reign.startLabel || (reign.startEntry ? formatMatchLabel(reign.startEntry) : "Inaugural");
+    const endLabel = reign.endEntry ? formatMatchLabel(reign.endEntry) : "Current";
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${reign.champion}</td>
+      <td>${startLabel}</td>
+      <td>${endLabel}</td>
+      <td>${reign.matches}</td>
+      <td>${reign.defenses}</td>
+      <td>${reign.endEntry ? reign.lostTo : "-"}</td>
+    `;
+    linealReigns.append(row);
+  });
+};
+
+const renderMatchLog = (timeline) => {
+  if (!linealMatches) return;
+  linealMatches.innerHTML = "";
+  timeline.forEach((entry) => {
+    const row = document.createElement("tr");
+    row.classList.add("lineal-row", `lineal-row--${entry.championResult.toLowerCase()}`);
+    row.innerHTML = `
+      <td>${entry.year}</td>
+      <td>${entry.event}</td>
+      <td>${entry.round}</td>
+      <td>${entry.championBefore}</td>
+      <td>${entry.opponent}</td>
+      <td><span class="lineal-result lineal-result--${entry.championResult.toLowerCase()}">${entry.championResult}</span></td>
+      <td>${entry.score || "-"}</td>
+    `;
+    linealMatches.append(row);
   });
 };
 
@@ -113,4 +250,8 @@ fetch("data.json")
     const matches = (data.matches || []).filter((match) => match.result !== "not played");
     const result = buildLinealTimeline(matches);
     renderTimeline(result);
+    const reigns = buildReigns(result.timeline, "Tiger Woods");
+    renderReigns(reigns);
+    renderMatchLog(result.timeline);
+    renderChampionCard(reigns);
   });

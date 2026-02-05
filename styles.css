@@ -916,6 +916,131 @@ input[type="range"] {
   gap: 0.75rem;
 }
 
+.hero__content--wide {
+  max-width: 1100px;
+}
+
+.hero--lineal .hero__content {
+  max-width: 1100px;
+}
+
+.hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: 2rem;
+  align-items: end;
+}
+
+.lineal-card {
+  background: #0b1324;
+  color: #f8fafc;
+  padding: 1.75rem;
+  border-radius: 20px;
+  box-shadow: 0 16px 32px rgba(11, 19, 36, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lineal-card__label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #a9b4c6;
+  margin: 0 0 0.75rem;
+}
+
+.lineal-card__name {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.8rem, 2.4vw, 2.4rem);
+}
+
+.lineal-card__meta {
+  color: #d1d7e2;
+  font-size: 0.95rem;
+  margin-bottom: 1.1rem;
+}
+
+.lineal-card__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.lineal-card__stats span {
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.lineal-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.lineal-status--change {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.lineal-status--retain {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.lineal-result {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.lineal-result--win {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.lineal-result--halved {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.lineal-result--loss {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.lineal-row--win {
+  background: #f0fdf4;
+}
+
+.lineal-row--halved {
+  background: #fffbeb;
+}
+
+.lineal-row--loss {
+  background: #fff1f2;
+}
+
+.lineal-layout .panel {
+  overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .hero__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .footer {
   padding: 0 4vw 2.5rem;
   color: var(--ink-soft);

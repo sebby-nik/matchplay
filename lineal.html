@@ -12,22 +12,32 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header class="hero">
-      <div class="hero__content">
+    <header class="hero hero--lineal">
+      <div class="hero__content hero__content--wide">
         <div class="hero__title-row">
           <img class="brand__logo" src="assets/logo.png" alt="Matchplay Records logo" />
           <h1>Lineal Matchplay Champion</h1>
         </div>
-        <p class="lede">
-          The lineal title passes only when the reigning champion loses a singles match.
-          Inaugural champion: Tiger Woods.
-        </p>
-        <a class="hero__link" href="index.html">← Back to rankings</a>
+        <div class="hero__grid">
+          <div>
+            <p class="lede">
+              The lineal title passes only when the reigning champion loses a singles match.
+              Inaugural champion: Tiger Woods.
+            </p>
+            <a class="hero__link" href="index.html">← Back to rankings</a>
+          </div>
+          <div class="lineal-card" id="linealCurrentCard">
+            <p class="lineal-card__label">Current Champion</p>
+            <h2 class="lineal-card__name" id="linealChampionName">Tiger Woods</h2>
+            <div class="lineal-card__meta" id="linealChampionMeta"></div>
+            <div class="lineal-card__stats" id="linealChampionStats"></div>
+          </div>
+        </div>
       </div>
     </header>
 
-    <main class="layout">
-      <section class="panel">
+    <main class="layout lineal-layout">
+      <section class="panel panel--lineal">
         <div class="panel__header">
           <div class="panel__title-row">
             <h2>Lineal Timeline</h2>
@@ -50,10 +60,63 @@
                 <th>Opponent</th>
                 <th>Result</th>
                 <th>Score</th>
+                <th>Status</th>
                 <th>Champion (After)</th>
               </tr>
             </thead>
             <tbody id="linealBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel panel--lineal">
+        <div class="panel__header">
+          <div class="panel__title-row">
+            <h2>Reigns</h2>
+          </div>
+          <p class="muted">Each reign starts when the title is won and ends at the first loss.</p>
+        </div>
+        <div class="table-wrap">
+          <table class="rank-table lineal-table">
+            <thead>
+              <tr>
+                <th>Champion</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Matches</th>
+                <th>Defenses</th>
+                <th>Lost To</th>
+              </tr>
+            </thead>
+            <tbody id="linealReigns"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel panel--lineal">
+        <div class="panel__header">
+          <div class="panel__title-row">
+            <h2>Champion Match Log</h2>
+          </div>
+          <p class="muted">
+            Every singles match that involved the lineal champion at the time, including wins,
+            losses, and halves.
+          </p>
+        </div>
+        <div class="table-wrap">
+          <table class="rank-table lineal-table">
+            <thead>
+              <tr>
+                <th>Year</th>
+                <th>Event</th>
+                <th>Round</th>
+                <th>Champion</th>
+                <th>Opponent</th>
+                <th>Result</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody id="linealMatches"></tbody>
           </table>
         </div>
       </section>

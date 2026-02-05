@@ -961,6 +961,19 @@ input[type="range"] {
   font-size: clamp(1.8rem, 2.4vw, 2.4rem);
 }
 
+.lineal-card__title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.lineal-card__record {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
 .lineal-card__meta {
   color: inherit;
   font-size: 0.95rem;

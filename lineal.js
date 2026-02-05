@@ -7,6 +7,7 @@ const linealLogBody = document.getElementById("linealLogBody");
 const linealChampionName = document.getElementById("linealChampionName");
 const linealChampionMeta = document.getElementById("linealChampionMeta");
 const linealChampionStats = document.getElementById("linealChampionStats");
+const linealChampionRecord = document.getElementById("linealChampionRecord");
 
 const EVENT_ORDER = ["WGC Match Play", "Presidents Cup", "Ryder Cup"];
 const ROUND_ORDER = [
@@ -448,11 +449,13 @@ const renderChampionCard = (reigns, overallStats) => {
     return sum + Math.max(reign.wins - titleWinAdjustment, 0);
   }, 0);
   const overall = overallStats.get(current.champion) || { wins: 0, draws: 0, losses: 0 };
+  if (linealChampionRecord) {
+    linealChampionRecord.textContent = `${overall.wins}-${overall.draws}-${overall.losses} W-D-L`;
+  }
   linealChampionStats.innerHTML = `
     <span>${reignCount} reigns</span>
     <span>${totalMatches} matches</span>
     <span>${totalDefenses} defenses</span>
-    <span>${overall.wins}-${overall.draws}-${overall.losses} W-D-L</span>
   `;
 };
 

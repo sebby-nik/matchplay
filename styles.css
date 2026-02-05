@@ -260,7 +260,28 @@ input[type="range"] {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+}
+
+.filter-chips__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
   padding: 0 2rem 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-clear-all {
+  border: none;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0.25rem 0.4rem;
+}
+
+.filter-clear-all:hover {
+  color: var(--ink);
 }
 
 .filter-chip {
@@ -610,7 +631,13 @@ input[type="range"] {
   }
 
   .filter-chips {
+    padding: 0;
+  }
+
+  .filter-chips__row {
     padding: 0 1.25rem 1rem;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .rank-table {

@@ -19,6 +19,7 @@ const minMatchesInput = document.getElementById("minMatches");
 const minMatchesValue = document.getElementById("minMatchesValue");
 const summary = document.getElementById("summary");
 const filterChips = document.getElementById("filterChips");
+const clearAllFilters = document.getElementById("clearAllFilters");
 const rankBody = document.getElementById("rankBody");
 const countryFilter = document.getElementById("countryFilter");
 const countrySummary = document.getElementById("countrySummary");
@@ -269,10 +270,12 @@ const renderFilterChips = () => {
 
   if (chips.length === 0) {
     filterChips.style.display = "none";
+    if (clearAllFilters) clearAllFilters.style.display = "none";
     return;
   }
 
   filterChips.style.display = "flex";
+  if (clearAllFilters) clearAllFilters.style.display = "inline-flex";
   chips.forEach((chip) => {
     const button = document.createElement("button");
     button.type = "button";
@@ -611,6 +614,24 @@ minMatchesInput.addEventListener("input", () => {
   minMatchesValue.textContent = `${minMatchesInput.value}+`;
   applyFilters();
 });
+
+if (clearAllFilters) {
+  clearAllFilters.addEventListener("click", () => {
+    selectedEvents = new Set();
+    pendingEvents = new Set();
+    selectedYears = new Set();
+    pendingYears = new Set();
+    selectedCountries = new Set();
+    pendingCountries = new Set();
+    updateEventSummary();
+    updateYearSummary();
+    updateCountrySummary();
+    syncEventCheckboxes();
+    syncYearCheckboxes();
+    syncCountryCheckboxes();
+    applyFilters();
+  });
+}
 
 document.querySelectorAll("th[data-sort]").forEach((th) => {
   th.addEventListener("click", () => handleSort(th.dataset.sort));

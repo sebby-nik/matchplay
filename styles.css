@@ -155,6 +155,10 @@ p {
   margin-top: -2rem;
 }
 
+.lineal-layout {
+  margin-top: 2rem;
+}
+
 .panel {
   background: var(--panel);
   border-radius: 20px;

@@ -568,10 +568,6 @@ if (linealChampionsToggle && linealChampionsBody) {
   linealChampionsToggle.addEventListener("click", () => {
     const isCollapsed = linealChampionsBody.classList.toggle("is-collapsed");
     linealChampionsToggle.classList.toggle("is-collapsed", isCollapsed);
-    const label = linealChampionsToggle.querySelector("span");
-    if (label) {
-      label.textContent = isCollapsed ? "Expand" : "Collapse";
-    }
   });
 }
 
@@ -579,9 +575,5 @@ if (linealLogToggle && linealLogBody) {
   linealLogToggle.addEventListener("click", () => {
     const isCollapsed = linealLogBody.classList.toggle("is-collapsed");
     linealLogToggle.classList.toggle("is-collapsed", isCollapsed);
-    const label = linealLogToggle.querySelector("span");
-    if (label) {
-      label.textContent = isCollapsed ? "Expand" : "Collapse";
-    }
   });
 }

@@ -19,6 +19,15 @@ const ROUND_ORDER = [
   "Singles"
 ];
 
+const LINEAL_RETIREMENTS = [
+  {
+    player: "Constantino Rocca",
+    lastYear: 1997,
+    resetChampion: "Tiger Woods",
+    resetYear: 1998
+  }
+];
+
 const getRoundIndex = (round) => {
   const idx = ROUND_ORDER.indexOf(round);
   return idx === -1 ? ROUND_ORDER.length : idx;
@@ -69,7 +78,28 @@ const buildLinealTimeline = (matches) => {
 
   let champion = "Tiger Woods";
   const timeline = [];
+  const retirementsApplied = new Set();
   ordered.forEach((match) => {
+    const retirement = LINEAL_RETIREMENTS.find(
+      (entry) => entry.player === champion && match.year > entry.lastYear
+    );
+    if (retirement && !retirementsApplied.has(retirement.player)) {
+      timeline.push({
+        year: retirement.resetYear,
+        event: "Lineal Reset",
+        round: "—",
+        championBefore: champion,
+        opponent: "—",
+        championResult: "Vacated",
+        score: "—",
+        championAfter: retirement.resetChampion,
+        titleChange: true,
+        isVacate: true
+      });
+      retirementsApplied.add(retirement.player);
+      champion = retirement.resetChampion;
+    }
+
     if (match.player !== champion && match.opponent !== champion) return;
 
     const championBefore = champion;
@@ -87,7 +117,8 @@ const buildLinealTimeline = (matches) => {
       championResult,
       score: match.score || "",
       championAfter,
-      titleChange
+      titleChange,
+      isVacate: false
     });
 
     champion = championAfter;
@@ -141,6 +172,8 @@ const renderTimeline = ({ champion, timeline }) => {
   });
 };
 
+const isRenderableMatch = (entry) => !entry.isVacate;
+
 const buildReigns = (timeline, inauguralChampion) => {
   const reigns = [];
   let current = {
@@ -185,7 +218,7 @@ const buildReigns = (timeline, inauguralChampion) => {
 
     if (entry.titleChange) {
       current.endEntry = entry;
-      current.lostTo = entry.opponent;
+      current.lostTo = entry.isVacate ? "Vacated" : entry.opponent;
       reigns.push(current);
       current = {
         champion: entry.championAfter,
@@ -228,7 +261,7 @@ const renderReigns = (reigns) => {
 const renderMatchLog = (timeline) => {
   if (!linealMatches) return;
   linealMatches.innerHTML = "";
-  timeline.forEach((entry) => {
+  timeline.filter(isRenderableMatch).forEach((entry) => {
     const row = document.createElement("tr");
     row.classList.add("lineal-row", `lineal-row--${entry.championResult.toLowerCase()}`);
     row.innerHTML = `

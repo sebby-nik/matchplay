@@ -1019,6 +1019,11 @@ input[type="range"] {
   color: #991b1b;
 }
 
+.lineal-result--vacated {
+  background: #e2e8f0;
+  color: #334155;
+}
+
 .lineal-row--win {
   background: #f0fdf4;
 }
@@ -1029,6 +1034,10 @@ input[type="range"] {
 
 .lineal-row--loss {
   background: #fff1f2;
+}
+
+.lineal-row--vacated {
+  background: #f1f5f9;
 }
 
 .lineal-layout .panel {

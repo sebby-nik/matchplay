@@ -534,7 +534,7 @@ label {
   display: grid;
   grid-template-columns: 1fr;
   gap: 0.5rem 0.75rem;
-  justify-items: start;
+  justify-items: stretch;
   align-items: start;
   max-height: 200px;
   overflow: auto;
@@ -585,6 +585,7 @@ label {
   margin-top: 0;
   border: 0;
   padding: 0.5rem 0 0.25rem;
+  justify-items: stretch;
 }
 
 .multi-summary__chips {
@@ -644,13 +645,15 @@ label {
   gap: 0.5rem;
   font-size: 0.85rem;
   color: var(--ink);
-  padding: 0.35rem 0.25rem;
+  padding: 0.45rem 0.5rem;
   border-radius: 8px;
   cursor: pointer;
   text-align: left;
   width: 100%;
   position: relative;
   margin: 0;
+  align-self: stretch;
+  box-sizing: border-box;
 }
 
 .country-filter__item span {
@@ -668,6 +671,8 @@ label {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  width: 100%;
+  justify-content: flex-start;
 }
 
 .country-filter__text::before {

@@ -241,7 +241,7 @@ const renderPlayerDetailContent = (player) => {
     .slice()
     .sort((a, b) => b.year - a.year)
     .map((match) => {
-      const label = match.result === "halved" ? "Halved" : match.result.toUpperCase();
+      const label = match.result === "halved" ? "Draw" : match.result.toUpperCase();
       const resultClass =
         match.result === "win"
           ? "result-win"

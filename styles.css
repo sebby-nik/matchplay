@@ -1009,7 +1009,7 @@ input[type="range"] {
   color: #166534;
 }
 
-.lineal-result--halved {
+.lineal-result--draw {
   background: #fef3c7;
   color: #92400e;
 }
@@ -1028,7 +1028,7 @@ input[type="range"] {
   background: #f0fdf4;
 }
 
-.lineal-row--halved {
+.lineal-row--draw {
   background: #fef3c7;
 }
 

@@ -157,7 +157,7 @@ const getOpponent = (match, champion) =>
   match.player === champion ? match.opponent : match.player;
 
 const getChampionResult = (match, champion) => {
-  if (match.result === "halved") return "Halved";
+  if (match.result === "halved") return "Draw";
   const championIsPlayer = match.player === champion;
   const playerWon = match.result === "win";
   if (championIsPlayer) {
@@ -265,7 +265,7 @@ const buildLinealLog = (matches) => {
         step.opponent
       );
       const match = matchIndex >= 0 ? orderedMatches[matchIndex] : null;
-      const outcome = step.outcome === "win" ? "Win" : step.outcome === "halved" ? "Halved" : "Loss";
+      const outcome = step.outcome === "win" ? "Win" : step.outcome === "halved" ? "Draw" : "Loss";
 
       log.push({
         year: step.year,
@@ -355,7 +355,7 @@ const buildReigns = (timeline, grants, retirements) => {
     if (entry.championResult === "Win") {
       current.wins += 1;
       current.defenses += 1;
-    } else if (entry.championResult === "Halved") {
+    } else if (entry.championResult === "Draw") {
       current.halves += 1;
       current.defenses += 1;
     } else {
@@ -391,7 +391,7 @@ const renderChampionCard = (reigns) => {
   linealChampionStats.innerHTML = `
     <span>${current.matches} matches</span>
     <span>${current.defenses} defenses</span>
-    <span>${current.wins}-${current.halves}-${current.losses} W-H-L</span>
+    <span>${current.wins}-${current.halves}-${current.losses} W-D-L</span>
   `;
 };
 
@@ -404,7 +404,7 @@ const renderChampionsList = (reigns) => {
     const endLabel = reign.endEntry
       ? `Lost at ${formatMatchLabel(reign.endEntry)}`
       : reign.endLabel || "Present";
-    const detail = `${reign.matches} matches · ${reign.defenses} defenses · ${reign.wins}-${reign.halves}-${reign.losses} W-H-L`;
+    const detail = `${reign.matches} matches · ${reign.defenses} defenses · ${reign.wins}-${reign.halves}-${reign.losses} W-D-L`;
 
     const item = document.createElement("li");
     item.className = "lineal-champion";

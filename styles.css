@@ -128,7 +128,8 @@ label {
   border: 1px solid var(--line);
   border-radius: 10px;
   background: #ffffff;
-  padding: 0.5rem 0.75rem;
+  padding: 0.35rem 0.65rem;
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
 }
 
 .country-filter__dropdown summary {
@@ -142,6 +143,7 @@ label {
   flex-wrap: nowrap;
   white-space: nowrap;
   overflow: hidden;
+  min-height: 44px;
 }
 
 .country-filter__dropdown summary::-webkit-details-marker {
@@ -175,10 +177,10 @@ label {
 .multi-pill {
   display: inline-flex;
   align-items: center;
-  padding: 0.25rem 0.55rem;
-  border-radius: 999px;
-  background: #1d4ed8;
-  color: #ffffff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  background: #e5e7eb;
+  color: #111827;
   font-size: 0.8rem;
   font-weight: 600;
   max-width: 140px;
@@ -189,7 +191,7 @@ label {
 
 .summary-clear {
   border: none;
-  background: #e2e8f0;
+  background: #e5e7eb;
   color: var(--ink);
   border-radius: 999px;
   width: 24px;
@@ -201,7 +203,12 @@ label {
 }
 
 .summary-clear:hover {
-  background: #cbd5f5;
+  background: #d1d5db;
+}
+
+.country-filter__dropdown[open] {
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
 }
 
 .country-filter__item {

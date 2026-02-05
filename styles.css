@@ -265,7 +265,7 @@ body.filters-open .mobile-filter-overlay {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.6fr);
   gap: 2.5rem;
   align-items: center;
 }

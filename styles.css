@@ -230,6 +230,7 @@ label {
   border-radius: 8px;
   cursor: pointer;
   text-align: left;
+  width: 100%;
 }
 
 .country-filter__item input {

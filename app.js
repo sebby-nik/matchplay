@@ -92,13 +92,20 @@ const countryNameFromCode = (code) => {
 
 const renderSummaryChips = (items, type) => {
   if (items.length === 0) return "";
-  const chips = items
+  const maxVisible = 2;
+  const visible = items.slice(0, maxVisible);
+  const extra = items.length - visible.length;
+  const chips = visible
     .map(
       (item) => `<span class="multi-pill" title="${item.replace(/\"/g, "&quot;")}">${item}</span>`
     )
     .join("");
+  const more =
+    extra > 0
+      ? `<span class="multi-pill multi-pill--more" title="${items.join(", ").replace(/\"/g, "&quot;")}">+${extra}</span>`
+      : "";
   return `
-    <span class="multi-summary__chips">${chips}</span>
+    <span class="multi-summary__chips">${chips}${more}</span>
     <button class="summary-clear" type="button" data-clear="${type}">×</button>
   `;
 };

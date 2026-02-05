@@ -1,14 +1,15 @@
 :root {
-  --ink: #0f172a;
-  --ink-soft: #4b5563;
+  --ink: #0b1324;
+  --ink-soft: #5b6472;
   --paper: #ffffff;
-  --accent: #0f172a;
-  --accent-soft: #e2e8f0;
-  --highlight: #2563eb;
+  --accent: #0b1324;
+  --accent-soft: #e8edf3;
+  --highlight: #16a34a;
+  --highlight-deep: #065f46;
   --panel: #ffffff;
-  --line: #e5e7eb;
-  --shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
-  --serif: "Space Grotesk", "Segoe UI", sans-serif;
+  --line: #e4e9f0;
+  --shadow: 0 18px 40px rgba(11, 19, 36, 0.08);
+  --serif: "Instrument Serif", "Georgia", serif;
   --sans: "Instrument Sans", "Segoe UI", sans-serif;
 }
 
@@ -20,7 +21,7 @@ body {
   margin: 0;
   font-family: var(--sans);
   color: var(--ink);
-  background: #f8fafc;
+  background: #f5f7fb;
   min-height: 100vh;
 }
 
@@ -29,12 +30,12 @@ h2,
 h3 {
   font-family: var(--serif);
   margin: 0;
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-weight: 500;
+  letter-spacing: -0.025em;
 }
 
 h1 {
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-size: clamp(2.75rem, 5vw, 4.5rem);
 }
 
 p {
@@ -42,7 +43,9 @@ p {
 }
 
 .hero {
-  padding: 4rem 8vw 2.5rem;
+  padding: 4.5rem 8vw 3rem;
+  background: linear-gradient(135deg, #f8fbff 0%, #f2f7f4 45%, #eef2ff 100%);
+  border-bottom: 1px solid var(--line);
 }
 
 .hero__content {
@@ -59,7 +62,7 @@ p {
 
 .lede {
   color: var(--ink-soft);
-  font-size: 1.1rem;
+  font-size: 1.05rem;
 }
 
 .layout {
@@ -71,7 +74,7 @@ p {
 
 .panel {
   background: var(--panel);
-  border-radius: 18px;
+  border-radius: 20px;
   padding: 0;
   box-shadow: var(--shadow);
   border: 1px solid var(--line);
@@ -222,8 +225,8 @@ label {
 }
 
 .country-filter__dropdown[open] {
-  border-color: #93c5fd;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+  border-color: #86efac;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.18);
 }
 
 .country-filter__item {
@@ -326,6 +329,7 @@ input[type="search"] {
   min-height: 44px;
   height: 44px;
   line-height: 44px;
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.02);
 }
 
 input[type="range"] {
@@ -384,7 +388,7 @@ input[type="range"] {
 }
 
 .filter-clear-all:hover {
-  color: var(--ink);
+  color: var(--highlight-deep);
 }
 
 .filter-chip {
@@ -488,7 +492,7 @@ input[type="range"] {
 }
 
 .rank-table thead {
-  background: #f1f5f9;
+  background: #eef3f8;
   font-weight: 600;
   font-size: 0.85rem;
   letter-spacing: 0.04em;
@@ -504,11 +508,11 @@ input[type="range"] {
 }
 
 .rank-table tbody tr:hover {
-  background: #f8fafc;
+  background: #f3f6fb;
 }
 
 .rank-table tbody tr.is-open {
-  background: #f1f5f9;
+  background: #eef3f8;
 }
 
 .detail-row td {
@@ -617,18 +621,18 @@ input[type="range"] {
 }
 
 .match-row.result-win {
-  background: #f0fdf4;
-  border-color: #bbf7d0;
+  background: #effaf3;
+  border-color: #b9e6cc;
 }
 
 .match-row.result-halved {
-  background: #fffbeb;
-  border-color: #fde68a;
+  background: #fff7e6;
+  border-color: #fcd9a7;
 }
 
 .match-row.result-loss {
-  background: #fef2f2;
-  border-color: #fecaca;
+  background: #fff1f2;
+  border-color: #fbcfe8;
 }
 
 .badge {

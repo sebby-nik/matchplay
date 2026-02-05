@@ -37,7 +37,32 @@ let selectedPlayers = new Set();
 let availablePlayers = [];
 let allPlayers = [];
 
-const normalize = (value) => value.toLowerCase();
+const normalize = (value) => {
+  if (!value) return "";
+  const map = {
+    ø: "o",
+    Ø: "O",
+    æ: "ae",
+    Æ: "AE",
+    å: "a",
+    Å: "A",
+    ñ: "n",
+    Ñ: "N",
+    ç: "c",
+    Ç: "C",
+    á: "a",
+    Á: "A",
+    é: "e",
+    É: "E",
+    í: "i",
+    Í: "I"
+  };
+  const mapped = value.replace(/[øØæÆåÅñÑçÇáÁéÉíÍ]/g, (char) => map[char] || char);
+  return mapped
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+};
 
 const flagFromCountry = (code) => {
   if (!code) return "";

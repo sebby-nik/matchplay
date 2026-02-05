@@ -146,6 +146,14 @@ const renderTable = (players) => {
     const flag = flagFromCountry(player.country);
     const ppmValue = player.matches < 3 ? null : player.ppm;
     const ppmPercent = ppmValue && maxPpm ? Math.max((ppmValue / maxPpm) * 100, 8) : 0;
+    const ppmClass =
+      ppmValue === null
+        ? "ppm-bar__fill--na"
+        : ppmValue / maxPpm >= 0.67
+          ? "ppm-bar__fill--high"
+          : ppmValue / maxPpm >= 0.34
+            ? "ppm-bar__fill--mid"
+            : "ppm-bar__fill--low";
     row.innerHTML = `
       <td>${index + 1}</td>
       <td>${player.name}</td>
@@ -157,7 +165,7 @@ const renderTable = (players) => {
         <div class="ppm-cell">
           <span>${player.matches < 3 ? "N/A" : player.ppm.toFixed(2)}</span>
           <span class="ppm-bar">
-            <span class="ppm-bar__fill" style="width: ${ppmPercent}%"></span>
+            <span class="ppm-bar__fill ${ppmClass}" style="width: ${ppmPercent}%"></span>
           </span>
         </div>
       </td>

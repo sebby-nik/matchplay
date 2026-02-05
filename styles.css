@@ -598,8 +598,23 @@ input[type="range"] {
 .ppm-bar__fill {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, #16a34a, #22c55e);
   border-radius: 999px;
+}
+
+.ppm-bar__fill--high {
+  background: linear-gradient(90deg, #0f766e, #22c55e);
+}
+
+.ppm-bar__fill--mid {
+  background: linear-gradient(90deg, #f59e0b, #facc15);
+}
+
+.ppm-bar__fill--low {
+  background: linear-gradient(90deg, #ef4444, #f97316);
+}
+
+.ppm-bar__fill--na {
+  background: #e5e7eb;
 }
 
 .player-detail {

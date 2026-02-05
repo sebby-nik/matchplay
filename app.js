@@ -371,7 +371,7 @@ const applyFilters = () => {
       : sorted;
 
   currentPlayers = searched;
-  summary.textContent = `${searched.length} players • ${matches.length} matches • Min ${minMatches}+`;
+  summary.textContent = `${searched.length} players • Min ${minMatches}+`;
   renderFilterChips();
   renderPlayerChips();
   renderTable(searched);

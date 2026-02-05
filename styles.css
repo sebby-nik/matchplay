@@ -380,8 +380,9 @@ input[type="range"] {
 }
 
 .ppm-legend-wrap {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
   padding: 0 2rem 1rem;
 }
 
@@ -391,8 +392,6 @@ input[type="range"] {
   gap: 0.6rem;
   font-size: 0.85rem;
   color: var(--ink-soft);
-  justify-self: end;
-  padding-right: 1rem;
 }
 
 .ppm-swatch {
@@ -878,11 +877,11 @@ input[type="range"] {
 
   .ppm-legend-wrap {
     padding: 0 1.25rem 1rem;
-    grid-template-columns: 1fr;
+    justify-content: flex-start;
   }
 
   .ppm-legend {
-    justify-self: start;
+    flex-wrap: wrap;
   }
 
   .rank-table {

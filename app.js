@@ -6,11 +6,19 @@ const minMatchesValue = document.getElementById("minMatchesValue");
 const summary = document.getElementById("summary");
 const rankBody = document.getElementById("rankBody");
 const countryFilter = document.getElementById("countryFilter");
+const countrySummary = document.getElementById("countrySummary");
+const countrySearch = document.getElementById("countrySearch");
+const countrySelectAll = document.getElementById("countrySelectAll");
+const countryApply = document.getElementById("countryApply");
+const countryCancel = document.getElementById("countryCancel");
+const countryDropdown = document.querySelector(".country-filter__dropdown");
 
 let allMatches = [];
 let currentSort = { key: "ppm", direction: "desc" };
 let currentPlayers = [];
 let selectedCountries = new Set();
+let pendingCountries = new Set();
+let allCountries = [];
 
 const normalize = (value) => value.toLowerCase();
 
@@ -80,6 +88,32 @@ const renderTable = (players) => {
     row.addEventListener("click", () => renderPlayerDetail(player, row));
     rankBody.append(row);
   });
+};
+
+const updateCountrySummary = () => {
+  if (selectedCountries.size === 0) {
+    countrySummary.textContent = "All countries";
+    return;
+  }
+  const list = Array.from(selectedCountries);
+  const preview = list.slice(0, 2).join(", ");
+  const extra = list.length > 2 ? ` +${list.length - 2}` : "";
+  countrySummary.textContent = `${preview}${extra}`;
+};
+
+const syncCountryCheckboxes = () => {
+  countryFilter.querySelectorAll("input[type=\"checkbox\"]").forEach((cb) => {
+    if (cb === countrySelectAll) return;
+    cb.checked = pendingCountries.has(cb.value);
+  });
+  countrySelectAll.checked =
+    pendingCountries.size > 0 && pendingCountries.size === allCountries.length;
+};
+
+const applyCountryFilter = () => {
+  selectedCountries = new Set(pendingCountries);
+  updateCountrySummary();
+  applyFilters();
 };
 
 const renderPlayerDetailContent = (player) => {
@@ -214,6 +248,7 @@ const populateFilters = () => {
   const sticky = ["US", "GB"].filter((code) => countries.includes(code));
   const remaining = countries.filter((code) => !sticky.includes(code));
   const orderedCountries = [...sticky, ...remaining];
+  allCountries = orderedCountries.slice();
 
   countryFilter.innerHTML = "";
   orderedCountries.forEach((code) => {
@@ -228,14 +263,16 @@ const populateFilters = () => {
     const checkbox = item.querySelector("input");
     checkbox.addEventListener("change", () => {
       if (checkbox.checked) {
-        selectedCountries.add(code);
+        pendingCountries.add(code);
       } else {
-        selectedCountries.delete(code);
+        pendingCountries.delete(code);
       }
-      applyFilters();
+      countrySelectAll.checked =
+        pendingCountries.size > 0 && pendingCountries.size === allCountries.length;
     });
     countryFilter.append(item);
   });
+  updateCountrySummary();
 
   if (allMatches.length > 0) {
     const matchCounts = calculatePlayers(allMatches).map((player) => player.matches);
@@ -262,6 +299,47 @@ fetch("data.json")
     populateFilters();
     applyFilters();
   });
+
+[countryDropdown].forEach((dropdown) => {
+  dropdown.addEventListener("toggle", () => {
+    if (dropdown.open) {
+      pendingCountries = new Set(selectedCountries);
+      syncCountryCheckboxes();
+      countrySearch.value = "";
+      countryFilter.querySelectorAll(".country-filter__item").forEach((item) => {
+        item.classList.remove("is-hidden");
+      });
+    }
+  });
+});
+
+countrySearch.addEventListener("input", () => {
+  const query = normalize(countrySearch.value.trim());
+  countryFilter.querySelectorAll(".country-filter__item").forEach((item) => {
+    const text = item.textContent.toLowerCase();
+    item.classList.toggle("is-hidden", query && !text.includes(query));
+  });
+});
+
+countrySelectAll.addEventListener("change", () => {
+  if (countrySelectAll.checked) {
+    pendingCountries = new Set(allCountries);
+  } else {
+    pendingCountries = new Set();
+  }
+  syncCountryCheckboxes();
+});
+
+countryApply.addEventListener("click", () => {
+  applyCountryFilter();
+  countryDropdown.open = false;
+});
+
+countryCancel.addEventListener("click", () => {
+  pendingCountries = new Set(selectedCountries);
+  syncCountryCheckboxes();
+  countryDropdown.open = false;
+});
 
 [eventSelect, yearSelect].forEach((input) => {
   input.addEventListener("change", applyFilters);

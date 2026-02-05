@@ -119,9 +119,8 @@ label {
   gap: 0.5rem 0.75rem;
   max-height: 200px;
   overflow: auto;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--line);
-  border-radius: 10px;
+  padding: 0.5rem 0.25rem 0.25rem;
+  border-top: 1px solid var(--line);
   background: #ffffff;
 }
 
@@ -154,9 +153,9 @@ label {
 }
 
 .country-filter__dropdown .country-filter__list {
-  margin-top: 0.5rem;
+  margin-top: 0;
   border: 0;
-  padding: 0.5rem 0;
+  padding: 0.5rem 0 0.25rem;
 }
 
 .country-filter__item {
@@ -165,10 +164,69 @@ label {
   gap: 0.5rem;
   font-size: 0.85rem;
   color: var(--ink);
+  padding: 0.35rem 0.25rem;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
 .country-filter__item input {
   accent-color: var(--highlight);
+}
+
+.country-filter__item.is-hidden {
+  display: none;
+}
+
+.country-filter__item:hover {
+  background: #f1f5f9;
+}
+
+.country-filter__panel {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.country-filter__search {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.country-filter__search input {
+  border: none;
+  outline: none;
+  font-size: 0.9rem;
+}
+
+.country-filter__search-icon {
+  color: var(--ink-soft);
+}
+
+.country-filter__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.country-filter__actions button {
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.country-filter__actions button:last-child {
+  background: var(--ink);
+  color: #ffffff;
+  border-color: var(--ink);
 }
 
 select,

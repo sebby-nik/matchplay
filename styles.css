@@ -1358,6 +1358,10 @@ input[type="range"] {
   background: inherit;
 }
 
+.lineal-table tbody tr:nth-child(even) {
+  background: transparent;
+}
+
 .lineal-table {
   border-collapse: separate;
   border-spacing: 0 6px;

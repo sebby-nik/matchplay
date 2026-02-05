@@ -1,19 +1,19 @@
 :root {
-  --ink: #0b1324;
-  --ink-soft: #4b5563;
-  --paper: #ffffff;
-  --accent: #0b1324;
-  --accent-soft: #eef2f7;
-  --highlight: #17c964;
-  --highlight-deep: #0c7a3b;
-  --sport-gold: #f3c74f;
-  --sport-gold-deep: #d89b1f;
+  --ink: #161b26;
+  --ink-soft: #5f6676;
+  --paper: #f7f3ee;
+  --accent: #1d2433;
+  --accent-soft: #efe9e1;
+  --highlight: #9a7b45;
+  --highlight-deep: #6f5530;
+  --sport-gold: #d8b26a;
+  --sport-gold-deep: #b3873b;
   --panel: #ffffff;
-  --line: #e4e9f0;
-  --shadow: 0 24px 50px rgba(11, 19, 36, 0.12);
+  --line: #e6ded2;
+  --shadow: 0 28px 60px rgba(22, 27, 38, 0.12);
   --serif: "Instrument Serif", "Georgia", serif;
   --sans: "Instrument Sans", "Segoe UI", sans-serif;
-  --display: "Bebas Neue", "Impact", sans-serif;
+  --display: "Instrument Serif", "Georgia", serif;
 }
 
 * {
@@ -24,7 +24,7 @@ body {
   margin: 0;
   font-family: var(--sans);
   color: var(--ink);
-  background: #f3f4f6;
+  background: var(--paper);
   min-height: 100vh;
 }
 
@@ -38,16 +38,16 @@ h3 {
 }
 
 h2 {
-  font-family: var(--display);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-family: var(--serif);
+  text-transform: none;
+  letter-spacing: -0.01em;
 }
 
 h1 {
-  font-size: clamp(2.8rem, 5vw, 5rem);
-  font-family: var(--display);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-size: clamp(2.6rem, 5vw, 4.6rem);
+  font-family: var(--serif);
+  text-transform: none;
+  letter-spacing: -0.01em;
 }
 
 p {
@@ -59,20 +59,20 @@ p {
   border-bottom: 1px solid var(--line);
   position: relative;
   overflow: hidden;
+  background: linear-gradient(135deg, #f7f3ee 0%, #efe7dc 50%, #f7f3ee 100%);
 }
 
 .hero--sport {
-  color: #f8fafc;
-  background: radial-gradient(circle at 20% 20%, rgba(23, 201, 100, 0.35), transparent 55%),
-    radial-gradient(circle at 80% 30%, rgba(243, 199, 79, 0.35), transparent 50%),
-    linear-gradient(135deg, #0b1324 0%, #0f1c32 50%, #111827 100%);
+  color: var(--ink);
+  background: linear-gradient(135deg, #f7f3ee 0%, #efe7dc 50%, #f7f3ee 100%);
 }
 
 .hero--sport::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(120deg, rgba(255, 255, 255, 0.08), transparent 60%);
+  background: radial-gradient(circle at 20% 10%, rgba(183, 145, 89, 0.18), transparent 55%),
+    radial-gradient(circle at 75% 30%, rgba(120, 95, 56, 0.12), transparent 60%);
   pointer-events: none;
 }
 
@@ -98,7 +98,7 @@ p {
   width: 64px;
   height: 64px;
   border-radius: 18px;
-  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 12px 26px rgba(22, 27, 38, 0.2);
   object-fit: cover;
 }
 
@@ -111,7 +111,7 @@ p {
 }
 
 .lede {
-  color: rgba(248, 250, 252, 0.85);
+  color: var(--ink-soft);
   font-size: 1.1rem;
 }
 
@@ -120,7 +120,7 @@ p {
   align-items: center;
   gap: 0.4rem;
   margin-top: 1rem;
-  color: #f8fafc;
+  color: var(--highlight-deep);
   font-weight: 600;
   text-decoration: none;
 }
@@ -150,7 +150,7 @@ p {
 
 .panel--sport {
   border-radius: 24px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  border: 1px solid var(--line);
 }
 
 .panel__header {
@@ -160,18 +160,19 @@ p {
 
 .sport-band {
   padding: 3.5rem 6vw 2.5rem;
-  background: #0b1324;
-  color: #f8fafc;
+  background: #f5f0e8;
+  color: var(--ink);
   position: relative;
   overflow: hidden;
+  border-bottom: 1px solid var(--line);
 }
 
 .sport-band::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 20% 50%, rgba(23, 201, 100, 0.25), transparent 55%),
-    radial-gradient(circle at 80% 20%, rgba(243, 199, 79, 0.2), transparent 60%);
+  background: radial-gradient(circle at 20% 50%, rgba(183, 145, 89, 0.12), transparent 55%),
+    radial-gradient(circle at 80% 20%, rgba(120, 95, 56, 0.1), transparent 60%);
   opacity: 0.9;
 }
 
@@ -188,7 +189,7 @@ p {
   text-transform: uppercase;
   letter-spacing: 0.3em;
   font-size: 0.7rem;
-  color: rgba(248, 250, 252, 0.6);
+  color: rgba(95, 102, 118, 0.8);
   margin-bottom: 0.75rem;
 }
 
@@ -198,7 +199,7 @@ p {
 }
 
 .sport-band__copy p {
-  color: rgba(248, 250, 252, 0.8);
+  color: var(--ink-soft);
 }
 
 .sport-band__stats {
@@ -217,7 +218,7 @@ p {
 
 .sport-band__label {
   font-size: 0.85rem;
-  color: rgba(248, 250, 252, 0.6);
+  color: var(--ink-soft);
 }
 
 .sport-band__media {
@@ -227,12 +228,12 @@ p {
 
 .image-slot {
   border-radius: 18px;
-  border: 1px dashed rgba(248, 250, 252, 0.4);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+  border: 1px dashed rgba(95, 102, 118, 0.35);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.2));
   min-height: 180px;
   display: grid;
   place-items: center;
-  color: rgba(248, 250, 252, 0.7);
+  color: rgba(95, 102, 118, 0.8);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.2em;
@@ -244,7 +245,7 @@ p {
 }
 
 .sport-band--lineal {
-  background: #101827;
+  background: #f5f0e8;
 }
 
 @media (max-width: 900px) {
@@ -1080,10 +1081,10 @@ input[type="range"] {
 }
 
 .lineal-card--gold {
-  background: linear-gradient(135deg, #f7d774 0%, #f1c24a 45%, #e7a72a 100%);
-  color: #111827;
-  border: 1px solid rgba(17, 24, 39, 0.15);
-  box-shadow: 0 18px 36px rgba(214, 155, 34, 0.35);
+  background: linear-gradient(135deg, #f6e4b5 0%, #e6c984 45%, #d9b064 100%);
+  color: #1d2433;
+  border: 1px solid rgba(111, 85, 48, 0.3);
+  box-shadow: 0 18px 36px rgba(141, 101, 44, 0.25);
 }
 
 .lineal-card__label {

@@ -4,6 +4,7 @@ const eventSearch = document.getElementById("eventSearch");
 const eventSelectAll = document.getElementById("eventSelectAll");
 const eventApply = document.getElementById("eventApply");
 const eventCancel = document.getElementById("eventCancel");
+const eventClear = document.getElementById("eventClear");
 const eventDropdown = document.getElementById("eventDropdown");
 const yearFilter = document.getElementById("yearFilter");
 const yearSummary = document.getElementById("yearSummary");
@@ -11,11 +12,13 @@ const yearSearch = document.getElementById("yearSearch");
 const yearSelectAll = document.getElementById("yearSelectAll");
 const yearApply = document.getElementById("yearApply");
 const yearCancel = document.getElementById("yearCancel");
+const yearClear = document.getElementById("yearClear");
 const yearDropdown = document.getElementById("yearDropdown");
 const searchInput = document.getElementById("searchInput");
 const minMatchesInput = document.getElementById("minMatches");
 const minMatchesValue = document.getElementById("minMatchesValue");
 const summary = document.getElementById("summary");
+const filterChips = document.getElementById("filterChips");
 const rankBody = document.getElementById("rankBody");
 const countryFilter = document.getElementById("countryFilter");
 const countrySummary = document.getElementById("countrySummary");
@@ -23,6 +26,7 @@ const countrySearch = document.getElementById("countrySearch");
 const countrySelectAll = document.getElementById("countrySelectAll");
 const countryApply = document.getElementById("countryApply");
 const countryCancel = document.getElementById("countryCancel");
+const countryClear = document.getElementById("countryClear");
 const countryDropdown = document.getElementById("countryDropdown");
 
 let allMatches = [];
@@ -237,10 +241,66 @@ const applyFilters = () => {
 
   currentPlayers = sorted;
   summary.textContent = `${sorted.length} players • ${matches.length} matches • Min ${minMatches}+`;
+  renderFilterChips();
   renderTable(sorted);
 
   document.querySelectorAll(".detail-row").forEach((node) => node.remove());
   document.querySelectorAll("tr.is-open").forEach((node) => node.classList.remove("is-open"));
+};
+
+const renderFilterChips = () => {
+  if (!filterChips) return;
+  filterChips.innerHTML = "";
+
+  const chips = [];
+
+  selectedEvents.forEach((event) => {
+    chips.push({ type: "event", label: event, value: event });
+  });
+
+  selectedYears.forEach((year) => {
+    chips.push({ type: "year", label: year, value: year });
+  });
+
+  selectedCountries.forEach((code) => {
+    const flag = flagFromCountry(code);
+    chips.push({ type: "country", label: `${flag ? `${flag} ` : ""}${code}`, value: code });
+  });
+
+  if (chips.length === 0) {
+    filterChips.style.display = "none";
+    return;
+  }
+
+  filterChips.style.display = "flex";
+  chips.forEach((chip) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "filter-chip";
+    button.innerHTML = `<span>${chip.label}</span><span class=\"filter-chip__close\">×</span>`;
+    button.addEventListener("click", () => {
+      if (chip.type === "event") {
+        selectedEvents.delete(chip.value);
+        pendingEvents = new Set(selectedEvents);
+        updateEventSummary();
+        syncEventCheckboxes();
+      }
+      if (chip.type === "year") {
+        selectedYears.delete(chip.value);
+        pendingYears = new Set(selectedYears);
+        updateYearSummary();
+        syncYearCheckboxes();
+      }
+      if (chip.type === "country") {
+        selectedCountries.delete(chip.value);
+        pendingCountries = new Set(selectedCountries);
+        updateCountrySummary();
+        syncCountryCheckboxes();
+      }
+      applyFilters();
+    });
+    filterChips.append(button);
+  });
 };
 
 const updateEventSummary = () => {
@@ -463,6 +523,15 @@ eventCancel.addEventListener("click", () => {
   eventDropdown.open = false;
 });
 
+eventClear.addEventListener("click", () => {
+  pendingEvents = new Set();
+  selectedEvents = new Set();
+  syncEventCheckboxes();
+  updateEventSummary();
+  applyFilters();
+  eventDropdown.open = false;
+});
+
 yearSearch.addEventListener("input", () => {
   const query = normalize(yearSearch.value.trim());
   yearFilter.querySelectorAll(".country-filter__item").forEach((item) => {
@@ -491,6 +560,15 @@ yearCancel.addEventListener("click", () => {
   yearDropdown.open = false;
 });
 
+yearClear.addEventListener("click", () => {
+  pendingYears = new Set();
+  selectedYears = new Set();
+  syncYearCheckboxes();
+  updateYearSummary();
+  applyFilters();
+  yearDropdown.open = false;
+});
+
 countrySearch.addEventListener("input", () => {
   const query = normalize(countrySearch.value.trim());
   countryFilter.querySelectorAll(".country-filter__item").forEach((item) => {
@@ -516,6 +594,15 @@ countryApply.addEventListener("click", () => {
 countryCancel.addEventListener("click", () => {
   pendingCountries = new Set(selectedCountries);
   syncCountryCheckboxes();
+  countryDropdown.open = false;
+});
+
+countryClear.addEventListener("click", () => {
+  pendingCountries = new Set();
+  selectedCountries = new Set();
+  syncCountryCheckboxes();
+  updateCountrySummary();
+  applyFilters();
   countryDropdown.open = false;
 });
 

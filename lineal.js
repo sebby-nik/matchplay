@@ -521,11 +521,11 @@ const renderMatchLog = (entries) => {
     row.innerHTML = `
       <td>${entry.year}</td>
       <td>${entry.event}</td>
-      <td>${entry.round}</td>
       <td>${entry.championBefore}</td>
       <td>${entry.opponent}</td>
       <td><span class="lineal-result lineal-result--${entry.championResult.toLowerCase()}">${entry.championResult}</span></td>
       <td>${entry.score || "-"}</td>
+      <td>${entry.round}</td>
     `;
     linealMatches.append(row);
   });

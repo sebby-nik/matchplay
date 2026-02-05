@@ -286,7 +286,6 @@ const renderPlayerDetailContent = (player) => {
 
   return `
     <div class="player-detail">
-      <button class="detail-close" type="button" aria-label="Close details">×</button>
       <h3>${flag ? `${flag} ` : ""}${player.name}</h3>
       <div class="detail-meta">${player.matches} matches • ${player.points.toFixed(1)} points • ${player.wins}-${player.draws}-${player.losses}</div>
       <div class="match-list">${matches || "<p class=\"muted\">No matches yet.</p>"}</div>
@@ -313,15 +312,6 @@ const renderPlayerDetail = (player, row) => {
   detailRow.append(cell);
   row.after(detailRow);
   row.classList.add("is-open");
-
-  const closeBtn = detailRow.querySelector(".detail-close");
-  if (closeBtn) {
-    closeBtn.addEventListener("click", (event) => {
-      event.stopPropagation();
-      detailRow.remove();
-      row.classList.remove("is-open");
-    });
-  }
 };
 const sortPlayers = (players) => {
   const sorted = players.slice().sort((a, b) => {

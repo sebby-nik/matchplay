@@ -14,7 +14,7 @@ const countryCancel = document.getElementById("countryCancel");
 const countryDropdown = document.querySelector(".country-filter__dropdown");
 
 let allMatches = [];
-let currentSort = { key: "ppm", direction: "desc" };
+let currentSort = { key: "matches", direction: "desc" };
 let currentPlayers = [];
 let selectedCountries = new Set();
 let pendingCountries = new Set();

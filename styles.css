@@ -1054,17 +1054,17 @@ input[type="range"] {
 }
 
 .lineal-group-row td {
-  border-left: 1px solid var(--line);
-  border-right: 1px solid var(--line);
+  border-left: 2px solid var(--line);
+  border-right: 2px solid var(--line);
   background-clip: padding-box;
 }
 
 .lineal-group-start td {
-  border-top: 1px solid var(--line);
+  border-top: 2px solid var(--line);
 }
 
 .lineal-group-end td {
-  border-bottom: 1px solid var(--line);
+  border-bottom: 2px solid var(--line);
 }
 
 .lineal-group-start td:first-child {

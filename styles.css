@@ -1025,8 +1025,7 @@ input[type="range"] {
 }
 
 .lineal-row--win {
-  background: #16a34a;
-  color: #f8fafc;
+  background: #f0fdf4;
 }
 
 .lineal-row--halved {
@@ -1034,8 +1033,7 @@ input[type="range"] {
 }
 
 .lineal-row--loss {
-  background: #dc2626;
-  color: #fef2f2;
+  background: #fff1f2;
 }
 
 .lineal-row--vacated {

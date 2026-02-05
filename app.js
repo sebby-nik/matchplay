@@ -705,7 +705,9 @@ const renderPlayerChips = () => {
     const chip = document.createElement("span");
     chip.className = "player-chip";
     chip.innerHTML = `<span>${name}</span><button type="button" aria-label="Remove ${name}">×</button>`;
-    chip.querySelector("button").addEventListener("click", () => {
+    chip.querySelector("button").addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
       selectedPlayers.delete(name);
       renderPlayerChips();
       applyFilters();

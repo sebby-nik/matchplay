@@ -152,7 +152,7 @@ const renderTable = (players) => {
       <td>${player.matches}</td>
       <td>${player.points.toFixed(1)}</td>
       <td>${player.wins}-${player.draws}-${player.losses}</td>
-      <td>${player.ppm.toFixed(2)}</td>
+      <td>${player.matches < 3 ? "N/A" : player.ppm.toFixed(2)}</td>
     `;
 
     row.addEventListener("click", () => renderPlayerDetail(player, row));

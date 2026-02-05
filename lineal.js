@@ -138,6 +138,8 @@ const countryNameFromCode = (code) => {
     NZ: "New Zealand",
     ZA: "South Africa",
     ZW: "Zimbabwe",
+    AT: "Austria",
+    BE: "Belgium",
     JP: "Japan",
     KR: "South Korea",
     AR: "Argentina",
@@ -158,7 +160,13 @@ const countryNameFromCode = (code) => {
     IN: "India",
     CL: "Chile",
     FJ: "Fiji",
-    PH: "Philippines"
+    PH: "Philippines",
+    FI: "Finland",
+    IT: "Italy",
+    NL: "Netherlands",
+    NO: "Norway",
+    PL: "Poland",
+    TT: "Trinidad and Tobago"
   };
   return names[code] || code;
 };

@@ -768,7 +768,7 @@ const showPlayerSuggestions = (query) => {
     return;
   }
   const matches = source
-    .filter((name) => name.toLowerCase().includes(query))
+    .filter((name) => normalize(name).includes(query))
     .filter((name) => !selectedPlayers.has(name))
     .slice(0, 8);
   if (matches.length === 0) {

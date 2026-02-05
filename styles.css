@@ -81,6 +81,20 @@ p {
   font-size: 1.05rem;
 }
 
+.hero__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  color: var(--highlight-deep);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.hero__link:hover {
+  text-decoration: underline;
+}
+
 .layout {
   display: grid;
   gap: 2rem;
@@ -730,6 +744,11 @@ input[type="range"] {
 .rank-table td:last-child,
 .rank-table th:last-child {
   text-align: right;
+}
+
+.lineal-table th,
+.lineal-table td {
+  white-space: nowrap;
 }
 
 .flag {

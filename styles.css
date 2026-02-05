@@ -363,14 +363,20 @@ input[type="range"] {
   margin-bottom: 1rem;
 }
 
+.ppm-legend-wrap {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  padding: 0 2rem 1rem;
+}
+
 .ppm-legend {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  padding: 0 2rem 1rem;
   font-size: 0.85rem;
   color: var(--ink-soft);
-  justify-content: flex-end;
+  justify-self: end;
+  padding-right: 1rem;
 }
 
 .ppm-swatch {
@@ -851,8 +857,16 @@ input[type="range"] {
   }
 
   .ppm-legend {
-    padding: 0 1.25rem 1rem;
     flex-wrap: wrap;
+  }
+
+  .ppm-legend-wrap {
+    padding: 0 1.25rem 1rem;
+    grid-template-columns: 1fr;
+  }
+
+  .ppm-legend {
+    justify-self: start;
   }
 
   .rank-table {

@@ -932,6 +932,7 @@ input[type="range"] {
 }
 
 .lineal-card {
+  position: relative;
   background: #0b1324;
   color: #f8fafc;
   padding: 1.75rem;
@@ -940,11 +941,18 @@ input[type="range"] {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.lineal-card--gold {
+  background: linear-gradient(135deg, #f7d774 0%, #f1c24a 45%, #e7a72a 100%);
+  color: #111827;
+  border: 1px solid rgba(17, 24, 39, 0.15);
+  box-shadow: 0 18px 36px rgba(214, 155, 34, 0.35);
+}
+
 .lineal-card__label {
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: #a9b4c6;
+  color: inherit;
   margin: 0 0 0.75rem;
 }
 
@@ -954,7 +962,7 @@ input[type="range"] {
 }
 
 .lineal-card__meta {
-  color: #d1d7e2;
+  color: inherit;
   font-size: 0.95rem;
   margin-bottom: 1.1rem;
 }
@@ -966,12 +974,19 @@ input[type="range"] {
 }
 
 .lineal-card__stats span {
-  background: rgba(255, 255, 255, 0.08);
-  color: #f8fafc;
+  background: rgba(17, 24, 39, 0.12);
+  color: #111827;
   padding: 0.35rem 0.6rem;
   border-radius: 999px;
   font-size: 0.8rem;
   font-weight: 600;
+}
+
+.lineal-card__crown {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.4rem;
 }
 
 .lineal-status {

@@ -430,17 +430,22 @@ const buildReigns = (timeline, grants, retirements) => {
   return reigns;
 };
 
-const renderChampionCard = (reigns) => {
+const renderChampionCard = (reigns, overallStats) => {
   if (!linealChampionName || !linealChampionMeta || !linealChampionStats || reigns.length === 0) return;
   const current = reigns[reigns.length - 1];
   linealChampionName.textContent = current.champion;
-  const startLabel =
-    current.startLabel || (current.startEntry ? `Won title at ${formatMatchLabel(current.startEntry)}` : "Inaugural");
-  linealChampionMeta.textContent = `Champion since ${startLabel}`;
+  const titleEntry = current.startEntry;
+  const sinceText = titleEntry
+    ? `Champion since defeating ${titleEntry.opponent} at ${titleEntry.event}`
+    : current.startLabel || "Champion since inaugural grant";
+  linealChampionMeta.textContent = sinceText;
+
+  const defenses = Math.max(current.wins - (titleEntry ? 1 : 0), 0);
+  const overall = overallStats.get(current.champion) || { wins: 0, draws: 0, losses: 0 };
   linealChampionStats.innerHTML = `
     <span>${current.matches} matches</span>
-    <span>${current.defenses} defenses</span>
-    <span>${current.wins}-${current.halves}-${current.losses} W-D-L</span>
+    <span>${defenses} defenses</span>
+    <span>${overall.wins}-${overall.draws}-${overall.losses} W-D-L</span>
   `;
 };
 
@@ -512,6 +517,7 @@ fetch("data.json")
   .then((data) => {
     const matches = (data.matches || []).filter((match) => match.result !== "not played");
     const countryMap = new Map();
+    const overallStats = new Map();
     matches.forEach((match) => {
       if (match.player && match.player_country && !countryMap.has(match.player)) {
         countryMap.set(match.player, match.player_country);
@@ -519,11 +525,31 @@ fetch("data.json")
       if (match.opponent && match.opponent_country && !countryMap.has(match.opponent)) {
         countryMap.set(match.opponent, match.opponent_country);
       }
+
+      const ensure = (name) => {
+        if (!overallStats.has(name)) {
+          overallStats.set(name, { wins: 0, draws: 0, losses: 0 });
+        }
+        return overallStats.get(name);
+      };
+      const playerStats = ensure(match.player);
+      const opponentStats = ensure(match.opponent);
+
+      if (match.result === "win") {
+        playerStats.wins += 1;
+        opponentStats.losses += 1;
+      } else if (match.result === "halved") {
+        playerStats.draws += 1;
+        opponentStats.draws += 1;
+      } else if (match.result === "loss") {
+        playerStats.losses += 1;
+        opponentStats.wins += 1;
+      }
     });
     const { log, grants, retirements } = buildLinealLog(matches);
     const reigns = buildReigns(log, grants, retirements);
     renderMatchLog(log);
-    renderChampionCard(reigns);
+    renderChampionCard(reigns, overallStats);
     renderChampionsList(reigns, countryMap);
   });
 

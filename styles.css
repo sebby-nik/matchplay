@@ -115,7 +115,7 @@ label {
 
 .country-filter__list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  grid-template-columns: 1fr;
   gap: 0.5rem 0.75rem;
   max-height: 200px;
   overflow: auto;
@@ -205,14 +205,16 @@ label {
 }
 
 .country-filter__item {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 0.5rem;
   font-size: 0.85rem;
   color: var(--ink);
   padding: 0.35rem 0.25rem;
   border-radius: 8px;
   cursor: pointer;
+  text-align: left;
 }
 
 .country-filter__item input {

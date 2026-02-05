@@ -106,6 +106,7 @@ label {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  position: relative;
 }
 
 .country-filter__label {
@@ -131,6 +132,7 @@ label {
   background: #ffffff;
   padding: 0.35rem 0.65rem;
   box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
+  position: relative;
 }
 
 .country-filter__dropdown summary {
@@ -251,6 +253,16 @@ label {
   display: grid;
   gap: 0.75rem;
   margin-top: 0.75rem;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  z-index: 20;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.75rem;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
 }
 
 .country-filter__search {

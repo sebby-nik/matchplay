@@ -255,6 +255,11 @@ const sortPlayers = (players) => {
       const bRecord = b.wins * 3 + b.draws;
       return (aRecord - bRecord) * dir;
     }
+    if (currentSort.key === "ppm") {
+      const aValue = a.matches < 3 ? -Infinity : a.ppm;
+      const bValue = b.matches < 3 ? -Infinity : b.ppm;
+      return (aValue - bValue) * dir;
+    }
     return (a[currentSort.key] - b[currentSort.key]) * dir;
   });
 

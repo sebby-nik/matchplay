@@ -52,11 +52,12 @@ p {
   max-width: 720px;
 }
 
-.brand {
-  display: inline-flex;
+.hero__title-row {
+  display: flex;
   align-items: center;
-  gap: 0.9rem;
+  gap: 1.2rem;
   margin-bottom: 1.25rem;
+  flex-wrap: wrap;
 }
 
 .brand__logo {
@@ -65,14 +66,6 @@ p {
   border-radius: 18px;
   box-shadow: 0 12px 26px rgba(11, 19, 36, 0.2);
   object-fit: cover;
-}
-
-.brand__name {
-  font-family: var(--serif);
-  font-size: 1.25rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--highlight-deep);
 }
 
 .eyebrow {

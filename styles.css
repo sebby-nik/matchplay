@@ -363,6 +363,42 @@ input[type="range"] {
   margin-bottom: 1rem;
 }
 
+.ppm-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0 2rem 1rem;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.ppm-swatch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #0b1324;
+  background: #e5e7eb;
+}
+
+.ppm-swatch--high {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.ppm-swatch--mid {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.ppm-swatch--low {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
 .filter-chips {
   display: flex;
   flex-wrap: wrap;
@@ -811,6 +847,11 @@ input[type="range"] {
     padding: 0 1.25rem 1rem;
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .ppm-legend {
+    padding: 0 1.25rem 1rem;
+    flex-wrap: wrap;
   }
 
   .rank-table {

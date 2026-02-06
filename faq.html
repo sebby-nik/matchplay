@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FAQs</title>
+    <meta
+      name="description"
+      content="Answers to common questions about matchplay ratings, records, and data sources."
+    />
+    <meta property="og:site_name" content="Matchplay Rankings" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="FAQs | Matchplay Rankings" />
+    <meta
+      property="og:description"
+      content="Answers to common questions about matchplay ratings, records, and data sources."
+    />
+    <meta property="og:url" content="https://www.matchplayrankings.com/faq.html" />
+    <meta
+      property="og:image"
+      content="https://www.matchplayrankings.com/assets/matchplay-header-1.jpg"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="960" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="FAQs | Matchplay Rankings" />
+    <meta
+      name="twitter:description"
+      content="Answers to common questions about matchplay ratings, records, and data sources."
+    />
+    <meta
+      name="twitter:image"
+      content="https://www.matchplayrankings.com/assets/matchplay-header-1.jpg"
+    />
+    <link rel="canonical" href="https://www.matchplayrankings.com/faq.html" />
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <link rel="icon" href="favicon.ico" sizes="any" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.matchplayrankings.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "FAQs",
+            "item": "https://www.matchplayrankings.com/faq.html"
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <nav class="site-nav">
+      <div class="site-nav__inner">
+        <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="siteNavLinks">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div class="site-nav__links" id="siteNavLinks">
+          <a class="site-nav__link" href="index.html">Player Ratings</a>
+          <a class="site-nav__link" href="records.html">Player Records</a>
+          <a class="site-nav__link" href="lineal.html">Lineal Championship</a>
+          <a class="site-nav__link is-active" href="faq.html">FAQs</a>
+          <a class="site-nav__link" href="about.html">About Us</a>
+        </div>
+      </div>
+    </nav>
+    <div class="site-nav__backdrop" id="siteNavBackdrop"></div>
+
+    <section class="sport-band">
+      <div class="sport-band__content">
+        <div class="sport-band__copy">
+          <p class="sport-band__eyebrow">Frequently Asked Questions</p>
+          <h1>Everything you need to know about matchplay rankings.</h1>
+          <p>
+            From how ratings are calculated to what matches count, these answers cover
+            the most common questions about the Matchplay Rankings archive.
+          </p>
+        </div>
+        <div class="sport-band__media">
+          <div class="image-slot image-slot--photo">
+            <img
+              src="assets/matchplay-header-1.jpg"
+              alt="Matchplay handshake between golfers on the green"
+              width="1200"
+              height="960"
+              decoding="async"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <main class="layout layout--sport">
+      <section class="panel panel--sport">
+        <div class="panel__header">
+          <div class="panel__title-row">
+            <h2>FAQs</h2>
+          </div>
+          <p class="muted">
+            Don’t see your question here? Reach out and we’ll add it.
+          </p>
+        </div>
+
+        <div class="faq-list">
+          <details class="faq-item" open>
+            <summary>What matches are included in the rankings?</summary>
+            <p>
+              Singles matchplay results from the Ryder Cup, Presidents Cup, and WGC Match Play
+              are included. Team and four-ball formats are excluded.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>How are player ratings calculated?</summary>
+            <p>
+              Ratings are calculated using an Elo-style system. Every player starts at 1000,
+              then gains or loses points after each match based on the opponent’s rating and
+              the result.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>What does “Active” mean in the filters?</summary>
+            <p>
+              Active players are those who have played a match within the last five years,
+              based on the current year.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>Are halved matches treated differently?</summary>
+            <p>
+              Yes. A halved match awards 0.5 points in records and is treated as a draw in
+              the Elo calculations.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>Where does the data come from?</summary>
+            <p>
+              The dataset is compiled from official event results and curated to align names,
+              rounds, and scores across competitions.
+            </p>
+          </details>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__content">
+        <p class="footer__note">Have a question? Get in touch and we’ll update this page.</p>
+      </div>
+    </footer>
+
+    <script>
+      const navToggle = document.querySelector(".site-nav__toggle");
+      const navLinks = document.getElementById("siteNavLinks");
+      const navBackdrop = document.getElementById("siteNavBackdrop");
+      const closeNav = () => {
+        if (!navLinks || !navToggle || !navBackdrop) return;
+        navLinks.classList.remove("is-open");
+        navBackdrop.classList.remove("is-open");
+        navToggle.setAttribute("aria-expanded", "false");
+      };
+      if (navToggle && navLinks && navBackdrop) {
+        navToggle.addEventListener("click", () => {
+          const isOpen = navLinks.classList.toggle("is-open");
+          navBackdrop.classList.toggle("is-open", isOpen);
+          navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        });
+        navBackdrop.addEventListener("click", closeNav);
+        window.addEventListener("resize", () => {
+          if (window.innerWidth > 720) closeNav();
+        });
+      }
+    </script>
+  </body>
+</html>

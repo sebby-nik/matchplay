@@ -61,14 +61,19 @@
       <section class="panel panel--sport">
         <div class="panel__header">
           <div class="panel__title-row">
-            <h2>Get in touch</h2>
+            <button class="contact-title-button" id="contactTitleButton" type="button">
+              Get in touch
+            </button>
           </div>
           <p class="muted">
             Have corrections, sources, or feedback? Send us a note and we will review every suggestion.
           </p>
         </div>
         <div class="panel__body" style="padding: 1.5rem 2rem 2rem;">
-          <p class="muted">Email: hello@matchplayrankings.com</p>
+          <button class="contact-form__submit" id="contactEmailButton" type="button">
+            Email sebmargolis@gmail.com
+          </button>
+          <p class="contact-form__success" id="contactSuccess">Thanks — your email draft is ready.</p>
         </div>
       </section>
     </main>
@@ -98,6 +103,30 @@
         navBackdrop.addEventListener("click", closeNav);
         window.addEventListener("resize", () => {
           if (window.innerWidth > 720) closeNav();
+        });
+      }
+
+      const contactSuccess = document.getElementById("contactSuccess");
+      const contactEmailButton = document.getElementById("contactEmailButton");
+      const contactTitleButton = document.getElementById("contactTitleButton");
+
+      const openMailClient = (name, message) => {
+        const subject = encodeURIComponent("Matchplay Rankings — Contact");
+        const body = encodeURIComponent(`Name: ${name}\n\n${message}`);
+        window.location.href = `mailto:sebmargolis@gmail.com?subject=${subject}&body=${body}`;
+      };
+
+      if (contactEmailButton) {
+        contactEmailButton.addEventListener("click", () => {
+          openMailClient("Anonymous", "Hello,");
+          contactSuccess.classList.add("is-visible");
+        });
+      }
+
+      if (contactTitleButton) {
+        contactTitleButton.addEventListener("click", () => {
+          openMailClient("Anonymous", "Hello,");
+          contactSuccess.classList.add("is-visible");
         });
       }
     </script>

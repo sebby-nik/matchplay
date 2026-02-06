@@ -1660,6 +1660,15 @@ input[type="range"] {
   .player-detail {
     margin: 0;
     border-radius: 16px;
+    text-align: center;
+  }
+
+  .player-detail h3 {
+    justify-content: center;
+  }
+
+  .detail-meta {
+    text-align: center;
   }
 
   .match-row {

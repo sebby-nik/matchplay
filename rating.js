@@ -25,6 +25,10 @@ const mobileFilterOverlay = document.getElementById("mobileFilterOverlay");
 const controlsPanel = document.getElementById("controlsPanel");
 const controlsPanelClose = document.getElementById("controlsPanelClose");
 const tableHeaders = document.querySelectorAll(".rank-table th[data-sort]");
+const ratingLeaderName = document.getElementById("ratingLeaderName");
+const ratingLeaderRating = document.getElementById("ratingLeaderRating");
+const ratingLeaderMeta = document.getElementById("ratingLeaderMeta");
+const ratingLeaderStats = document.getElementById("ratingLeaderStats");
 
 const EVENT_ORDER = ["WGC Match Play", "Presidents Cup", "Ryder Cup"];
 const ROUND_ORDER = [
@@ -611,6 +615,7 @@ const applyFilters = () => {
 
   currentPlayers = searched;
   if (summary) summary.textContent = `${searched.length} players`;
+  updateLeaderCard(searched[0]);
   renderFilterChips();
   renderPlayerChips();
   renderTable(searched);
@@ -618,6 +623,26 @@ const applyFilters = () => {
 
   document.querySelectorAll(".detail-row").forEach((node) => node.remove());
   document.querySelectorAll("tr.is-open").forEach((node) => node.classList.remove("is-open"));
+};
+
+const updateLeaderCard = (player) => {
+  if (!ratingLeaderName || !ratingLeaderRating || !ratingLeaderMeta || !ratingLeaderStats) return;
+  if (!player) {
+    ratingLeaderName.textContent = "—";
+    ratingLeaderRating.textContent = "Rating —";
+    ratingLeaderMeta.textContent = "";
+    ratingLeaderStats.innerHTML = "";
+    return;
+  }
+
+  const flag = flagFromCountry(player.country);
+  ratingLeaderName.textContent = `${player.name}${flag ? ` ${flag}` : ""}`;
+  ratingLeaderRating.textContent = `Rating ${Math.round(player.rating)}`;
+  ratingLeaderMeta.textContent = `${player.matches} matches · ${player.wins}-${player.draws}-${player.losses} W-D-L`;
+  ratingLeaderStats.innerHTML = `
+    <span>Peak ${Math.round(player.peak)}</span>
+    <span>Last seen ${player.lastYear}</span>
+  `;
 };
 
 const populateFilters = () => {

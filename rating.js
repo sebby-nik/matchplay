@@ -155,7 +155,7 @@ const renderSummaryChips = (items, type) => {
   `;
 };
 
-const renderSparkline = (values, className = "") => {
+const renderSparkline = (values, className = "", label = "") => {
   if (!values || values.length < 2) return "";
   const tail = values.slice(-10);
   const slope = tail[tail.length - 1] - tail[0];
@@ -176,8 +176,9 @@ const renderSparkline = (values, className = "") => {
     })
     .join(" ");
   return `
-    <div class="sparkline ${className} ${trendClass}" aria-hidden="true">
+    <div class="sparkline ${className} ${trendClass}" aria-hidden="true" title="${label}">
       <svg viewBox="0 0 ${width} ${height}" role="img" focusable="false">
+        <title>${label}</title>
         <polyline points="${points}" />
       </svg>
     </div>
@@ -398,9 +399,9 @@ const renderTable = (players) => {
       <td>${Math.round(player.rating)}</td>
       <td>${player.matches}</td>
       <td>${player.wins}-${player.draws}-${player.losses}</td>
-      <td>
-        <div class="trend-cell" title="Peak rating: ${Math.round(player.peak)}">
-          ${renderSparkline(player.history, "trend-sparkline")}
+      <td title="Peak rating: ${Math.round(player.peak)}">
+        <div class="trend-cell">
+          ${renderSparkline(player.history, "trend-sparkline", `Peak rating: ${Math.round(player.peak)}`)}
         </div>
       </td>
     `;

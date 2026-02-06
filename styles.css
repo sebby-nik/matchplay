@@ -464,6 +464,7 @@ body.filters-open .mobile-filter-overlay {
   margin-bottom: 0.75rem;
 }
 
+.sport-band__copy h1,
 .sport-band__copy h2 {
   font-size: clamp(2rem, 4vw, 3.2rem);
   margin-bottom: 1rem;

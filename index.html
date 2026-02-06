@@ -4,12 +4,87 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Player Ratings</title>
+    <meta
+      name="description"
+      content="Official matchplay ratings and player rankings across Ryder Cup, Presidents Cup, and WGC Match Play singles competition."
+    />
+    <meta property="og:site_name" content="Matchplay Rankings" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Player Ratings | Matchplay Rankings" />
+    <meta
+      property="og:description"
+      content="Official matchplay ratings and player rankings across Ryder Cup, Presidents Cup, and WGC Match Play singles competition."
+    />
+    <meta property="og:url" content="https://www.matchplayrankings.com/" />
+    <meta
+      property="og:image"
+      content="https://www.matchplayrankings.com/assets/matchplay-rory.avif"
+    />
+    <meta property="og:image:width" content="640" />
+    <meta property="og:image:height" content="637" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Player Ratings | Matchplay Rankings" />
+    <meta
+      name="twitter:description"
+      content="Official matchplay ratings and player rankings across Ryder Cup, Presidents Cup, and WGC Match Play singles competition."
+    />
+    <meta
+      name="twitter:image"
+      content="https://www.matchplayrankings.com/assets/matchplay-rory.avif"
+    />
+    <link rel="canonical" href="https://www.matchplayrankings.com/" />
     <link rel="icon" type="image/png" href="assets/favicon.png" />
     <link
       href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Matchplay Rankings",
+        "url": "https://www.matchplayrankings.com/"
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Matchplay Rankings",
+        "url": "https://www.matchplayrankings.com/"
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Dataset",
+        "name": "Matchplay Singles Results",
+        "description": "Singles matchplay results from the Ryder Cup, Presidents Cup, and WGC Match Play used to power Matchplay Rankings.",
+        "url": "https://www.matchplayrankings.com/",
+        "distribution": [
+          {
+            "@type": "DataDownload",
+            "contentUrl": "https://www.matchplayrankings.com/data.json",
+            "encodingFormat": "application/json"
+          }
+        ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.matchplayrankings.com/"
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <nav class="site-nav">
@@ -32,7 +107,7 @@
       <div class="sport-band__content">
         <div class="sport-band__copy">
           <p class="sport-band__eyebrow">Official Matchplay Ratings</p>
-          <h2>A true measure of match play performance.</h2>
+          <h1>A true measure of match play performance.</h1>
           <p>
             These Elo ratings capture performance across elite match play competition, accounting for strength of opposition and quality of results. Every match updates a player’s rating, ensuring rankings reflect not just outcomes, but the context in which they were achieved.
             <br />
@@ -55,7 +130,13 @@
             <div class="lineal-card__stats" id="ratingLeaderStats"></div>
           </div>
           <div class="image-slot image-slot--photo">
-            <img src="assets/matchplay-rory.avif" alt="Rory McIlroy in match play action" />
+            <img
+              src="assets/matchplay-rory.avif"
+              alt="Rory McIlroy celebrating during match play"
+              width="640"
+              height="637"
+              decoding="async"
+            />
           </div>
         </div>
       </div>

@@ -144,6 +144,66 @@ p {
   text-decoration: underline;
 }
 
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  background: rgba(250, 247, 242, 0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+
+.site-nav__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.75rem 4vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.site-nav__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.site-nav__brand img {
+  width: 36px;
+  height: 36px;
+}
+
+.site-nav__links {
+  display: inline-flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.site-nav__link {
+  text-decoration: none;
+  font-weight: 600;
+  color: var(--ink-soft);
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+.site-nav__link:hover {
+  color: var(--ink);
+  border-color: var(--line);
+  background: #ffffff;
+}
+
+.site-nav__link.is-active {
+  color: var(--ink);
+  border-color: rgba(111, 85, 48, 0.35);
+  background: rgba(255, 255, 255, 0.9);
+}
+
 .layout {
   display: grid;
   gap: 2.5rem;

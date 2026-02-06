@@ -461,10 +461,15 @@ const renderChampionCard = (reigns, overallStats) => {
     linealChampionRecord.textContent = `${overall.wins}-${overall.draws}-${overall.losses}`;
   }
   linealChampionStats.innerHTML = `
-    <span class="lineal-card__crowns" aria-label="${reignCount} reigns">${"♛".repeat(reignCount)}</span>
     <span>${totalMatches} matches</span>
     <span>${totalDefenses} defenses</span>
   `;
+
+  const crownEl = document.querySelector(".lineal-card__crown");
+  if (crownEl) {
+    crownEl.textContent = "♛".repeat(reignCount);
+    crownEl.setAttribute("aria-label", `${reignCount} reigns`);
+  }
 };
 
 const renderChampionsList = (reigns, countryMap) => {

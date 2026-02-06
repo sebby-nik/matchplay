@@ -1547,6 +1547,8 @@ input[type="range"] {
   top: 1rem;
   right: 1rem;
   font-size: 1.4rem;
+  color: #2c190f;
+  letter-spacing: 0.1em;
 }
 
 .rating-rank-badge {

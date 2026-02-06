@@ -1921,8 +1921,8 @@ input[type="range"] {
     position: fixed;
     inset: 0;
     background: #ffffff;
-    z-index: 70;
-    padding: 1.5rem 1.5rem 2rem;
+    z-index: 95;
+    padding: 4.5rem 1.5rem 2rem;
     overflow: auto;
     transform: translateY(100%);
     transition: transform 0.25s ease;
@@ -1931,6 +1931,11 @@ input[type="range"] {
   .controls-panel__header {
     display: flex;
     margin-bottom: 1.5rem;
+    position: sticky;
+    top: 0;
+    background: #ffffff;
+    z-index: 1;
+    padding-bottom: 0.5rem;
   }
 
   body.filters-open .controls-panel {
@@ -2043,7 +2048,7 @@ input[type="range"] {
 
 
   .rank-table {
-    min-width: 640px;
+    min-width: 520px;
   }
 
   .player-detail {
@@ -2061,6 +2066,34 @@ input[type="range"] {
 
   .match-row .match-result {
     margin-bottom: 0.25rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .country-filter__panel {
+    position: static;
+    box-shadow: none;
+    border: 1px solid var(--line);
+  }
+
+  .country-filter__list {
+    max-height: 50vh;
+  }
+}
+
+@media (max-width: 720px) {
+  .image-slot--photo {
+    min-height: 200px;
+  }
+}
+
+@media (max-width: 700px) {
+  .lineal-champion__name {
+    font-size: 1.05rem;
+  }
+
+  .lineal-champion__record {
+    font-size: 0.95rem;
   }
 }
 

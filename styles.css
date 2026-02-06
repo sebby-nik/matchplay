@@ -1864,6 +1864,20 @@ input[type="range"] {
   .lineal-champion__name {
     font-size: 1.15rem;
   }
+
+  .lineal-champion__year {
+    display: none;
+  }
+
+  .lineal-champion__record {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .lineal-champion__crowns {
+    font-size: 1.4rem;
+  }
 }
 
 .lineal-layout .panel {

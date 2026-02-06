@@ -1686,7 +1686,7 @@ input[type="range"] {
     inset 0 -6px 18px rgba(0, 0, 0, 0.35),
     0 18px 30px rgba(15, 23, 42, 0.2);
   position: relative;
-  padding-top: 3.5rem;
+  padding-top: 4.5rem;
   overflow: hidden;
 }
 
@@ -1712,7 +1712,7 @@ input[type="range"] {
 
 .honours-board__plaque {
   position: absolute;
-  top: -1.25rem;
+  top: 1rem;
   left: 50%;
   transform: translateX(-50%);
   background: linear-gradient(135deg, #f7d56a 0%, #d3a84b 100%);

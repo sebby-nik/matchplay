@@ -1,6 +1,5 @@
 const linealMatches = document.getElementById("linealMatches");
 const linealChampions = document.getElementById("linealChampions");
-const linealChampionsToggle = document.getElementById("linealChampionsToggle");
 const linealChampionsBody = document.getElementById("linealChampionsBody");
 const linealLogToggle = document.getElementById("linealLogToggle");
 const linealLogBody = document.getElementById("linealLogBody");
@@ -571,13 +570,6 @@ fetch("data.json")
     renderChampionCard(reigns, overallStats);
     renderChampionsList(reigns, countryMap);
   });
-
-if (linealChampionsToggle && linealChampionsBody) {
-  linealChampionsToggle.addEventListener("click", () => {
-    const isCollapsed = linealChampionsBody.classList.toggle("is-collapsed");
-    linealChampionsToggle.classList.toggle("is-collapsed", isCollapsed);
-  });
-}
 
 if (linealLogToggle && linealLogBody) {
   linealLogToggle.addEventListener("click", () => {

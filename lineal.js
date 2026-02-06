@@ -451,11 +451,18 @@ const renderChampionCard = (reigns, overallStats, log) => {
 
   const championReigns = reigns.filter((reign) => reign.champion === current.champion);
   const reignCount = championReigns.length;
-  const championEntries = (log || []).filter((entry) => entry.championBefore === current.champion);
+  const championEntries = (log || []).filter(
+    (entry) => entry.championBefore === current.champion || entry.opponent === current.champion
+  );
   const totalMatches = championEntries.length;
-  const totalWins = championEntries.filter((entry) => entry.championResult === "Win").length;
-  const titleWins = championReigns.filter(
-    (reign) => reign.startEntry && reign.startEntry.championResult === "Win"
+  const totalWins = championEntries.filter((entry) => {
+    if (entry.championBefore === current.champion) {
+      return entry.championResult === "Win";
+    }
+    return entry.opponent === current.champion && entry.championResult === "Loss";
+  }).length;
+  const titleWins = championEntries.filter(
+    (entry) => entry.opponent === current.champion && entry.championResult === "Loss"
   ).length;
   const totalDefenses = Math.max(totalWins - titleWins, 0);
   const overall = overallStats.get(current.champion) || { wins: 0, draws: 0, losses: 0 };

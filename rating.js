@@ -155,7 +155,7 @@ const renderSummaryChips = (items, type) => {
   `;
 };
 
-const renderSparkline = (values) => {
+const renderSparkline = (values, className = "") => {
   if (!values || values.length < 2) return "";
   const width = 160;
   const height = 36;
@@ -173,7 +173,7 @@ const renderSparkline = (values) => {
     })
     .join(" ");
   return `
-    <div class="sparkline" aria-hidden="true">
+    <div class="sparkline ${className}" aria-hidden="true">
       <svg viewBox="0 0 ${width} ${height}" role="img" focusable="false">
         <polyline points="${points}" />
       </svg>
@@ -395,7 +395,11 @@ const renderTable = (players) => {
       <td>${Math.round(player.rating)}</td>
       <td>${player.matches}</td>
       <td>${player.wins}-${player.draws}-${player.losses}</td>
-      <td>${Math.round(player.peak)}</td>
+      <td>
+        <div class="trend-cell" title="Peak rating: ${Math.round(player.peak)}">
+          ${renderSparkline(player.history, "trend-sparkline")}
+        </div>
+      </td>
     `;
     row.addEventListener("click", () => renderPlayerDetail(player, row));
     ratingBody.append(row);
@@ -407,7 +411,7 @@ const sortPlayers = (players) => {
     const dir = currentSort.direction === "asc" ? 1 : -1;
     if (currentSort.key === "name") return a.name.localeCompare(b.name) * dir;
     if (currentSort.key === "matches") return (a.matches - b.matches) * dir;
-    if (currentSort.key === "peak") return (a.peak - b.peak) * dir;
+    if (currentSort.key === "trend") return (a.peak - b.peak) * dir;
     if (currentSort.key === "wdl") {
       const aRecord = a.wins * 3 + a.draws;
       const bRecord = b.wins * 3 + b.draws;

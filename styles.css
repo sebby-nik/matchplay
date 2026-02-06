@@ -192,6 +192,7 @@ p {
   background: transparent;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   gap: 4px;
   padding: 0;
   cursor: pointer;

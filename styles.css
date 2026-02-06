@@ -280,6 +280,10 @@ p {
   box-shadow: 0 12px 22px rgba(15, 23, 42, 0.2);
 }
 
+.contact-title-button:hover {
+  background: #0f172a;
+}
+
 .contact-form {
   display: grid;
   gap: 1rem;

@@ -475,7 +475,7 @@ const renderChampionsList = (reigns, countryMap) => {
   reigns.forEach((reign, index) => {
     reignCounts[reign.champion] = (reignCounts[reign.champion] || 0) + 1;
     const reignCount = reignCounts[reign.champion];
-    const record = `${reign.wins}-${reign.halves}-${reign.losses} W-D-L`;
+    const record = `${reign.wins}-${reign.halves}-${reign.losses}`;
     const yearMatch =
       reign.startEntry?.year ||
       (reign.startLabel && reign.startLabel.match(/\d{4}/)?.[0]) ||

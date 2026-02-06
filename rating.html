@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Matchplay Ratings</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero hero--sport hero--parallax">
+      <div class="hero__content hero__content--wide">
+        <div class="hero__title-row">
+          <img class="brand__logo brand__logo--xl" src="assets/logo.png" alt="Matchplay Records logo" />
+          <h1>Matchplay Ratings</h1>
+        </div>
+        <div class="hero__links">
+          <a class="hero__link" href="index.html">Matchplay Rankings →</a>
+          <a class="hero__link" href="lineal.html">Lineal Championship →</a>
+        </div>
+      </div>
+    </header>
+
+    <section class="sport-band">
+      <div class="sport-band__content">
+        <div class="sport-band__copy">
+          <p class="sport-band__eyebrow">Elo Ratings</p>
+          <h2>Strength of schedule, baked in.</h2>
+          <p>
+            Every player debuts at 1000. Ratings rise and fall with each singles match, adjusted
+            for opponent strength and a mild year-by-year decay.
+          </p>
+        </div>
+        <div class="sport-band__media">
+          <div class="image-slot image-slot--photo">
+            <img src="assets/matchplay-header-1.jpg" alt="Matchplay handshake" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <main class="layout layout--sport">
+      <section class="panel panel--sport">
+        <div class="panel__header">
+          <div class="panel__title-row">
+            <h2>Matchplay Ratings Table</h2>
+          </div>
+          <p class="muted">
+            Ratings are computed in chronological order by year, then event, then round.
+          </p>
+        </div>
+
+        <div class="table-wrap">
+          <table class="rank-table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Player</th>
+                <th>Rating</th>
+                <th>Matches</th>
+                <th>W-D-L</th>
+                <th>Peak</th>
+              </tr>
+            </thead>
+            <tbody id="ratingBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__content">
+        <p class="footer__note">Ratings are for singles matchplay only.</p>
+      </div>
+    </footer>
+
+    <script src="rating.js"></script>
+  </body>
+</html>

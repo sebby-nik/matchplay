@@ -198,10 +198,10 @@ const renderTable = () => {
     row.innerHTML = `
       <td>${index + 1}</td>
       <td>${player.name}</td>
-      <td>${player.rating.toFixed(1)}</td>
+      <td>${Math.round(player.rating)}</td>
       <td>${player.matches}</td>
       <td>${player.wins}-${player.draws}-${player.losses}</td>
-      <td>${player.peak.toFixed(1)}</td>
+      <td>${Math.round(player.peak)}</td>
     `;
     ratingBody.append(row);
   });

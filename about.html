@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>About Us</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <nav class="site-nav">
+      <div class="site-nav__inner">
+        <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="siteNavLinks">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div class="site-nav__links" id="siteNavLinks">
+          <a class="site-nav__link" href="index.html">Player Ratings</a>
+          <a class="site-nav__link" href="records.html">Player Records</a>
+          <a class="site-nav__link" href="lineal.html">Lineal Championship</a>
+          <a class="site-nav__link is-active" href="about.html">About Us</a>
+        </div>
+      </div>
+    </nav>
+    <div class="site-nav__backdrop" id="siteNavBackdrop"></div>
+
+    <section class="sport-band">
+      <div class="sport-band__content">
+        <div class="sport-band__copy">
+          <p class="sport-band__eyebrow">About Us</p>
+          <h2>Matchplay, documented with care.</h2>
+          <p>
+            We are building the most complete archive of singles match play in elite golf. Our goal is to
+            preserve every result, make the data easy to explore, and celebrate the moments that define
+            head-to-head competition.
+          </p>
+          <p>
+            The database covers the Ryder Cup, Presidents Cup, and WGC Match Play, and is continually
+            refined for accuracy. If you spot an error or have a source to validate a result, we would
+            love to hear from you.
+          </p>
+          <p>
+            This project is independent and data-driven. We prioritize clear methodology, transparent
+            sourcing, and usability on every device.
+          </p>
+        </div>
+        <div class="sport-band__media">
+          <div class="image-slot image-slot--photo">
+            <img src="assets/matchplay-header-1.jpg" alt="Matchplay handshake on the green" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <main class="layout layout--sport">
+      <section class="panel panel--sport">
+        <div class="panel__header">
+          <div class="panel__title-row">
+            <h2>Get in touch</h2>
+          </div>
+          <p class="muted">
+            Have corrections, sources, or feedback? Send us a note and we will review every suggestion.
+          </p>
+        </div>
+        <div class="panel__body" style="padding: 1.5rem 2rem 2rem;">
+          <p class="muted">Email: hello@matchplayrankings.com</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__content">
+        <p class="footer__note">Built to honor match play history.</p>
+      </div>
+    </footer>
+
+    <script>
+      const navToggle = document.querySelector(".site-nav__toggle");
+      const navLinks = document.getElementById("siteNavLinks");
+      const navBackdrop = document.getElementById("siteNavBackdrop");
+      const closeNav = () => {
+        if (!navLinks || !navToggle || !navBackdrop) return;
+        navLinks.classList.remove("is-open");
+        navBackdrop.classList.remove("is-open");
+        navToggle.setAttribute("aria-expanded", "false");
+      };
+      if (navToggle && navLinks && navBackdrop) {
+        navToggle.addEventListener("click", () => {
+          const isOpen = navLinks.classList.toggle("is-open");
+          navBackdrop.classList.toggle("is-open", isOpen);
+          navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        });
+        navBackdrop.addEventListener("click", closeNav);
+        window.addEventListener("resize", () => {
+          if (window.innerWidth > 720) closeNav();
+        });
+      }
+    </script>
+  </body>
+</html>

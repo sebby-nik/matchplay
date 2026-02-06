@@ -1745,9 +1745,9 @@ input[type="range"] {
 
 .lineal-champion {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto 90px 1.6fr 1fr auto;
   gap: 1.25rem;
-  align-items: start;
+  align-items: center;
   padding: 1rem 0;
   border-bottom: 1px solid rgba(247, 213, 106, 0.2);
 }
@@ -1766,44 +1766,6 @@ input[type="range"] {
     inset 0 -2px 4px rgba(0, 0, 0, 0.4);
 }
 
-.lineal-champion__header {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-
-.lineal-champion__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  align-items: center;
-}
-
-.lineal-champion__header h3 {
-  margin: 0;
-  font-size: 1.4rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #f7d56a;
-}
-
-.lineal-champion__range {
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(247, 213, 106, 0.7);
-}
-
-.lineal-champion__reigns {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #2c190f;
-  background: linear-gradient(135deg, #f7d56a 0%, #d3a84b 100%);
-  padding: 0.2rem 0.55rem;
-  border-radius: 999px;
-  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4);
-}
 
 .toggle-button {
   border: 1px solid var(--line);
@@ -1834,24 +1796,55 @@ input[type="range"] {
   transform: rotate(-90deg);
 }
 
-.lineal-champion__detail {
-  margin: 0.6rem 0 0;
-  color: rgba(247, 213, 106, 0.75);
-}
-
 .lineal-champion__flag {
   font-size: 1.1rem;
   line-height: 1;
 }
 
+.lineal-champion__year {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(247, 213, 106, 0.8);
+}
+
+.lineal-champion__name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #f7d56a;
+}
+
+.lineal-champion__record {
+  font-size: 1rem;
+  color: rgba(247, 213, 106, 0.85);
+  letter-spacing: 0.04em;
+}
+
+.lineal-champion__crowns {
+  font-size: 1.2rem;
+  color: #f7d56a;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
 @media (max-width: 700px) {
   .lineal-champion {
-    grid-template-columns: 1fr;
+    grid-template-columns: auto 1fr;
+    row-gap: 0.6rem;
   }
 
   .lineal-champion__index {
     width: 34px;
     height: 34px;
+  }
+
+  .lineal-champion__year,
+  .lineal-champion__record,
+  .lineal-champion__crowns {
+    grid-column: 2 / -1;
   }
 }
 

@@ -470,38 +470,32 @@ const renderChampionCard = (reigns, overallStats) => {
 const renderChampionsList = (reigns, countryMap) => {
   if (!linealChampions) return;
   linealChampions.innerHTML = "";
-  const reignCounts = reigns.reduce((acc, reign) => {
-    acc[reign.champion] = (acc[reign.champion] || 0) + 1;
-    return acc;
-  }, {});
+  const reignCounts = {};
 
   reigns.forEach((reign, index) => {
-    const startLabel =
-      reign.startLabel || (reign.startEntry ? `Won title at ${formatMatchLabel(reign.startEntry)}` : "Inaugural");
-    const endLabel = reign.endEntry
-      ? `Lost at ${formatMatchLabel(reign.endEntry)}`
-      : reign.endLabel || "Present";
-    const detail = `${reign.matches} matches · ${reign.defenses} defenses · ${reign.wins}-${reign.halves}-${reign.losses} W-D-L`;
-    const reignCount = reignCounts[reign.champion] || 1;
-    const reignLabel = reignCount > 1 ? `${reignCount} reigns` : "1 reign";
+    reignCounts[reign.champion] = (reignCounts[reign.champion] || 0) + 1;
+    const reignCount = reignCounts[reign.champion];
+    const record = `${reign.wins}-${reign.halves}-${reign.losses} W-D-L`;
+    const yearMatch =
+      reign.startEntry?.year ||
+      (reign.startLabel && reign.startLabel.match(/\d{4}/)?.[0]) ||
+      "";
     const countryCode = countryMap.get(reign.champion) || "";
     const flag = flagFromCountry(countryCode);
     const countryName = countryNameFromCode(countryCode);
+    const crowns = "♛".repeat(reignCount);
 
     const item = document.createElement("li");
     item.className = "lineal-champion";
     item.innerHTML = `
       <div class="lineal-champion__index">${index + 1}</div>
-      <div class="lineal-champion__body">
-        <div class="lineal-champion__header">
-          <h3>${flag ? `<span class=\"lineal-champion__flag\" title=\"${countryName}\">${flag}</span>` : ""}${reign.champion}</h3>
-          <div class="lineal-champion__meta">
-            <span class="lineal-champion__range">${startLabel} → ${endLabel}</span>
-            <span class="lineal-champion__reigns">${reignLabel}</span>
-          </div>
-        </div>
-        <p class="lineal-champion__detail">${detail}</p>
+      <div class="lineal-champion__year">${yearMatch}</div>
+      <div class="lineal-champion__name">
+        ${flag ? `<span class="lineal-champion__flag" title="${countryName}">${flag}</span>` : ""}
+        <span>${reign.champion}</span>
       </div>
+      <div class="lineal-champion__record">${record}</div>
+      <div class="lineal-champion__crowns" aria-label="${reignCount} reigns">${crowns}</div>
     `;
     linealChampions.append(item);
   });

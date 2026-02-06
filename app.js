@@ -212,10 +212,11 @@ const renderTable = (players) => {
           : ppmValue / maxPpm >= 0.34
             ? "ppm-bar__fill--mid"
             : "ppm-bar__fill--low";
+    const nationality = countryNameFromCode(player.country);
     row.innerHTML = `
       <td>${player.rank ?? index + 1}</td>
-      <td>${player.name}</td>
-      <td>${flag ? `<span class=\"flag\">${flag}</span>` : ""}</td>
+      <td>${flag ? `<span class="flag">${flag}</span> ` : ""}${player.name}</td>
+      <td>${nationality}</td>
       <td>${player.matches}</td>
       <td>${player.points.toFixed(1)}</td>
       <td>${player.wins}-${player.draws}-${player.losses}</td>

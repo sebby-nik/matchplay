@@ -4,11 +4,6 @@ const eventSummary = document.getElementById("eventSummary");
 const eventSearch = document.getElementById("eventSearch");
 const eventSelectAll = document.getElementById("eventSelectAll");
 const eventDropdown = document.getElementById("eventDropdown");
-const yearFilter = document.getElementById("yearFilter");
-const yearSummary = document.getElementById("yearSummary");
-const yearSearch = document.getElementById("yearSearch");
-const yearSelectAll = document.getElementById("yearSelectAll");
-const yearDropdown = document.getElementById("yearDropdown");
 const searchInput = document.getElementById("searchInput");
 const playerChips = document.getElementById("playerChips");
 const playerSuggestions = document.getElementById("playerSuggestions");
@@ -52,11 +47,9 @@ let allPlayers = [];
 let availablePlayers = [];
 let currentPlayers = [];
 let selectedEvents = new Set();
-let selectedYears = new Set();
 let selectedCountries = new Set();
 let selectedPlayers = new Set();
 let allEvents = [];
-let allYears = [];
 let allCountries = [];
 let currentSort = { key: "rating", direction: "desc" };
 
@@ -162,6 +155,32 @@ const renderSummaryChips = (items, type) => {
   `;
 };
 
+const renderSparkline = (values) => {
+  if (!values || values.length < 2) return "";
+  const width = 160;
+  const height = 36;
+  const padding = 4;
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const range = max - min || 1;
+  const step = (width - padding * 2) / (values.length - 1);
+  const points = values
+    .map((value, index) => {
+      const x = padding + step * index;
+      const y =
+        height - padding - ((value - min) / range) * (height - padding * 2);
+      return `${x},${y}`;
+    })
+    .join(" ");
+  return `
+    <div class="sparkline" aria-hidden="true">
+      <svg viewBox="0 0 ${width} ${height}" role="img" focusable="false">
+        <polyline points="${points}" />
+      </svg>
+    </div>
+  `;
+};
+
 const getRoundIndex = (round) => {
   const idx = ROUND_ORDER.indexOf(round);
   return idx === -1 ? ROUND_ORDER.length : idx;
@@ -224,7 +243,8 @@ const ensurePlayer = (ratings, name, country) => {
       draws: 0,
       losses: 0,
       lastYear: null,
-      matchList: []
+      matchList: [],
+      history: []
     });
   } else if (country && !ratings.get(name).country) {
     ratings.get(name).country = country;
@@ -289,6 +309,8 @@ const computeRatings = (matches) => {
 
     if (player.rating > player.peak) player.peak = player.rating;
     if (opponent.rating > opponent.peak) opponent.peak = opponent.rating;
+    player.history.push(player.rating);
+    opponent.history.push(opponent.rating);
 
     const opponentResult =
       match.result === "win" ? "loss" : match.result === "loss" ? "win" : "halved";
@@ -301,6 +323,7 @@ const computeRatings = (matches) => {
 
 const renderPlayerDetailContent = (player) => {
   const flag = flagFromCountry(player.country);
+  const sparkline = renderSparkline(player.history);
   const matches = player.matchList
     .slice()
     .sort((a, b) => b.year - a.year)
@@ -331,6 +354,7 @@ const renderPlayerDetailContent = (player) => {
     <div class="player-detail">
       <h3>${flag ? `${flag} ` : ""}${player.name}</h3>
       <div class="detail-meta">${player.matches} matches • ${player.wins}-${player.draws}-${player.losses}</div>
+      ${sparkline}
       <div class="match-list">${matches || "<p class=\"muted\">No matches yet.</p>"}</div>
     </div>
   `;
@@ -422,22 +446,6 @@ const syncEventCheckboxes = () => {
   eventSelectAll.checked = selectedEvents.size > 0 && selectedEvents.size === allEvents.length;
 };
 
-const updateYearSummary = () => {
-  if (selectedYears.size === 0) {
-    yearSummary.textContent = "All years";
-    return;
-  }
-  const list = Array.from(selectedYears).sort((a, b) => Number(b) - Number(a));
-  yearSummary.innerHTML = renderSummaryChips(list, "year");
-};
-
-const syncYearCheckboxes = () => {
-  yearFilter.querySelectorAll("input[type=\"checkbox\"]").forEach((cb) => {
-    if (cb === yearSelectAll) return;
-    cb.checked = selectedYears.has(cb.value);
-  });
-  yearSelectAll.checked = selectedYears.size > 0 && selectedYears.size === allYears.length;
-};
 
 const updateCountrySummary = () => {
   if (selectedCountries.size === 0) {
@@ -471,10 +479,6 @@ const renderFilterChips = () => {
     chips.push({ type: "event", label: event, value: event });
   });
 
-  selectedYears.forEach((year) => {
-    chips.push({ type: "year", label: year, value: year });
-  });
-
   selectedCountries.forEach((code) => {
     const flag = flagFromCountry(code);
     const name = countryNameFromCode(code);
@@ -499,11 +503,6 @@ const renderFilterChips = () => {
         selectedEvents.delete(chip.value);
         updateEventSummary();
         syncEventCheckboxes();
-      }
-      if (chip.type === "year") {
-        selectedYears.delete(chip.value);
-        updateYearSummary();
-        syncYearCheckboxes();
       }
       if (chip.type === "country") {
         selectedCountries.delete(chip.value);
@@ -574,10 +573,6 @@ const applyFilters = () => {
     matches = matches.filter((match) => selectedEvents.has(match.event));
   }
 
-  if (selectedYears.size > 0) {
-    matches = matches.filter((match) => selectedYears.has(String(match.year)));
-  }
-
   if (selectedCountries.size > 0) {
     matches = matches.filter((match) => selectedCountries.has(match.player_country));
   }
@@ -643,34 +638,6 @@ const populateFilters = () => {
     eventFilter.append(item);
   });
   updateEventSummary();
-
-  const years = Array.from(new Set(allMatches.map((match) => match.year)))
-    .sort((a, b) => b - a)
-    .map((year) => String(year));
-  allYears = years.slice();
-  yearFilter.innerHTML = "";
-  years.forEach((year) => {
-    const id = `year-${year}`;
-    const item = document.createElement("label");
-    item.className = "country-filter__item";
-    item.innerHTML = `
-      <input type="checkbox" value="${year}" id="${id}" />
-      <span class="country-filter__text">${year}</span>
-    `;
-    const checkbox = item.querySelector("input");
-    checkbox.addEventListener("change", () => {
-      if (checkbox.checked) {
-        selectedYears.add(year);
-      } else {
-        selectedYears.delete(year);
-      }
-      updateYearSummary();
-      syncYearCheckboxes();
-      applyFilters();
-    });
-    yearFilter.append(item);
-  });
-  updateYearSummary();
 
   const countries = Array.from(new Set(allMatches.map((match) => match.player_country))).sort();
   const sticky = ["US", "GB"].filter((code) => countries.includes(code));
@@ -772,20 +739,13 @@ const handleMobileFilterBar = () => {
 window.addEventListener("scroll", handleMobileFilterBar);
 window.addEventListener("load", handleMobileFilterBar);
 
-[eventDropdown, yearDropdown, countryDropdown].forEach((dropdown) => {
+[eventDropdown, countryDropdown].forEach((dropdown) => {
   dropdown.addEventListener("toggle", () => {
     if (dropdown.open) {
       if (dropdown === eventDropdown) {
         syncEventCheckboxes();
         eventSearch.value = "";
         eventFilter.querySelectorAll(".country-filter__item").forEach((item) => {
-          item.classList.remove("is-hidden");
-        });
-      }
-      if (dropdown === yearDropdown) {
-        syncYearCheckboxes();
-        yearSearch.value = "";
-        yearFilter.querySelectorAll(".country-filter__item").forEach((item) => {
           item.classList.remove("is-hidden");
         });
       }
@@ -816,25 +776,6 @@ eventSelectAll.addEventListener("change", () => {
   }
   syncEventCheckboxes();
   updateEventSummary();
-  applyFilters();
-});
-
-yearSearch.addEventListener("input", () => {
-  const query = normalize(yearSearch.value.trim());
-  yearFilter.querySelectorAll(".country-filter__item").forEach((item) => {
-    const text = item.textContent.toLowerCase();
-    item.classList.toggle("is-hidden", query && !text.includes(query));
-  });
-});
-
-yearSelectAll.addEventListener("change", () => {
-  if (yearSelectAll.checked) {
-    selectedYears = new Set(allYears);
-  } else {
-    selectedYears = new Set();
-  }
-  syncYearCheckboxes();
-  updateYearSummary();
   applyFilters();
 });
 
@@ -871,13 +812,6 @@ bindSummaryClear(eventSummary, () => {
   selectedEvents = new Set();
   syncEventCheckboxes();
   updateEventSummary();
-  applyFilters();
-});
-
-bindSummaryClear(yearSummary, () => {
-  selectedYears = new Set();
-  syncYearCheckboxes();
-  updateYearSummary();
   applyFilters();
 });
 
@@ -935,29 +869,26 @@ if (activeOnlyToggle) {
   activeOnlyToggle.addEventListener("change", applyFilters);
 }
 
-if (clearAllFilters) {
-  clearAllFilters.addEventListener("click", () => {
-    selectedEvents = new Set();
-    selectedYears = new Set();
-    selectedCountries = new Set();
-    selectedPlayers = new Set();
-    updateEventSummary();
-    updateYearSummary();
-    updateCountrySummary();
-    syncEventCheckboxes();
-    syncYearCheckboxes();
-    syncCountryCheckboxes();
-    renderPlayerChips();
-    applyFilters();
-  });
-}
+  if (clearAllFilters) {
+    clearAllFilters.addEventListener("click", () => {
+      selectedEvents = new Set();
+      selectedCountries = new Set();
+      selectedPlayers = new Set();
+      updateEventSummary();
+      updateCountrySummary();
+      syncEventCheckboxes();
+      syncCountryCheckboxes();
+      renderPlayerChips();
+      applyFilters();
+    });
+  }
 
 tableHeaders.forEach((th) => {
   th.addEventListener("click", () => handleSort(th.dataset.sort));
 });
 
 const closeDropdownsOnClickOutside = (event) => {
-  [eventDropdown, yearDropdown, countryDropdown].forEach((dropdown) => {
+  [eventDropdown, countryDropdown].forEach((dropdown) => {
     if (!dropdown.open) return;
     if (dropdown.contains(event.target)) return;
     dropdown.open = false;
@@ -968,7 +899,7 @@ document.addEventListener("click", closeDropdownsOnClickOutside);
 
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;
-  [eventDropdown, yearDropdown, countryDropdown].forEach((dropdown) => {
+  [eventDropdown, countryDropdown].forEach((dropdown) => {
     dropdown.open = false;
   });
 });

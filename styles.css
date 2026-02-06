@@ -1745,7 +1745,7 @@ input[type="range"] {
 
 .lineal-champion {
   display: grid;
-  grid-template-columns: auto 90px 1.6fr 1fr auto;
+  grid-template-columns: auto 90px 1.6fr 140px 110px;
   gap: 1.25rem;
   align-items: center;
   padding: 1rem 0;
@@ -1830,6 +1830,10 @@ input[type="range"] {
   font-size: 1.6rem;
   color: #f7d56a;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  min-width: 6.5rem;
+  text-align: left;
+  display: inline-flex;
+  gap: 0.15rem;
 }
 
 @media (max-width: 700px) {

@@ -936,6 +936,11 @@ input[type="range"] {
   border-bottom: 1px solid var(--line);
 }
 
+.rank-table th:nth-child(5),
+.rank-table td:nth-child(5) {
+  white-space: nowrap;
+}
+
 .rank-table th:nth-child(6),
 .rank-table td:nth-child(6) {
   white-space: nowrap;

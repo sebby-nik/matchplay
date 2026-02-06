@@ -344,7 +344,6 @@ const formatDelta = (delta) => {
 
 const renderPlayerDetailContent = (player) => {
   const flag = flagFromCountry(player.country);
-  const sparkline = renderSparkline(player.history);
   const matches = player.matchList
     .slice()
     .sort((a, b) => b.year - a.year)
@@ -379,7 +378,6 @@ const renderPlayerDetailContent = (player) => {
     <div class="player-detail">
       <h3>${flag ? `${flag} ` : ""}${player.name}</h3>
       <div class="detail-meta">${player.matches} matches • ${player.wins}-${player.draws}-${player.losses}</div>
-      ${sparkline}
       <div class="match-list">${matches || "<p class=\"muted\">No matches yet.</p>"}</div>
     </div>
   `;

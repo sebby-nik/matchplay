@@ -3,8 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Player Ratings</title>
+    <title>Player Records</title>
     <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:wght@400;500;600&display=swap"
       rel="stylesheet"
@@ -16,10 +18,10 @@
       <div class="hero__content hero__content--wide">
         <div class="hero__title-row">
           <img class="brand__logo brand__logo--xl" src="assets/logo.png" alt="Matchplay Records logo" />
-          <h1>Player Ratings</h1>
+          <h1>Player Records</h1>
         </div>
         <div class="hero__links">
-          <a class="hero__link" href="records.html">Player Records →</a>
+          <a class="hero__link" href="index.html">Player Ratings →</a>
           <a class="hero__link" href="lineal.html">Lineal Championship →</a>
         </div>
       </div>
@@ -28,53 +30,52 @@
     <section class="sport-band">
       <div class="sport-band__content">
         <div class="sport-band__copy">
-          <p class="sport-band__eyebrow">Official Matchplay Ratings</p>
-          <h2>A true measure of match play performance.</h2>
+          <p class="sport-band__eyebrow">Matchplay Archive</p>
+          <h2>Built for the game at its highest level.</h2>
           <p>
-            These Elo ratings capture performance across elite match play competition, accounting for strength of opposition and quality of results. Every match updates a player’s rating, ensuring rankings reflect not just outcomes, but the context in which they were achieved.
-            <br />
-            <br />
-            Every player debuts at a Rating of 1000 and then goes up and down depending on their results and the rating difference between them and their opponent at the time. This ensures that player ratings won't just be inflated by an easy run of matches and is how Chess Ratings are traditionally calculated.
-            <br />
-            <br />
-            The result is a definitive, data-driven ranking of match play ability.
+            A definitive archive of Matchplay history, tracking every singles match from the Ryder Cup (since 1927), Presidents Cup (since 1994), and WGC Match Play (since 1999). Explore player records, compare head-to-heads, and revisit every match played.
           </p>
+          <div class="sport-band__stats">
+            <div>
+              <span class="sport-band__value">600+</span>
+              <span class="sport-band__label">Players</span>
+            </div>
+            <div>
+              <span class="sport-band__value">84</span>
+              <span class="sport-band__label">Tournaments</span>
+            </div>
+            <div>
+              <span class="sport-band__value">2600+</span>
+              <span class="sport-band__label">Matches</span>
+            </div>
+          </div>
         </div>
         <div class="sport-band__media">
-          <div class="lineal-card lineal-card--gold" id="ratingLeaderCard">
-            <span class="rating-rank-badge" aria-hidden="true">#1</span>
-            <p class="lineal-card__label">Top Rated Player</p>
-            <div class="lineal-card__title-row">
-              <h2 class="lineal-card__name" id="ratingLeaderName">—</h2>
-              <span class="lineal-card__record" id="ratingLeaderRating">Rating —</span>
-            </div>
-            <div class="lineal-card__meta" id="ratingLeaderMeta"></div>
-            <div class="lineal-card__stats" id="ratingLeaderStats"></div>
-          </div>
           <div class="image-slot image-slot--photo">
-            <img src="assets/matchplay-rory.avif" alt="Rory McIlroy in match play action" />
+            <img src="assets/matchplay-header-1.jpg" alt="Matchplay handshake on the green" />
           </div>
         </div>
       </div>
     </section>
 
     <main class="layout layout--sport">
-      <section class="panel panel--sport">
+      <section class="panel panel--sport" id="rankings">
         <div class="panel__header">
           <div class="panel__title-row">
-            <h2>Player Ratings</h2>
+            <h2>Player Records</h2>
             <button class="mobile-filter-toggle" id="mobileFilterToggle" type="button">
               Filters
             </button>
             <div class="status-toggle">
               <span class="status-toggle__label">All-time</span>
-              <input id="activeOnlyToggle" type="checkbox" checked />
+              <input id="activeOnlyToggle" type="checkbox" />
               <span class="status-toggle__slider"></span>
               <span class="status-toggle__label">Active</span>
             </div>
           </div>
           <p class="muted">
-            Ratings are computed in chronological order by year, then event, then round.
+            Ranked by points by default. Click a player to view their full match
+            list.
           </p>
         </div>
 
@@ -107,6 +108,23 @@
                   <span class="country-filter__text">Select all</span>
                 </label>
                 <div id="eventFilter" class="country-filter__list"></div>
+              </div>
+            </details>
+          </div>
+          <div class="country-filter">
+            <span class="country-filter__label">Year</span>
+            <details class="country-filter__dropdown" id="yearDropdown">
+              <summary id="yearSummary">All years</summary>
+              <div class="country-filter__panel">
+                <div class="country-filter__search">
+                  <span class="country-filter__search-icon">⌕</span>
+                  <input id="yearSearch" type="search" placeholder="Search years" />
+                </div>
+                <label class="country-filter__item country-filter__item--all">
+                  <input id="yearSelectAll" type="checkbox" />
+                  <span class="country-filter__text">Select all</span>
+                </label>
+                <div id="yearFilter" class="country-filter__list"></div>
               </div>
             </details>
           </div>
@@ -149,23 +167,24 @@
             Clear all filters
           </button>
         </div>
-
         <div class="table-wrap">
           <table class="rank-table">
             <thead>
               <tr>
                 <th data-sort="rank">Rank</th>
                 <th data-sort="name">Player</th>
-                <th data-sort="rating">Rating</th>
                 <th data-sort="matches">Matches</th>
-                <th data-sort="wdl">W-D-L</th>
-                <th data-sort="trend">Trend</th>
+                <th data-sort="points">Points</th>
+                <th data-sort="record">W-D-L</th>
+                <th data-sort="ppm">Pts/Match</th>
               </tr>
             </thead>
-            <tbody id="ratingBody"></tbody>
+            <tbody id="rankBody"></tbody>
           </table>
         </div>
+
       </section>
+
     </main>
 
     <div class="mobile-filter-bar" id="mobileFilterBar">
@@ -177,10 +196,23 @@
 
     <footer class="footer">
       <div class="footer__content">
-        <p class="footer__note">Ratings are for singles matchplay only.</p>
+        <p class="footer__note">Built to grow into the complete matchplay singles archive.</p>
+        <details class="footer__details">
+          <summary>About this project</summary>
+            <p>
+              This MVP focuses on player-level matchplay singles results from the Ryder Cup,
+              Presidents Cup, and WGC Match Play. The data model is ready for additional events
+              and formats.
+            </p>
+          <ul class="facts">
+            <li><strong>Scope:</strong> Singles matches only</li>
+            <li><strong>Events:</strong> Ryder Cup, Presidents Cup, WGC Match Play</li>
+            <li><strong>Ranking:</strong> Points per match</li>
+          </ul>
+        </details>
       </div>
     </footer>
 
-    <script src="rating.js"></script>
+    <script src="app.js"></script>
   </body>
 </html>

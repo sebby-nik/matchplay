@@ -949,3 +949,28 @@ document.addEventListener("keydown", (event) => {
     dropdown.open = false;
   });
 });
+
+const navToggle = document.querySelector(".site-nav__toggle");
+const navLinks = document.getElementById("siteNavLinks");
+const navBackdrop = document.getElementById("siteNavBackdrop");
+
+const closeNav = () => {
+  if (!navLinks || !navToggle || !navBackdrop) return;
+  navLinks.classList.remove("is-open");
+  navBackdrop.classList.remove("is-open");
+  navToggle.setAttribute("aria-expanded", "false");
+};
+
+if (navToggle && navLinks && navBackdrop) {
+  navToggle.addEventListener("click", () => {
+    const isOpen = navLinks.classList.toggle("is-open");
+    navBackdrop.classList.toggle("is-open", isOpen);
+    navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+  });
+
+  navBackdrop.addEventListener("click", closeNav);
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 720) closeNav();
+  });
+}

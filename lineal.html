@@ -18,13 +18,19 @@
           <img src="assets/logo.png" alt="Matchplay Records logo" />
           <span>Matchplay</span>
         </a>
-        <div class="site-nav__links">
+        <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="siteNavLinks">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div class="site-nav__links" id="siteNavLinks">
           <a class="site-nav__link" href="index.html">Player Ratings</a>
           <a class="site-nav__link" href="records.html">Player Records</a>
           <a class="site-nav__link is-active" href="lineal.html">Lineal Championship</a>
         </div>
       </div>
     </nav>
+    <div class="site-nav__backdrop" id="siteNavBackdrop"></div>
     <header class="hero hero--sport hero--parallax hero--lineal">
       <div class="hero__content hero__content--wide">
         <div class="hero__title-row">

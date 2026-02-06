@@ -146,12 +146,54 @@
             </p>
           </details>
           <details class="faq-item">
+            <summary>Why do some players have fewer matches?</summary>
+            <p>
+              The archive focuses on singles matchplay events only, so players who primarily
+              competed in team formats or in different eras may have fewer recorded matches.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>How often is the data updated?</summary>
+            <p>
+              The archive is updated after major matchplay events. We publish updates as new
+              results become available and verified.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>Can I compare two players head-to-head?</summary>
+            <p>
+              Head-to-head comparisons are in progress. For now, use player filters to
+              review individual match lists and records.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>Do team points count toward the rankings?</summary>
+            <p>
+              No. The rankings only use individual singles match results to keep comparisons
+              consistent across events.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>What if I spot an error?</summary>
+            <p>
+              Please get in touch and include as much detail as possible. We verify every
+              correction before updating the archive.
+            </p>
+          </details>
+          <details class="faq-item">
             <summary>Where does the data come from?</summary>
             <p>
               The dataset is compiled from official event results and curated to align names,
               rounds, and scores across competitions.
             </p>
           </details>
+        </div>
+
+        <div class="faq-cta">
+          <p class="muted">Have a question or correction?</p>
+          <button class="contact-title-button" id="contactTitleButton" type="button">
+            Get in touch
+          </button>
         </div>
       </section>
     </main>
@@ -181,6 +223,20 @@
         navBackdrop.addEventListener("click", closeNav);
         window.addEventListener("resize", () => {
           if (window.innerWidth > 720) closeNav();
+        });
+      }
+
+      const contactTitleButton = document.getElementById("contactTitleButton");
+
+      const openMailClient = (name, message) => {
+        const subject = encodeURIComponent("Matchplay Rankings — Contact");
+        const body = encodeURIComponent(`Name: ${name}\n\n${message}`);
+        window.location.href = `mailto:sebmargolis@gmail.com?subject=${subject}&body=${body}`;
+      };
+
+      if (contactTitleButton) {
+        contactTitleButton.addEventListener("click", () => {
+          openMailClient("Anonymous", "Hello,");
         });
       }
     </script>

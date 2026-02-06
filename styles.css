@@ -2050,6 +2050,14 @@ input[type="range"] {
   color: var(--ink-soft);
 }
 
+.faq-cta {
+  padding: 0 2rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
 @media (max-width: 720px) {
   .hero {
     padding: 3rem 6vw 2rem;
@@ -2109,6 +2117,10 @@ input[type="range"] {
   }
 
   .faq-list {
+    padding: 0 1.25rem 2rem;
+  }
+
+  .faq-cta {
     padding: 0 1.25rem 2rem;
   }
 }

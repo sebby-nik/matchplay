@@ -1130,6 +1130,18 @@ input[type="range"] {
   stroke-width: 2;
 }
 
+.sparkline--up polyline {
+  stroke: #16a34a;
+}
+
+.sparkline--down polyline {
+  stroke: #dc2626;
+}
+
+.sparkline--flat polyline {
+  stroke: #f59e0b;
+}
+
 .match-list {
   display: grid;
   gap: 0.75rem;

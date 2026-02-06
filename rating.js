@@ -157,6 +157,9 @@ const renderSummaryChips = (items, type) => {
 
 const renderSparkline = (values, className = "") => {
   if (!values || values.length < 2) return "";
+  const tail = values.slice(-10);
+  const slope = tail[tail.length - 1] - tail[0];
+  const trendClass = slope > 1 ? "sparkline--up" : slope < -1 ? "sparkline--down" : "sparkline--flat";
   const width = 160;
   const height = 36;
   const padding = 4;
@@ -173,7 +176,7 @@ const renderSparkline = (values, className = "") => {
     })
     .join(" ");
   return `
-    <div class="sparkline ${className}" aria-hidden="true">
+    <div class="sparkline ${className} ${trendClass}" aria-hidden="true">
       <svg viewBox="0 0 ${width} ${height}" role="img" focusable="false">
         <polyline points="${points}" />
       </svg>

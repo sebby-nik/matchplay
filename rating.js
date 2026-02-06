@@ -366,9 +366,9 @@ const renderPlayerDetailContent = (player) => {
             <div class="meta">${match.round || "Singles"}</div>
           </div>
           <div>
+            <span class="rating-delta ${deltaClass}">${deltaValue}</span>
             <div class="match-result">${label}</div>
             <span class="meta">${match.score || ""}</span>
-            <span class="rating-delta ${deltaClass}">${deltaValue}</span>
           </div>
         </div>
       `;

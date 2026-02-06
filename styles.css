@@ -1333,6 +1333,19 @@ input[type="range"] {
   font-size: 1.4rem;
 }
 
+.rating-rank-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1d2433;
+  background: rgba(255, 255, 255, 0.75);
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(111, 85, 48, 0.35);
+}
+
 .lineal-status {
   display: inline-flex;
   align-items: center;

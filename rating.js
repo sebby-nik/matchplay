@@ -635,13 +635,11 @@ const updateLeaderCard = (player) => {
     return;
   }
 
-  const flag = flagFromCountry(player.country);
-  ratingLeaderName.textContent = `${player.name}${flag ? ` ${flag}` : ""}`;
+  ratingLeaderName.textContent = player.name;
   ratingLeaderRating.textContent = `Rating ${Math.round(player.rating)}`;
   ratingLeaderMeta.textContent = `${player.matches} matches · ${player.wins}-${player.draws}-${player.losses} W-D-L`;
   ratingLeaderStats.innerHTML = `
     <span>Peak ${Math.round(player.peak)}</span>
-    <span>Last seen ${player.lastYear}</span>
   `;
 };
 

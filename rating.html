@@ -48,9 +48,12 @@
         <div class="panel__header">
           <div class="panel__title-row">
             <h2>Matchplay Ratings Table</h2>
+            <button class="mobile-filter-toggle" id="mobileFilterToggle" type="button">
+              Filters
+            </button>
             <div class="status-toggle">
               <span class="status-toggle__label">All-time</span>
-              <input id="activeOnlyToggle" type="checkbox" />
+              <input id="activeOnlyToggle" type="checkbox" checked />
               <span class="status-toggle__slider"></span>
               <span class="status-toggle__label">Active</span>
             </div>
@@ -58,6 +61,95 @@
           <p class="muted">
             Ratings are computed in chronological order by year, then event, then round.
           </p>
+        </div>
+
+        <div class="controls controls-panel" id="controlsPanel">
+          <div class="controls-panel__header">
+            <h3>Filters</h3>
+            <button class="controls-panel__close" id="controlsPanelClose" type="button">
+              Close
+            </button>
+          </div>
+          <label>
+            Player Search
+            <div class="player-search">
+              <div id="playerChips" class="player-search__chips"></div>
+              <input id="searchInput" type="search" placeholder="Add player" />
+              <div id="playerSuggestions" class="player-search__suggestions"></div>
+            </div>
+          </label>
+          <div class="country-filter">
+            <span class="country-filter__label">Event</span>
+            <details class="country-filter__dropdown" id="eventDropdown">
+              <summary id="eventSummary">All events</summary>
+              <div class="country-filter__panel">
+                <div class="country-filter__search">
+                  <span class="country-filter__search-icon">⌕</span>
+                  <input id="eventSearch" type="search" placeholder="Search events" />
+                </div>
+                <label class="country-filter__item country-filter__item--all">
+                  <input id="eventSelectAll" type="checkbox" />
+                  <span class="country-filter__text">Select all</span>
+                </label>
+                <div id="eventFilter" class="country-filter__list"></div>
+              </div>
+            </details>
+          </div>
+          <div class="country-filter">
+            <span class="country-filter__label">Year</span>
+            <details class="country-filter__dropdown" id="yearDropdown">
+              <summary id="yearSummary">All years</summary>
+              <div class="country-filter__panel">
+                <div class="country-filter__search">
+                  <span class="country-filter__search-icon">⌕</span>
+                  <input id="yearSearch" type="search" placeholder="Search years" />
+                </div>
+                <label class="country-filter__item country-filter__item--all">
+                  <input id="yearSelectAll" type="checkbox" />
+                  <span class="country-filter__text">Select all</span>
+                </label>
+                <div id="yearFilter" class="country-filter__list"></div>
+              </div>
+            </details>
+          </div>
+          <label>
+            <span class="range-label">
+              Min Matches
+              <span id="minMatchesValue" class="range-value">1+</span>
+            </span>
+            <div class="range-row">
+              <input id="minMatches" type="range" min="1" max="10" step="1" value="1" />
+            </div>
+          </label>
+          <div class="country-filter">
+            <span class="country-filter__label">Nationality</span>
+            <details class="country-filter__dropdown" id="countryDropdown">
+              <summary id="countrySummary">All nationalities</summary>
+              <div class="country-filter__panel">
+                <div class="country-filter__search">
+                  <span class="country-filter__search-icon">⌕</span>
+                  <input
+                    id="countrySearch"
+                    type="search"
+                    placeholder="Search countries"
+                  />
+                </div>
+                <label class="country-filter__item country-filter__item--all">
+                  <input id="countrySelectAll" type="checkbox" />
+                  <span class="country-filter__text">Select all</span>
+                </label>
+                <div id="countryFilter" class="country-filter__list"></div>
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <div id="summary" class="summary"></div>
+        <div class="filter-chips__row">
+          <div id="filterChips" class="filter-chips"></div>
+          <button id="clearAllFilters" type="button" class="filter-clear-all">
+            Clear all filters
+          </button>
         </div>
 
         <div class="table-wrap">
@@ -77,6 +169,13 @@
         </div>
       </section>
     </main>
+
+    <div class="mobile-filter-bar" id="mobileFilterBar">
+      <button class="mobile-filter-toggle" type="button" id="mobileFilterToggleBar">
+        Filters
+      </button>
+    </div>
+    <div class="mobile-filter-overlay" id="mobileFilterOverlay"></div>
 
     <footer class="footer">
       <div class="footer__content">

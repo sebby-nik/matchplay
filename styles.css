@@ -185,11 +185,11 @@ p {
 
 .site-nav__toggle {
   display: none;
-  width: 44px;
-  height: 44px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: #ffffff;
+  width: 28px;
+  height: 28px;
+  border-radius: 0;
+  border: 0;
+  background: transparent;
   align-items: center;
   justify-content: center;
   gap: 4px;

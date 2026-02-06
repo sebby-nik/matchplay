@@ -439,7 +439,7 @@ const buildReigns = (timeline, grants, retirements) => {
   return reigns;
 };
 
-const renderChampionCard = (reigns, overallStats) => {
+const renderChampionCard = (reigns, overallStats, log) => {
   if (!linealChampionName || !linealChampionMeta || !linealChampionStats || reigns.length === 0) return;
   const current = reigns[reigns.length - 1];
   linealChampionName.textContent = current.champion;
@@ -451,11 +451,13 @@ const renderChampionCard = (reigns, overallStats) => {
 
   const championReigns = reigns.filter((reign) => reign.champion === current.champion);
   const reignCount = championReigns.length;
-  const totalMatches = championReigns.reduce((sum, reign) => sum + reign.matches, 0);
-  const totalDefenses = championReigns.reduce((sum, reign) => {
-    const titleWinAdjustment = reign.startEntry ? 1 : 0;
-    return sum + Math.max(reign.wins - titleWinAdjustment, 0);
-  }, 0);
+  const championEntries = (log || []).filter((entry) => entry.championBefore === current.champion);
+  const totalMatches = championEntries.length;
+  const totalWins = championEntries.filter((entry) => entry.championResult === "Win").length;
+  const titleWins = championReigns.filter(
+    (reign) => reign.startEntry && reign.startEntry.championResult === "Win"
+  ).length;
+  const totalDefenses = Math.max(totalWins - titleWins, 0);
   const overall = overallStats.get(current.champion) || { wins: 0, draws: 0, losses: 0 };
   if (linealChampionRecord) {
     linealChampionRecord.textContent = `${overall.wins}-${overall.draws}-${overall.losses}`;
@@ -566,7 +568,7 @@ fetch("data.json")
     const { log, grants, retirements } = buildLinealLog(matches);
     const reigns = buildReigns(log, grants, retirements);
     renderMatchLog(log);
-    renderChampionCard(reigns, overallStats);
+    renderChampionCard(reigns, overallStats, log);
     renderChampionsList(reigns, countryMap);
   });
 

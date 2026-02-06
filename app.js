@@ -212,11 +212,9 @@ const renderTable = (players) => {
           : ppmValue / maxPpm >= 0.34
             ? "ppm-bar__fill--mid"
             : "ppm-bar__fill--low";
-    const nationality = countryNameFromCode(player.country);
     row.innerHTML = `
       <td>${player.rank ?? index + 1}</td>
-      <td>${flag ? `<span class="flag">${flag}</span> ` : ""}${player.name}</td>
-      <td>${nationality}</td>
+      <td>${player.name}${flag ? ` <span class="flag">${flag}</span>` : ""}</td>
       <td>${player.matches}</td>
       <td>${player.points.toFixed(1)}</td>
       <td>${player.wins}-${player.draws}-${player.losses}</td>
@@ -308,7 +306,7 @@ const renderPlayerDetail = (player, row) => {
   const detailRow = document.createElement("tr");
   detailRow.className = "detail-row";
   const cell = document.createElement("td");
-  cell.colSpan = 7;
+  cell.colSpan = 6;
   cell.innerHTML = renderPlayerDetailContent(player);
   detailRow.append(cell);
   row.after(detailRow);

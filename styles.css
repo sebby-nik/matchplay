@@ -1687,10 +1687,6 @@ input[type="range"] {
 
 .honours-board {
   background:
-    radial-gradient(circle at 6% 10%, rgba(210, 210, 210, 0.35), rgba(40, 40, 40, 0.9) 6px, transparent 7px),
-    radial-gradient(circle at 94% 10%, rgba(210, 210, 210, 0.35), rgba(40, 40, 40, 0.9) 6px, transparent 7px),
-    radial-gradient(circle at 6% 90%, rgba(210, 210, 210, 0.35), rgba(40, 40, 40, 0.9) 6px, transparent 7px),
-    radial-gradient(circle at 94% 90%, rgba(210, 210, 210, 0.35), rgba(40, 40, 40, 0.9) 6px, transparent 7px),
     radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.2), transparent 35%),
     radial-gradient(circle at 88% 18%, rgba(255, 255, 255, 0.18), transparent 35%),
     radial-gradient(circle at 12% 88%, rgba(0, 0, 0, 0.22), transparent 40%),
@@ -1702,7 +1698,7 @@ input[type="range"] {
       rgba(0, 0, 0, 0.08) 2px,
       rgba(0, 0, 0, 0.08) 4px
     ),
-    linear-gradient(135deg, #2a170d 0%, #2f1a10 40%, #1a0f08 100%);
+    linear-gradient(135deg, #3a2313 0%, #4a2c18 40%, #2c190f 100%);
   border-radius: 22px;
   border: 1px solid rgba(0, 0, 0, 0.45);
   box-shadow:

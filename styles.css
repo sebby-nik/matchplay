@@ -1193,6 +1193,25 @@ input[type="range"] {
   color: #991b1b;
 }
 
+.rating-delta {
+  display: inline-block;
+  margin-top: 0.2rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.rating-delta--pos {
+  color: #16a34a;
+}
+
+.rating-delta--neg {
+  color: #dc2626;
+}
+
+.rating-delta--even {
+  color: var(--ink-soft);
+}
+
 .match-row.result-win {
   background: #effaf3;
   border-color: #b9e6cc;

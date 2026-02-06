@@ -260,14 +260,15 @@ const ensurePlayer = (ratings, name, country) => {
   return ratings.get(name);
 };
 
-const addMatchToPlayer = (player, match, opponent, result) => {
+const addMatchToPlayer = (player, match, opponent, result, delta) => {
   player.matchList.push({
     event: match.event,
     year: match.year,
     round: match.round,
     opponent,
     result,
-    score: match.score
+    score: match.score,
+    delta
   });
 };
 
@@ -296,6 +297,9 @@ const computeRatings = (matches) => {
     const playerK = kFactor(player.matches);
     const opponentK = kFactor(opponent.matches);
 
+    const playerBefore = player.rating;
+    const opponentBefore = opponent.rating;
+
     player.rating = player.rating + playerK * (score - playerExpected);
     opponent.rating = opponent.rating + opponentK * ((1 - score) - opponentExpected);
 
@@ -322,11 +326,20 @@ const computeRatings = (matches) => {
 
     const opponentResult =
       match.result === "win" ? "loss" : match.result === "loss" ? "win" : "halved";
-    addMatchToPlayer(player, match, match.opponent, match.result);
-    addMatchToPlayer(opponent, match, match.player, opponentResult);
+    const playerDelta = player.rating - playerBefore;
+    const opponentDelta = opponent.rating - opponentBefore;
+    addMatchToPlayer(player, match, match.opponent, match.result, playerDelta);
+    addMatchToPlayer(opponent, match, match.player, opponentResult, opponentDelta);
   });
 
   return Array.from(ratings.values());
+};
+
+const formatDelta = (delta) => {
+  const value = Math.round(delta);
+  if (value > 0) return `+${value}`;
+  if (value < 0) return `${value}`;
+  return "0";
 };
 
 const renderPlayerDetailContent = (player) => {
@@ -343,6 +356,9 @@ const renderPlayerDetailContent = (player) => {
           : match.result === "loss"
             ? "result-loss"
             : "result-halved";
+      const deltaValue = formatDelta(match.delta || 0);
+      const deltaClass =
+        deltaValue.startsWith("+") ? "rating-delta--pos" : deltaValue.startsWith("-") ? "rating-delta--neg" : "rating-delta--even";
       return `
         <div class="match-row ${resultClass}">
           <div>
@@ -352,6 +368,7 @@ const renderPlayerDetailContent = (player) => {
           <div>
             <div class="match-result">${label}</div>
             <span class="meta">${match.score || ""}</span>
+            <span class="rating-delta ${deltaClass}">${deltaValue}</span>
           </div>
         </div>
       `;

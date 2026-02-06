@@ -69,12 +69,7 @@
             Have corrections, sources, or feedback? Send us a note and we will review every suggestion.
           </p>
         </div>
-        <div class="panel__body" style="padding: 1.5rem 2rem 2rem;">
-          <button class="contact-form__submit" id="contactEmailButton" type="button">
-            Email sebmargolis@gmail.com
-          </button>
-          <p class="contact-form__success" id="contactSuccess">Thanks — your email draft is ready.</p>
-        </div>
+        <div class="panel__body" style="padding: 1.5rem 2rem 2rem;"></div>
       </section>
     </main>
 
@@ -106,8 +101,6 @@
         });
       }
 
-      const contactSuccess = document.getElementById("contactSuccess");
-      const contactEmailButton = document.getElementById("contactEmailButton");
       const contactTitleButton = document.getElementById("contactTitleButton");
 
       const openMailClient = (name, message) => {
@@ -116,17 +109,9 @@
         window.location.href = `mailto:sebmargolis@gmail.com?subject=${subject}&body=${body}`;
       };
 
-      if (contactEmailButton) {
-        contactEmailButton.addEventListener("click", () => {
-          openMailClient("Anonymous", "Hello,");
-          contactSuccess.classList.add("is-visible");
-        });
-      }
-
       if (contactTitleButton) {
         contactTitleButton.addEventListener("click", () => {
           openMailClient("Anonymous", "Hello,");
-          contactSuccess.classList.add("is-visible");
         });
       }
     </script>

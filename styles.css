@@ -267,6 +267,65 @@ p {
   background: rgba(255, 255, 255, 0.9);
 }
 
+.contact-title-button {
+  border: 0;
+  background: #111827;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  box-shadow: 0 12px 22px rgba(15, 23, 42, 0.2);
+}
+
+.contact-form {
+  display: grid;
+  gap: 1rem;
+  max-width: 520px;
+}
+
+.contact-form__field {
+  display: grid;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.contact-form__field input,
+.contact-form__field textarea {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.8rem 0.9rem;
+  font: inherit;
+}
+
+.contact-form__field textarea {
+  resize: vertical;
+}
+
+.contact-form__submit {
+  justify-self: start;
+  border: 1px solid var(--line);
+  background: #111827;
+  color: #ffffff;
+  padding: 0.6rem 1.1rem;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.contact-form__success {
+  display: none;
+  color: #15803d;
+  font-weight: 600;
+}
+
+.contact-form__success.is-visible {
+  display: block;
+}
+
 .layout {
   display: grid;
   gap: 2.5rem;

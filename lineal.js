@@ -458,10 +458,10 @@ const renderChampionCard = (reigns, overallStats) => {
   }, 0);
   const overall = overallStats.get(current.champion) || { wins: 0, draws: 0, losses: 0 };
   if (linealChampionRecord) {
-    linealChampionRecord.textContent = `${overall.wins}-${overall.draws}-${overall.losses} W-D-L`;
+    linealChampionRecord.textContent = `${overall.wins}-${overall.draws}-${overall.losses}`;
   }
   linealChampionStats.innerHTML = `
-    <span>${reignCount} reigns</span>
+    <span class="lineal-card__crowns" aria-label="${reignCount} reigns">${"♛".repeat(reignCount)}</span>
     <span>${totalMatches} matches</span>
     <span>${totalDefenses} defenses</span>
   `;

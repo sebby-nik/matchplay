@@ -1536,6 +1536,12 @@ input[type="range"] {
   font-weight: 600;
 }
 
+.lineal-card__crowns {
+  background: linear-gradient(135deg, #f7d56a 0%, #d3a84b 100%);
+  color: #2c190f;
+  letter-spacing: 0.08em;
+}
+
 .lineal-card__crown {
   position: absolute;
   top: 1rem;

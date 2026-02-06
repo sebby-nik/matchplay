@@ -48,6 +48,12 @@
         <div class="panel__header">
           <div class="panel__title-row">
             <h2>Matchplay Ratings Table</h2>
+            <div class="status-toggle">
+              <span class="status-toggle__label">All-time</span>
+              <input id="activeOnlyToggle" type="checkbox" />
+              <span class="status-toggle__slider"></span>
+              <span class="status-toggle__label">Active</span>
+            </div>
           </div>
           <p class="muted">
             Ratings are computed in chronological order by year, then event, then round.
@@ -58,12 +64,12 @@
           <table class="rank-table">
             <thead>
               <tr>
-                <th>Rank</th>
-                <th>Player</th>
-                <th>Rating</th>
-                <th>Matches</th>
-                <th>W-D-L</th>
-                <th>Peak</th>
+                <th data-sort="rank">Rank</th>
+                <th data-sort="name">Player</th>
+                <th data-sort="rating">Rating</th>
+                <th data-sort="matches">Matches</th>
+                <th data-sort="wdl">W-D-L</th>
+                <th data-sort="peak">Peak</th>
               </tr>
             </thead>
             <tbody id="ratingBody"></tbody>

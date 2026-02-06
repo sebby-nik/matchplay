@@ -1,4 +1,6 @@
 const ratingBody = document.getElementById("ratingBody");
+const activeOnlyToggle = document.getElementById("activeOnlyToggle");
+const tableHeaders = document.querySelectorAll(".rank-table th[data-sort]");
 
 const EVENT_ORDER = ["WGC Match Play", "Presidents Cup", "Ryder Cup"];
 const ROUND_ORDER = [
@@ -60,10 +62,9 @@ const kFactor = (matchesPlayed) => {
   return 20;
 };
 
-const applyYearDecay = (ratings, year) => {
+const applyYearDecay = (ratings) => {
   ratings.forEach((entry) => {
     entry.rating = BASE_RATING + (entry.rating - BASE_RATING) * YEAR_DECAY;
-    entry.lastYear = year;
   });
 };
 
@@ -91,7 +92,7 @@ const computeRatings = (matches) => {
   ordered.forEach((match) => {
     if (currentYear === null) currentYear = match.year;
     if (match.year !== currentYear) {
-      applyYearDecay(ratings, match.year);
+      applyYearDecay(ratings);
       currentYear = match.year;
     }
 
@@ -113,6 +114,8 @@ const computeRatings = (matches) => {
 
     player.matches += 1;
     opponent.matches += 1;
+    player.lastYear = match.year;
+    opponent.lastYear = match.year;
 
     if (score === 1) {
       player.wins += 1;
@@ -132,11 +135,64 @@ const computeRatings = (matches) => {
   return Array.from(ratings.values());
 };
 
-const renderTable = (players) => {
+const sortDefaults = {
+  rank: "desc",
+  rating: "desc",
+  matches: "desc",
+  peak: "desc",
+  wdl: "desc",
+  name: "asc"
+};
+
+let sortKey = "rating";
+let sortDir = sortDefaults[sortKey];
+let allPlayers = [];
+let currentMaxYear = null;
+
+const getSortValue = (player, key) => {
+  if (key === "name") return player.name.toLowerCase();
+  if (key === "matches") return player.matches;
+  if (key === "peak") return player.peak;
+  if (key === "wdl") return player.wins + player.draws * 0.5;
+  if (key === "rank") return player.rating;
+  return player.rating;
+};
+
+const updateHeaderState = () => {
+  tableHeaders.forEach((header) => {
+    const key = header.dataset.sort;
+    header.classList.remove("is-sorted", "is-sorted-asc", "is-sorted-desc");
+    if (key === sortKey) {
+      header.classList.add("is-sorted", sortDir === "asc" ? "is-sorted-asc" : "is-sorted-desc");
+    }
+  });
+};
+
+const sortPlayers = (players) => {
+  const sorted = players.slice().sort((a, b) => {
+    const aVal = getSortValue(a, sortKey);
+    const bVal = getSortValue(b, sortKey);
+    if (aVal < bVal) return sortDir === "asc" ? -1 : 1;
+    if (aVal > bVal) return sortDir === "asc" ? 1 : -1;
+    return a.name.localeCompare(b.name);
+  });
+  return sorted;
+};
+
+const filterPlayers = (players) => {
+  if (!activeOnlyToggle || !activeOnlyToggle.checked || currentMaxYear === null) {
+    return players;
+  }
+  const activeCutoff = currentMaxYear - 5;
+  return players.filter((player) => player.lastYear !== null && player.lastYear >= activeCutoff);
+};
+
+const renderTable = () => {
   if (!ratingBody) return;
   ratingBody.innerHTML = "";
 
-  const sorted = players.slice().sort((a, b) => b.rating - a.rating);
+  const filtered = filterPlayers(allPlayers);
+  const sorted = sortPlayers(filtered);
   sorted.forEach((player, index) => {
     const row = document.createElement("tr");
     row.innerHTML = `
@@ -155,6 +211,27 @@ fetch("data.json")
   .then((res) => res.json())
   .then((data) => {
     const matches = (data.matches || []).filter((match) => match.result !== "not played");
-    const ratings = computeRatings(matches);
-    renderTable(ratings);
+    currentMaxYear = matches.reduce((max, match) => Math.max(max, match.year), null);
+    allPlayers = computeRatings(matches);
+    updateHeaderState();
+    renderTable();
   });
+
+tableHeaders.forEach((header) => {
+  header.addEventListener("click", () => {
+    const key = header.dataset.sort;
+    if (!key) return;
+    if (sortKey === key) {
+      sortDir = sortDir === "asc" ? "desc" : "asc";
+    } else {
+      sortKey = key;
+      sortDir = sortDefaults[key] || "desc";
+    }
+    updateHeaderState();
+    renderTable();
+  });
+});
+
+if (activeOnlyToggle) {
+  activeOnlyToggle.addEventListener("change", renderTable);
+}

@@ -1839,7 +1839,8 @@ input[type="range"] {
 @media (max-width: 700px) {
   .lineal-champion {
     grid-template-columns: auto 1fr;
-    row-gap: 0.6rem;
+    row-gap: 0.4rem;
+    column-gap: 0.85rem;
   }
 
   .lineal-champion__index {
@@ -1851,6 +1852,17 @@ input[type="range"] {
   .lineal-champion__record,
   .lineal-champion__crowns {
     grid-column: 2 / -1;
+    text-align: left;
+  }
+
+  .lineal-champion__record,
+  .lineal-champion__crowns {
+    justify-self: start;
+    min-width: 0;
+  }
+
+  .lineal-champion__name {
+    font-size: 1.15rem;
   }
 }
 

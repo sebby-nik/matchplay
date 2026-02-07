@@ -573,7 +573,7 @@
               <p class="schedule__meta schedule__meta--empty">${venueLabel || "&nbsp;"}</p>
               <div class="schedule__date">${dateLabel}</div>
             </div>
-            ${showWinner ? `<div class="schedule__winner"><span class="winner-badge"><img src="${winnerAsset}" alt="${winnerAlt}" /></span></div>` : ""}
+            ${showWinner ? `<div class="schedule__winner">${wgcWinner ? `<span class="winner-name">${wgcWinner}</span>` : ""}<span class="winner-badge"><img src="${winnerAsset}" alt="${winnerAlt}" /></span></div>` : ""}
           `;
           groupCards.appendChild(card);
         });

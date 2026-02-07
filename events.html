@@ -106,8 +106,6 @@
 
     <script src="app.js"></script>
     <script>
-      (() => {
-        try {
       const MONTH_ORDER = [
         "January",
         "February",
@@ -700,17 +698,6 @@
           if (window.innerWidth > 720) closeNav();
         });
       }
-        } catch (error) {
-          const upcomingPanel = document.querySelector(".schedule__panel[data-panel='upcoming']");
-          const resultsPanel = document.querySelector(".schedule__panel[data-panel='results']");
-          if (upcomingPanel) {
-            upcomingPanel.innerHTML = `<p class="schedule__empty">Events script error: ${error.message}</p>`;
-          }
-          if (resultsPanel) {
-            resultsPanel.innerHTML = `<p class="schedule__empty">Events script error: ${error.message}</p>`;
-          }
-        }
-      })();
     </script>
   </body>
 </html>

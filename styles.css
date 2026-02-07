@@ -180,6 +180,23 @@ p {
   gap: 0.75rem;
 }
 
+.schedule__logo {
+  width: 84px;
+  height: 84px;
+  border-radius: 18px;
+  background: rgba(29, 36, 51, 0.04);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem;
+}
+
+.schedule__logo img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
 .schedule__date {
   text-transform: uppercase;
   letter-spacing: 0.18em;

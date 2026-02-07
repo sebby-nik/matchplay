@@ -70148,23 +70148,5 @@
       "points": 0,
       "month": "October"
     }
-  ],
-  "events": [
-    {
-      "event": "Presidents Cup",
-      "year": 2026,
-      "month": "September",
-      "dateLabel": "Sep 22–27, 2026",
-      "dateStart": "2026-09-22",
-      "venue": "Medinah Country Club (Course No. 3), Chicago, Illinois, USA"
-    },
-    {
-      "event": "Ryder Cup",
-      "year": 2027,
-      "month": "September",
-      "dateLabel": "Sep 17–19, 2027",
-      "dateStart": "2027-09-17",
-      "venue": "The Golf Course at Adare Manor, County Limerick, Ireland"
-    }
   ]
 }

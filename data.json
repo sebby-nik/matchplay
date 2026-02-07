@@ -70189,6 +70189,22 @@
       "dateLabel": "TBA",
       "dateStart": "2033-09-01",
       "venue": "Olympic Club, Lake Course, San Francisco, California, USA"
+    },
+    {
+      "event": "Presidents Cup",
+      "year": 2028,
+      "month": "September",
+      "dateLabel": "TBA",
+      "dateStart": "2028-09-01",
+      "venue": "Kingston Heath Golf Club, Cheltenham, Victoria, Australia"
+    },
+    {
+      "event": "Presidents Cup",
+      "year": 2030,
+      "month": "September",
+      "dateLabel": "TBA",
+      "dateStart": "2030-09-01",
+      "venue": "Bellerive Country Club, Town and Country, Missouri, USA"
     }
   ]
 }

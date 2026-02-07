@@ -70165,6 +70165,30 @@
       "dateLabel": "Sep 17–19, 2027",
       "dateStart": "2027-09-17",
       "venue": "The Golf Course at Adare Manor, County Limerick, Ireland"
+    },
+    {
+      "event": "Ryder Cup",
+      "year": 2029,
+      "month": "September",
+      "dateLabel": "TBA",
+      "dateStart": "2029-09-01",
+      "venue": "Hazeltine National Golf Club, Chaska, Minnesota, USA"
+    },
+    {
+      "event": "Ryder Cup",
+      "year": 2031,
+      "month": "September",
+      "dateLabel": "TBA",
+      "dateStart": "2031-09-01",
+      "venue": "Camiral Golf & Wellness, Caldes de Malavella, Catalonia, Spain"
+    },
+    {
+      "event": "Ryder Cup",
+      "year": 2033,
+      "month": "September",
+      "dateLabel": "TBA",
+      "dateStart": "2033-09-01",
+      "venue": "Olympic Club, Lake Course, San Francisco, California, USA"
     }
   ]
 }

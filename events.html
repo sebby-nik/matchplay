@@ -271,6 +271,56 @@
         2013: "Golf de Saint-Nom-la-Bretèche, Paris, France"
       };
 
+      const wgcMatchPlayWinners = {
+        1999: "Jeff Maggert",
+        2000: "Darren Clarke",
+        2001: "Steve Stricker",
+        2002: "Kevin Sutherland",
+        2003: "Tiger Woods",
+        2004: "Tiger Woods",
+        2005: "David Toms",
+        2006: "Geoff Ogilvy",
+        2007: "Henrik Stenson",
+        2008: "Tiger Woods",
+        2009: "Geoff Ogilvy",
+        2010: "Paul Casey",
+        2011: "Ian Poulter",
+        2012: "Hunter Mahan",
+        2013: "Matt Kuchar",
+        2014: "Jason Day",
+        2015: "Rory McIlroy",
+        2016: "Jason Day",
+        2017: "Dustin Johnson",
+        2018: "Bubba Watson",
+        2019: "Kevin Kisner",
+        2021: "Billy Horschel",
+        2022: "Scottie Scheffler",
+        2023: "Sam Burns"
+      };
+
+      const wgcWinnerImages = {
+        "Sam Burns": "https://commons.wikimedia.org/wiki/Special:FilePath/Sam_Burns_golfer_interview.png",
+        "Scottie Scheffler": "https://commons.wikimedia.org/wiki/Special:FilePath/ScottieScheffler.jpg",
+        "Billy Horschel": "assets/winner-placeholder.svg",
+        "Kevin Kisner": "https://commons.wikimedia.org/wiki/Special:FilePath/Kevin_Kisner_-_2018.jpg",
+        "Bubba Watson": "https://commons.wikimedia.org/wiki/Special:FilePath/BubbaWatson.jpg",
+        "Dustin Johnson": "https://commons.wikimedia.org/wiki/Special:FilePath/Dustin_Johnson_2016_US_Open_Winner_Golfer.png",
+        "Rory McIlroy": "https://commons.wikimedia.org/wiki/Special:FilePath/Rory_McIlroy_Irish_Golfer.jpg",
+        "Jason Day": "https://commons.wikimedia.org/wiki/Special:FilePath/Jason_Day.jpg",
+        "Matt Kuchar": "https://commons.wikimedia.org/wiki/Special:FilePath/Matt_Kuchar.jpg",
+        "Hunter Mahan": "https://commons.wikimedia.org/wiki/Special:FilePath/Hunter_Mahan.jpg",
+        "Ian Poulter": "https://commons.wikimedia.org/wiki/Special:FilePath/Ian_Poulter_at_2018_US_Open_01.jpg",
+        "Paul Casey": "https://commons.wikimedia.org/wiki/Special:FilePath/Paul_Casey_2008_US_Open_cropped.jpg",
+        "Henrik Stenson": "https://commons.wikimedia.org/wiki/Special:FilePath/Henrik_Stenson.JPG",
+        "Geoff Ogilvy": "https://commons.wikimedia.org/wiki/Special:FilePath/Geoff_Ogilvy_(6346173487).jpg",
+        "David Toms": "https://commons.wikimedia.org/wiki/Special:FilePath/David_Toms_2008_PGA_Championship_cropped.jpg",
+        "Tiger Woods": "https://commons.wikimedia.org/wiki/Special:FilePath/Tiger_Woods_2018_US_Open_02.jpg",
+        "Kevin Sutherland": "assets/winner-placeholder.svg",
+        "Steve Stricker": "https://commons.wikimedia.org/wiki/Special:FilePath/Steve_Stricker.jpg",
+        "Darren Clarke": "https://commons.wikimedia.org/wiki/Special:FilePath/DarrenClarke.jpg",
+        "Jeff Maggert": "assets/winner-placeholder.svg"
+      };
+
       const wgcMatchPlayDates = {
         1999: "Feb 24-28, 1999",
         2000: "Feb 23-27, 2000",
@@ -497,8 +547,13 @@
             "";
 
           const winnerLabel = winnerMap[item.event]?.[item.year];
-          const winnerAsset = winnerLabel ? winnerAssetMap[winnerLabel] : "assets/winner-placeholder.svg";
-          const winnerAlt = winnerLabel ? `${winnerLabel} winner` : "Winner";
+          const wgcWinner = item.event === "WGC Match Play" ? wgcMatchPlayWinners[item.year] : null;
+          const winnerAsset = wgcWinner
+            ? (wgcWinnerImages[wgcWinner] || "assets/winner-placeholder.svg")
+            : winnerLabel
+              ? winnerAssetMap[winnerLabel]
+              : "assets/winner-placeholder.svg";
+          const winnerAlt = wgcWinner ? `${wgcWinner} winner` : winnerLabel ? `${winnerLabel} winner` : "Winner";
           const winnerClass = winnerLabel ? `winner-${winnerLabel.toLowerCase().replace(/[^a-z0-9]+/g, "-")}` : "";
           const eventClass = `event-${item.event.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
           const isPresidentsTie = item.event === "Presidents Cup" && item.year === 2003;

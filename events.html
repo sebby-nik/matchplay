@@ -84,38 +84,8 @@
         </button>
       </div>
 
-      <div class="schedule__panel is-active" data-panel="upcoming" role="tabpanel">
-        <div class="schedule__group">
-          <div class="schedule__heading">
-            <h2>2026</h2>
-          </div>
-          <div class="schedule__cards">
-            <article class="schedule__card schedule__card--logo">
-              <div class="schedule__logo">
-                <img src="assets/presidents-cup-logo.png" alt="Presidents Cup logo" />
-              </div>
-              <h3>Presidents Cup 2026</h3>
-              <p class="schedule__meta">Medinah Country Club (Course No. 3), Chicago, Illinois, USA</p>
-              <div class="schedule__date">Sep 22–27, 2026</div>
-            </article>
-          </div>
-        </div>
-
-        <div class="schedule__group">
-          <div class="schedule__heading">
-            <h2>2027</h2>
-          </div>
-          <div class="schedule__cards">
-            <article class="schedule__card schedule__card--logo">
-              <div class="schedule__logo">
-                <img src="assets/ryder-cup-logo.png" alt="Ryder Cup logo" />
-              </div>
-              <h3>Ryder Cup 2027</h3>
-              <p class="schedule__meta">The Golf Course at Adare Manor, County Limerick, Ireland</p>
-              <div class="schedule__date">Sep 17–19, 2027</div>
-            </article>
-          </div>
-        </div>
+      <div class="schedule__panel is-active" data-panel="upcoming" role="tabpanel" aria-live="polite">
+        <div class="schedule__loading">Loading upcoming events…</div>
       </div>
 
       <div class="schedule__panel" data-panel="results" role="tabpanel" aria-live="polite">
@@ -180,7 +150,7 @@
           .toUpperCase();
       };
 
-      const buildResults = (matches) => {
+      const buildEventList = (matches) => {
         const entries = new Map();
         matches.forEach((match) => {
           const key = `${match.event}-${match.year}-${match.month || ""}`;
@@ -188,37 +158,63 @@
             entries.set(key, {
               event: match.event,
               year: match.year,
-              month: match.month || "January"
+              month: match.month || "January",
+              venue: ""
             });
           }
         });
 
-        const list = Array.from(entries.values()).sort((a, b) => {
+        return Array.from(entries.values());
+      };
+
+      const sortByDateDesc = (list) => {
+        return list.sort((a, b) => {
+          if (a.dateStart && b.dateStart) return b.dateStart.localeCompare(a.dateStart);
           if (a.year !== b.year) return b.year - a.year;
           return MONTH_ORDER.indexOf(b.month) - MONTH_ORDER.indexOf(a.month);
         });
+      };
 
+      const sortByDateAsc = (list) => {
+        return list.sort((a, b) => {
+          if (a.dateStart && b.dateStart) return a.dateStart.localeCompare(b.dateStart);
+          if (a.year !== b.year) return a.year - b.year;
+          return MONTH_ORDER.indexOf(a.month) - MONTH_ORDER.indexOf(b.month);
+        });
+      };
+
+      const splitByTime = (list) => {
         const now = new Date();
         const currentYear = now.getFullYear();
         const currentMonthIndex = now.getMonth();
 
-        return list.filter((item) => {
+        const past = [];
+        const future = [];
+
+        list.forEach((item) => {
           const monthIndex = MONTH_ORDER.indexOf(item.month);
-          return item.year < currentYear || (item.year === currentYear && monthIndex <= currentMonthIndex);
+          const isPast = item.year < currentYear || (item.year === currentYear && monthIndex <= currentMonthIndex);
+          if (isPast) {
+            past.push(item);
+          } else {
+            future.push(item);
+          }
         });
+
+        return { past, future };
       };
 
-      const renderResults = (results) => {
-        const panel = document.querySelector(".schedule__panel[data-panel='results']");
+      const renderSchedule = (panelKey, items, emptyMessage) => {
+        const panel = document.querySelector(`.schedule__panel[data-panel='${panelKey}']`);
         panel.innerHTML = "";
 
-        if (!results.length) {
-          panel.innerHTML = "<p class=\"schedule__empty\">No past events listed yet.</p>";
+        if (!items.length) {
+          panel.innerHTML = `<p class="schedule__empty">${emptyMessage}</p>`;
           return;
         }
 
         let currentYear = null;
-        results.forEach((item) => {
+        items.forEach((item) => {
           if (item.year !== currentYear) {
             currentYear = item.year;
             const group = document.createElement("div");
@@ -230,11 +226,31 @@
           const logo = logoMap[item.event];
           card.className = "schedule__card schedule__card--logo";
 
-          const dateLabel = `${item.month} ${item.year}`;
-          const venueLabel = "";
+          const dateLabel = item.dateLabel || `${item.month} ${item.year}`;
+          const venueLabel = item.venue || "";
 
           card.innerHTML = `\n            <div class=\"schedule__logo\">\n              ${logo ? `<img src=\"${logo}\" alt=\"${item.event} logo\" />` : `<span class=\"schedule__logo-text\">${initialsForEvent(item.event)}</span>`}\n            </div>\n            <h3>${item.event} ${item.year}</h3>\n            <p class=\"schedule__meta schedule__meta--empty\">${venueLabel || \"&nbsp;\"}</p>\n            <div class=\"schedule__date\">${dateLabel}</div>\n          `;\n          groupCards.appendChild(card);\n        });\n      };
 
-      fetch("data.json")\n        .then((response) => response.json())\n        .then((data) => {\n          const results = buildResults(data.matches || []);\n          renderResults(results);\n        })\n        .catch(() => {\n          const panel = document.querySelector(\".schedule__panel[data-panel='results']\");\n          if (panel) {\n            panel.innerHTML = \"<p class=\\\"schedule__empty\\\">Unable to load past events.</p>\";\n          }\n        });\n    </script>
+      fetch("data.json")
+        .then((response) => response.json())
+        .then((data) => {
+          const matchEvents = buildEventList(data.matches || []);
+          const futureEvents = Array.isArray(data.events) ? data.events : [];
+          const allEvents = [...matchEvents, ...futureEvents];
+          const { past, future } = splitByTime(allEvents);
+          renderSchedule("upcoming", sortByDateAsc(future), "No upcoming events listed yet.");
+          renderSchedule("results", sortByDateDesc(past), "No past events listed yet.");
+        })
+        .catch(() => {
+          const upcomingPanel = document.querySelector(".schedule__panel[data-panel='upcoming']");
+          const resultsPanel = document.querySelector(".schedule__panel[data-panel='results']");
+          if (upcomingPanel) {
+            upcomingPanel.innerHTML = "<p class=\"schedule__empty\">Unable to load upcoming events.</p>";
+          }
+          if (resultsPanel) {
+            resultsPanel.innerHTML = "<p class=\"schedule__empty\">Unable to load past events.</p>";
+          }
+        });
+    </script>
   </body>
 </html>

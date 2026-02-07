@@ -197,6 +197,35 @@ p {
   object-fit: contain;
 }
 
+@media (min-width: 860px) {
+  .schedule__card {
+    flex-direction: row;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .schedule__logo {
+    flex: 0 0 96px;
+    width: 96px;
+    height: 96px;
+  }
+
+  .schedule__card h3,
+  .schedule__meta,
+  .schedule__tags,
+  .schedule__date {
+    margin: 0;
+  }
+
+  .schedule__card h3 {
+    font-size: 1.4rem;
+  }
+
+  .schedule__card > :not(.schedule__logo) {
+    width: 100%;
+  }
+}
+
 .schedule__date {
   text-transform: uppercase;
   letter-spacing: 0.18em;

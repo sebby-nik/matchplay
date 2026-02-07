@@ -200,7 +200,7 @@
           const resultsEvents = buildEventList(data.matches || []);
           const upcomingEvents = Array.isArray(data.events) ? data.events : [];
           renderSchedule("results", sortByDateDesc(resultsEvents), "No results listed yet.");
-          renderSchedule("upcoming", sortByDateDesc(upcomingEvents), "No upcoming events listed yet.");
+          renderSchedule("upcoming", sortByDateAsc(upcomingEvents), "No upcoming events listed yet.");
         })
         .catch(() => {
           const resultsPanel = document.querySelector(".schedule__panel[data-panel='results']");

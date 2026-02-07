@@ -182,6 +182,42 @@ p {
   display: block;
 }
 
+.schedule__filters {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.schedule__filter-label {
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.schedule__filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.schedule__filter-btn {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--ink);
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.schedule__filter-btn.is-active {
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+}
+
 .schedule__loading,
 .schedule__empty {
   color: var(--ink-soft);

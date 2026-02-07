@@ -84,6 +84,17 @@
         </button>
       </div>
 
+      <div class="schedule__filters">
+        <span class="schedule__filter-label">Event Type</span>
+        <div class="schedule__filter-group" role="group" aria-label="Filter by event type">
+          <button class="schedule__filter-btn is-active" type="button" data-filter="all">All</button>
+          <button class="schedule__filter-btn" type="button" data-filter="Ryder Cup">Ryder Cup</button>
+          <button class="schedule__filter-btn" type="button" data-filter="Presidents Cup">Presidents Cup</button>
+          <button class="schedule__filter-btn" type="button" data-filter="WGC Match Play">WGC Match Play</button>
+          <button class="schedule__filter-btn" type="button" data-filter="Seve Trophy">Seve Trophy</button>
+        </div>
+      </div>
+
       <div class="schedule__panel is-active" data-panel="upcoming" role="tabpanel" aria-live="polite">
         <div class="schedule__loading">Loading upcoming events…</div>
       </div>
@@ -588,12 +599,23 @@
         }, Promise.reject());
       };
 
+      let cachedUpcoming = [];
+      let cachedResults = [];
+
+      const applyEventFilter = (filterValue) => {
+        const upcoming = filterValue === "all" ? cachedUpcoming : cachedUpcoming.filter((item) => item.event === filterValue);
+        const results = filterValue === "all" ? cachedResults : cachedResults.filter((item) => item.event === filterValue);
+        renderSchedule("upcoming", sortByDateAsc(upcoming), "No upcoming events listed yet.", false);
+        renderSchedule("results", sortByDateDesc(results), "No results listed yet.", true);
+      };
+
       fetchData(["data.json", "./data.json", "/data.json"])
         .then((data) => {
           const resultsEvents = buildEventList(data.matches || []);
           const upcomingEvents = Array.isArray(data.events) ? data.events : [];
-          renderSchedule("results", sortByDateDesc(resultsEvents), "No results listed yet.", true);
-          renderSchedule("upcoming", sortByDateAsc(upcomingEvents), "No upcoming events listed yet.", false);
+          cachedResults = sortByDateDesc(resultsEvents);
+          cachedUpcoming = sortByDateAsc(upcomingEvents);
+          applyEventFilter("all");
         })
         .catch(() => {
           const resultsPanel = document.querySelector(".schedule__panel[data-panel='results']");
@@ -630,6 +652,14 @@
       }
 
       setScheduleView("upcoming");
+
+      const filterButtons = Array.from(document.querySelectorAll(".schedule__filter-btn"));
+      filterButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          filterButtons.forEach((btn) => btn.classList.toggle("is-active", btn === button));
+          applyEventFilter(button.dataset.filter);
+        });
+      });
     </script>
   </body>
 </html>

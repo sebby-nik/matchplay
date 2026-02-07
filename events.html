@@ -502,8 +502,13 @@
           const winnerClass = winnerLabel ? `winner-${winnerLabel.toLowerCase().replace(/[^a-z0-9]+/g, "-")}` : "";
           const eventClass = `event-${item.event.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
           const isPresidentsTie = item.event === "Presidents Cup" && item.year === 2003;
+          const isSeveEuWin =
+            item.event === "Seve Trophy" &&
+            (winnerLabel === "Continental Europe" || winnerLabel === "Europe");
 
-          card.className = `schedule__card schedule__card--logo ${eventClass} ${isPresidentsTie ? "winner-usa" : winnerClass}`;
+          card.className = `schedule__card schedule__card--logo ${eventClass} ${
+            isSeveEuWin ? "winner-seve-eu" : isPresidentsTie ? "winner-usa" : winnerClass
+          }`;
           card.innerHTML = `
             <div class="schedule__logo">
               ${logo ? `<img src="${logo}" alt="${item.event} logo" />` : `<span class="schedule__logo-text">${initialsForEvent(item.event)}</span>`}

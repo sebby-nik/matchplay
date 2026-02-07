@@ -243,6 +243,11 @@ p {
   border-color: var(--sport-gold-deep);
 }
 
+.schedule__card.winner-seve-eu {
+  border-width: 3px;
+  border-color: #d8b26a;
+}
+
 .schedule__logo {
   width: 84px;
   height: 84px;

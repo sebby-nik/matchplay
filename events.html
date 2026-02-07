@@ -279,7 +279,7 @@
           const winnerLabel = winnerMap[item.event]?.[item.year];
           const winnerAsset = winnerLabel ? winnerAssetMap[winnerLabel] : "assets/winner-placeholder.svg";
           const winnerAlt = winnerLabel ? `${winnerLabel} winner` : "Winner";
-          const winnerClass = winnerLabel ? `winner-${winnerLabel.toLowerCase().replace(/[^a-z0-9]+/g, \"-\")}` : \"\";
+          const winnerClass = winnerLabel ? `winner-${winnerLabel.toLowerCase().replace(/[^a-z0-9]+/g, "-")}` : "";
 
           card.className = `schedule__card schedule__card--logo ${winnerClass}`;
           card.innerHTML = `

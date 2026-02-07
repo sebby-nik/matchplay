@@ -62951,6 +62951,126 @@
       "result": "win",
       "score": "1 up",
       "points": 1
+    },
+    {
+      "event": "Seve Trophy",
+      "year": 2000,
+      "round": "Singles",
+      "player": "Seve Ballesteros",
+      "player_country": "ES",
+      "opponent": "Colin Montgomerie",
+      "opponent_country": "GB",
+      "result": "win",
+      "score": "2 & 1",
+      "points": 1
+    },
+    {
+      "event": "Seve Trophy",
+      "year": 2000,
+      "round": "Singles",
+      "player": "Sergio García",
+      "player_country": "ES",
+      "opponent": "Darren Clarke",
+      "opponent_country": "GB",
+      "result": "halved",
+      "score": "halved",
+      "points": 0.5
+    },
+    {
+      "event": "Seve Trophy",
+      "year": 2000,
+      "round": "Singles",
+      "player": "Jarmo Sandelin",
+      "player_country": "SE",
+      "opponent": "John Bickerton",
+      "opponent_country": "GB",
+      "result": "win",
+      "score": "2 & 1",
+      "points": 1
+    },
+    {
+      "event": "Seve Trophy",
+      "year": 2000,
+      "round": "Singles",
+      "player": "Thomas Bjørn",
+      "player_country": "DK",
+      "opponent": "Lee Westwood",
+      "opponent_country": "GB",
+      "result": "loss",
+      "score": "1 up",
+      "points": 0
+    },
+    {
+      "event": "Seve Trophy",
+      "year": 2000,
+      "round": "Singles",
+      "player": "Alex Čejka",
+      "player_country": "DE",
+      "opponent": "Phillip Price",
+      "opponent_country": "GB",
+      "result": "loss",
+      "score": "2 & 1",
+      "points": 0
+    },
+    {
+      "event": "Seve Trophy",
+      "year": 2000,
+      "round": "Singles",
+      "player": "Bernhard Langer",
+      "player_country": "DE",
+      "opponent": "Ian Woosnam",
+      "opponent_country": "GB",
+      "result": "win",
+      "score": "4 & 3",
+      "points": 1
+    },
+    {
+      "event": "Seve Trophy",
+      "year": 2000,
+      "round": "Singles",
+      "player": "Robert Karlsson",
+      "player_country": "SE",
+      "opponent": "David Howell",
+      "opponent_country": "GB",
+      "result": "win",
+      "score": "2 & 1",
+      "points": 1
+    },
+    {
+      "event": "Seve Trophy",
+      "year": 2000,
+      "round": "Singles",
+      "player": "José María Olazábal",
+      "player_country": "ES",
+      "opponent": "Gary Orr",
+      "opponent_country": "GB",
+      "result": "win",
+      "score": "2 & 1",
+      "points": 1
+    },
+    {
+      "event": "Seve Trophy",
+      "year": 2000,
+      "round": "Singles",
+      "player": "Jean Van de Velde",
+      "player_country": "FR",
+      "opponent": "Paul Lawrie",
+      "opponent_country": "GB",
+      "result": "loss",
+      "score": "5 & 4",
+      "points": 0
+    },
+    {
+      "event": "Seve Trophy",
+      "year": 2000,
+      "round": "Singles",
+      "player": "Miguel Ángel Jiménez",
+      "player_country": "ES",
+      "opponent": "Pádraig Harrington",
+      "opponent_country": "IE",
+      "result": "loss",
+      "score": "1 up",
+      "points": 0
     }
   ]
 }

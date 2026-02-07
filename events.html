@@ -75,7 +75,22 @@
     </header>
 
     <section class="schedule">
-      <div class="schedule__loading">Loading events…</div>
+      <div class="schedule__toggle" role="tablist" aria-label="Events view">
+        <button class="schedule__toggle-btn is-active" type="button" data-view="upcoming" role="tab" aria-selected="true">
+          Upcoming
+        </button>
+        <button class="schedule__toggle-btn" type="button" data-view="results" role="tab" aria-selected="false">
+          Results
+        </button>
+      </div>
+
+      <div class="schedule__panel is-active" data-panel="upcoming" role="tabpanel" aria-live="polite">
+        <div class="schedule__loading">Loading upcoming events…</div>
+      </div>
+
+      <div class="schedule__panel" data-panel="results" role="tabpanel" aria-live="polite">
+        <div class="schedule__loading">Loading results…</div>
+      </div>
     </section>
 
     <script src="app.js"></script>
@@ -135,12 +150,12 @@
         });
       };
 
-      const renderSchedule = (items) => {
-        const schedule = document.querySelector(".schedule");
-        schedule.innerHTML = "";
+      const renderSchedule = (panelKey, items, emptyMessage) => {
+        const panel = document.querySelector(`.schedule__panel[data-panel='${panelKey}']`);
+        panel.innerHTML = "";
 
         if (!items.length) {
-          schedule.innerHTML = "<p class=\"schedule__empty\">No events listed yet.</p>";
+          panel.innerHTML = `<p class="schedule__empty">${emptyMessage}</p>`;
           return;
         }
 
@@ -156,15 +171,15 @@
               </div>
               <div class="schedule__cards"></div>
             `;
-            schedule.appendChild(group);
+            panel.appendChild(group);
           }
 
-          const groupCards = schedule.lastElementChild.querySelector(".schedule__cards");
+          const groupCards = panel.lastElementChild.querySelector(".schedule__cards");
           const card = document.createElement("article");
           const logo = logoMap[item.event];
           card.className = "schedule__card schedule__card--logo";
 
-          const dateLabel = `${item.month} ${item.year}`;
+          const dateLabel = item.dateLabel || `${item.month} ${item.year}`;
           const venueLabel = item.venue || "";
 
           card.innerHTML = `
@@ -182,13 +197,46 @@
       fetch("data.json")
         .then((response) => response.json())
         .then((data) => {
-          const events = buildEventList(data.matches || []);
-          renderSchedule(sortByDateDesc(events));
+          const resultsEvents = buildEventList(data.matches || []);
+          const upcomingEvents = Array.isArray(data.events) ? data.events : [];
+          renderSchedule("results", sortByDateDesc(resultsEvents), "No results listed yet.");
+          renderSchedule("upcoming", sortByDateDesc(upcomingEvents), "No upcoming events listed yet.");
         })
         .catch(() => {
-          const schedule = document.querySelector(".schedule");
-          schedule.innerHTML = "<p class=\"schedule__empty\">Unable to load events.</p>";
+          const resultsPanel = document.querySelector(".schedule__panel[data-panel='results']");
+          const upcomingPanel = document.querySelector(".schedule__panel[data-panel='upcoming']");
+          if (resultsPanel) {
+            resultsPanel.innerHTML = "<p class=\"schedule__empty\">Unable to load results.</p>";
+          }
+          if (upcomingPanel) {
+            upcomingPanel.innerHTML = "<p class=\"schedule__empty\">Unable to load upcoming events.</p>";
+          }
         });
+
+      const setScheduleView = (view) => {
+        const scheduleButtons = Array.from(document.querySelectorAll(".schedule__toggle-btn"));
+        const schedulePanels = Array.from(document.querySelectorAll(".schedule__panel"));
+        scheduleButtons.forEach((btn) => {
+          const active = btn.dataset.view === view;
+          btn.classList.toggle("is-active", active);
+          btn.setAttribute("aria-selected", active ? "true" : "false");
+        });
+        schedulePanels.forEach((panel) => {
+          panel.classList.toggle("is-active", panel.dataset.panel === view);
+        });
+      };
+
+      const scheduleToggle = document.querySelector(".schedule__toggle");
+      if (scheduleToggle) {
+        scheduleToggle.addEventListener("click", (event) => {
+          const button = event.target.closest(".schedule__toggle-btn");
+          if (!button) return;
+          event.preventDefault();
+          setScheduleView(button.dataset.view);
+        });
+      }
+
+      setScheduleView("upcoming");
     </script>
   </body>
 </html>

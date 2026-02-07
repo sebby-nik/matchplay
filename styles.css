@@ -238,6 +238,11 @@ p {
   border-color: #1d1f22;
 }
 
+.schedule__card.event-wgc-match-play {
+  border-width: 3px;
+  border-color: var(--sport-gold-deep);
+}
+
 .schedule__logo {
   width: 84px;
   height: 84px;

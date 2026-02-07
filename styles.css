@@ -148,6 +148,46 @@ p {
   padding: 4.5rem 8vw 5rem;
 }
 
+.schedule__toggle {
+  display: inline-flex;
+  gap: 0.5rem;
+  background: rgba(29, 36, 51, 0.06);
+  padding: 0.4rem;
+  border-radius: 999px;
+  margin-bottom: 2.5rem;
+}
+
+.schedule__toggle-btn {
+  border: 0;
+  background: transparent;
+  padding: 0.55rem 1.25rem;
+  border-radius: 999px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+  font-family: var(--sans);
+}
+
+.schedule__toggle-btn.is-active {
+  background: var(--panel);
+  color: var(--accent);
+  box-shadow: 0 10px 24px rgba(22, 27, 38, 0.12);
+}
+
+.schedule__panel {
+  display: none;
+}
+
+.schedule__panel.is-active {
+  display: block;
+}
+
+.schedule__loading,
+.schedule__empty {
+  color: var(--ink-soft);
+  font-size: 1rem;
+}
+
 .schedule__group {
   margin-bottom: 3.5rem;
 }
@@ -198,30 +238,29 @@ p {
 }
 
 @media (min-width: 860px) {
-  .schedule__card {
+  .schedule__card--logo {
     flex-direction: row;
     align-items: center;
     gap: 1.5rem;
   }
 
-  .schedule__logo {
+  .schedule__card--logo .schedule__logo {
     flex: 0 0 96px;
     width: 96px;
     height: 96px;
   }
 
-  .schedule__card h3,
-  .schedule__meta,
-  .schedule__tags,
-  .schedule__date {
+  .schedule__card--logo h3,
+  .schedule__card--logo .schedule__meta,
+  .schedule__card--logo .schedule__date {
     margin: 0;
   }
 
-  .schedule__card h3 {
+  .schedule__card--logo h3 {
     font-size: 1.4rem;
   }
 
-  .schedule__card > :not(.schedule__logo) {
+  .schedule__card--logo > :not(.schedule__logo) {
     width: 100%;
   }
 }

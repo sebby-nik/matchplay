@@ -75,39 +75,148 @@
     </header>
 
     <section class="schedule">
-      <div class="schedule__group">
-        <div class="schedule__heading">
-          <h2>2026</h2>
+      <div class="schedule__toggle" role="tablist" aria-label="Events view">
+        <button class="schedule__toggle-btn is-active" type="button" data-view="upcoming" role="tab" aria-selected="true">
+          Upcoming
+        </button>
+        <button class="schedule__toggle-btn" type="button" data-view="results" role="tab" aria-selected="false">
+          Results
+        </button>
+      </div>
+
+      <div class="schedule__panel is-active" data-panel="upcoming" role="tabpanel">
+        <div class="schedule__group">
+          <div class="schedule__heading">
+            <h2>2026</h2>
+          </div>
+          <div class="schedule__cards">
+            <article class="schedule__card schedule__card--logo">
+              <div class="schedule__logo">
+                <img src="assets/presidents-cup-logo.png" alt="Presidents Cup logo" />
+              </div>
+              <h3>Presidents Cup 2026</h3>
+              <p class="schedule__meta">Medinah Country Club (Course No. 3), Chicago, Illinois, USA</p>
+              <div class="schedule__date">Sep 22–27, 2026</div>
+            </article>
+          </div>
         </div>
-        <div class="schedule__cards">
-          <article class="schedule__card">
-            <div class="schedule__logo">
-              <img src="assets/presidents-cup-logo.png" alt="Presidents Cup logo" />
-            </div>
-            <h3>Presidents Cup 2026</h3>
-            <p class="schedule__meta">Medinah Country Club (Course No. 3), Chicago, Illinois, USA</p>
-            <div class="schedule__date">Sep 22–27, 2026</div>
-          </article>
+
+        <div class="schedule__group">
+          <div class="schedule__heading">
+            <h2>2027</h2>
+          </div>
+          <div class="schedule__cards">
+            <article class="schedule__card schedule__card--logo">
+              <div class="schedule__logo">
+                <img src="assets/ryder-cup-logo.png" alt="Ryder Cup logo" />
+              </div>
+              <h3>Ryder Cup 2027</h3>
+              <p class="schedule__meta">The Golf Course at Adare Manor, County Limerick, Ireland</p>
+              <div class="schedule__date">Sep 17–19, 2027</div>
+            </article>
+          </div>
         </div>
       </div>
 
-      <div class="schedule__group">
-        <div class="schedule__heading">
-          <h2>2027</h2>
-        </div>
-        <div class="schedule__cards">
-          <article class="schedule__card">
-            <div class="schedule__logo">
-              <img src="assets/ryder-cup-logo.png" alt="Ryder Cup logo" />
-            </div>
-            <h3>Ryder Cup 2027</h3>
-            <p class="schedule__meta">The Golf Course at Adare Manor, County Limerick, Ireland</p>
-            <div class="schedule__date">Sep 17–19, 2027</div>
-          </article>
-        </div>
+      <div class="schedule__panel" data-panel="results" role="tabpanel" aria-live="polite">
+        <div class="schedule__loading">Loading results…</div>
       </div>
     </section>
 
     <script src="app.js"></script>
+    <script>
+      const scheduleButtons = Array.from(document.querySelectorAll(".schedule__toggle-btn"));
+      const schedulePanels = Array.from(document.querySelectorAll(".schedule__panel"));
+
+      scheduleButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const view = button.dataset.view;
+          scheduleButtons.forEach((btn) => {
+            const active = btn === button;
+            btn.classList.toggle("is-active", active);
+            btn.setAttribute("aria-selected", active ? "true" : "false");
+          });
+          schedulePanels.forEach((panel) => {
+            panel.classList.toggle("is-active", panel.dataset.panel === view);
+          });
+        });
+      });
+
+      const MONTH_ORDER = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ];
+
+      const logoMap = {
+        "Ryder Cup": "assets/ryder-cup-logo.png",
+        "Presidents Cup": "assets/presidents-cup-logo.png"
+      };
+
+      const buildResults = (matches) => {
+        const entries = new Map();
+        matches.forEach((match) => {
+          const key = `${match.event}-${match.year}-${match.month || ""}`;
+          if (!entries.has(key)) {
+            entries.set(key, {
+              event: match.event,
+              year: match.year,
+              month: match.month || "January"
+            });
+          }
+        });
+
+        const list = Array.from(entries.values()).sort((a, b) => {
+          if (a.year !== b.year) return b.year - a.year;
+          return MONTH_ORDER.indexOf(b.month) - MONTH_ORDER.indexOf(a.month);
+        });
+
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonthIndex = now.getMonth();
+
+        return list.filter((item) => {
+          const monthIndex = MONTH_ORDER.indexOf(item.month);
+          return item.year < currentYear || (item.year === currentYear && monthIndex <= currentMonthIndex);
+        });
+      };
+
+      const renderResults = (results) => {
+        const panel = document.querySelector(".schedule__panel[data-panel='results']");
+        panel.innerHTML = "";
+
+        if (!results.length) {
+          panel.innerHTML = "<p class=\"schedule__empty\">No past events listed yet.</p>";
+          return;
+        }
+
+        let currentYear = null;
+        results.forEach((item) => {
+          if (item.year !== currentYear) {
+            currentYear = item.year;
+            const group = document.createElement("div");
+            group.className = "schedule__group";
+            group.innerHTML = `\n              <div class=\"schedule__heading\">\n                <h2>${currentYear}</h2>\n              </div>\n              <div class=\"schedule__cards\"></div>\n            `;\n            panel.appendChild(group);\n          }
+
+          const groupCards = panel.lastElementChild.querySelector(".schedule__cards");
+          const card = document.createElement("article");
+          const logo = logoMap[item.event];
+          card.className = `schedule__card${logo ? " schedule__card--logo" : ""}`;
+
+          const dateLabel = `${item.month} ${item.year}`;
+          const venueLabel = "Venue not listed";
+
+          card.innerHTML = `\n            ${logo ? `<div class=\"schedule__logo\"><img src=\"${logo}\" alt=\"${item.event} logo\" /></div>` : ""}\n            <h3>${item.event} ${item.year}</h3>\n            <p class=\"schedule__meta\">${venueLabel}</p>\n            <div class=\"schedule__date\">${dateLabel}</div>\n          `;\n          groupCards.appendChild(card);\n        });\n      };
+
+      fetch("data.json")\n        .then((response) => response.json())\n        .then((data) => {\n          const results = buildResults(data.matches || []);\n          renderResults(results);\n        })\n        .catch(() => {\n          const panel = document.querySelector(\".schedule__panel[data-panel='results']\");\n          if (panel) {\n            panel.innerHTML = \"<p class=\\\"schedule__empty\\\">Unable to load past events.</p>\";\n          }\n        });\n    </script>
   </body>
 </html>

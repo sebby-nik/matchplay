@@ -163,17 +163,6 @@ p {
   font-size: clamp(1.6rem, 3vw, 2.4rem);
 }
 
-.schedule__pill {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.35rem 0.85rem;
-  border-radius: 999px;
-  background: var(--accent-soft);
-  color: var(--highlight-deep);
-  font-weight: 600;
-  font-size: 0.85rem;
-}
-
 .schedule__cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));

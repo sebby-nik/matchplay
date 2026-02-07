@@ -138,12 +138,17 @@
         });
       };
 
-      document.addEventListener("click", (event) => {
-        const button = event.target.closest(".schedule__toggle-btn");
-        if (!button) return;
-        event.preventDefault();
-        setScheduleView(button.dataset.view);
-      });
+      const scheduleToggle = document.querySelector(".schedule__toggle");
+      if (scheduleToggle) {
+        scheduleToggle.addEventListener("click", (event) => {
+          const button = event.target.closest(".schedule__toggle-btn");
+          if (!button) return;
+          event.preventDefault();
+          setScheduleView(button.dataset.view);
+        });
+      }
+
+      setScheduleView("upcoming");
 
       const MONTH_ORDER = [
         "January",

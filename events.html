@@ -117,6 +117,93 @@
         "Seve Trophy": "assets/seve-trophy-logo.png"
       };
 
+      const winnerMap = {
+        "Ryder Cup": {
+          1927: "USA",
+          1929: "Great Britain",
+          1931: "USA",
+          1933: "Great Britain",
+          1935: "USA",
+          1937: "USA",
+          1947: "USA",
+          1949: "USA",
+          1951: "USA",
+          1953: "USA",
+          1955: "USA",
+          1957: "Great Britain",
+          1959: "USA",
+          1961: "USA",
+          1963: "USA",
+          1965: "USA",
+          1967: "USA",
+          1969: "USA",
+          1971: "USA",
+          1973: "USA",
+          1975: "USA",
+          1977: "USA",
+          1979: "USA",
+          1981: "USA",
+          1983: "USA",
+          1985: "Europe",
+          1987: "Europe",
+          1989: "Europe",
+          1991: "USA",
+          1993: "USA",
+          1995: "Europe",
+          1997: "Europe",
+          1999: "USA",
+          2002: "Europe",
+          2004: "Europe",
+          2006: "Europe",
+          2008: "USA",
+          2010: "Europe",
+          2012: "Europe",
+          2014: "Europe",
+          2016: "USA",
+          2018: "Europe",
+          2021: "USA",
+          2023: "Europe",
+          2025: "Europe"
+        },
+        "Presidents Cup": {
+          1994: "USA",
+          1996: "USA",
+          1998: "International",
+          2000: "USA",
+          2003: "Tie",
+          2005: "USA",
+          2007: "USA",
+          2009: "USA",
+          2011: "USA",
+          2013: "USA",
+          2015: "USA",
+          2017: "USA",
+          2019: "USA",
+          2022: "USA",
+          2024: "USA"
+        },
+        "Seve Trophy": {
+          2000: "Continental Europe",
+          2002: "Great Britain and Ireland",
+          2003: "Great Britain and Ireland",
+          2005: "Great Britain and Ireland",
+          2007: "Great Britain and Ireland",
+          2009: "Great Britain and Ireland",
+          2011: "Great Britain and Ireland",
+          2013: "Continental Europe"
+        }
+      };
+
+      const winnerAssetMap = {
+        USA: "assets/round-usa-flag.png",
+        Europe: "assets/round-eu-flag.png",
+        "Great Britain": "assets/round-eu-flag.png",
+        "Great Britain and Ireland": "assets/round-eu-flag.png",
+        "Continental Europe": "assets/round-eu-flag.png",
+        International: "assets/row-logo.png",
+        Tie: "assets/winner-placeholder.svg"
+      };
+
       const initialsForEvent = (eventName) => {
         return eventName
           .split(" ")
@@ -157,7 +244,7 @@
         });
       };
 
-      const renderSchedule = (panelKey, items, emptyMessage) => {
+      const renderSchedule = (panelKey, items, emptyMessage, showWinner) => {
         const panel = document.querySelector(`.schedule__panel[data-panel='${panelKey}']`);
         panel.innerHTML = "";
 
@@ -189,13 +276,20 @@
           const dateLabel = item.dateLabel || `${item.month} ${item.year}`;
           const venueLabel = item.venue || "";
 
+          const winnerLabel = winnerMap[item.event]?.[item.year];
+          const winnerAsset = winnerLabel ? winnerAssetMap[winnerLabel] : "assets/winner-placeholder.svg";
+          const winnerAlt = winnerLabel ? `${winnerLabel} winner` : "Winner";
+
           card.innerHTML = `
             <div class="schedule__logo">
               ${logo ? `<img src="${logo}" alt="${item.event} logo" />` : `<span class="schedule__logo-text">${initialsForEvent(item.event)}</span>`}
             </div>
-            <h3>${item.event} ${item.year}</h3>
-            <p class="schedule__meta schedule__meta--empty">${venueLabel || "&nbsp;"}</p>
-            <div class="schedule__date">${dateLabel}</div>
+            <div class="schedule__content">
+              <h3>${item.event} ${item.year}</h3>
+              <p class="schedule__meta schedule__meta--empty">${venueLabel || "&nbsp;"}</p>
+              <div class="schedule__date">${dateLabel}</div>
+            </div>
+            ${showWinner ? `<div class="schedule__winner"><span class="winner-badge"><img src="${winnerAsset}" alt="${winnerAlt}" /></span></div>` : ""}
           `;
           groupCards.appendChild(card);
         });
@@ -214,8 +308,8 @@
         .then((data) => {
           const resultsEvents = buildEventList(data.matches || []);
           const upcomingEvents = Array.isArray(data.events) ? data.events : [];
-          renderSchedule("results", sortByDateDesc(resultsEvents), "No results listed yet.");
-          renderSchedule("upcoming", sortByDateAsc(upcomingEvents), "No upcoming events listed yet.");
+          renderSchedule("results", sortByDateDesc(resultsEvents), "No results listed yet.", true);
+          renderSchedule("upcoming", sortByDateAsc(upcomingEvents), "No upcoming events listed yet.", false);
         })
         .catch(() => {
           const resultsPanel = document.querySelector(".schedule__panel[data-panel='results']");

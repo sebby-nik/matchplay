@@ -5,7 +5,7 @@ A lightweight, static MVP for browsing individual player records across major ma
 ## Features
 - Player search with sortable rankings
 - Full match list per player
-- Event-level filters (Ryder Cup, Presidents Cup, WGC Match Play)
+- Event-level filters (Ryder Cup, Presidents Cup, WGC Match Play, Seve Trophy)
 
 ## Structure
 - `index.html` — main page layout

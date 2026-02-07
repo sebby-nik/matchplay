@@ -150,6 +150,13 @@
         });
       };
 
+      const sortByDateAsc = (list) => {
+        return list.sort((a, b) => {
+          if (a.year !== b.year) return a.year - b.year;
+          return MONTH_ORDER.indexOf(a.month) - MONTH_ORDER.indexOf(b.month);
+        });
+      };
+
       const renderSchedule = (panelKey, items, emptyMessage) => {
         const panel = document.querySelector(`.schedule__panel[data-panel='${panelKey}']`);
         panel.innerHTML = "";
@@ -194,8 +201,16 @@
         });
       };
 
-      fetch("data.json")
-        .then((response) => response.json())
+      const fetchData = (urls) => {
+        return urls.reduce((promise, url) => {
+          return promise.catch(() => fetch(url).then((response) => {
+            if (!response.ok) throw new Error(`Failed to load ${url}`);
+            return response.json();
+          }));
+        }, Promise.reject());
+      };
+
+      fetchData(["data.json", "./data.json", "/data.json"])
         .then((data) => {
           const resultsEvents = buildEventList(data.matches || []);
           const upcomingEvents = Array.isArray(data.events) ? data.events : [];

@@ -359,6 +359,10 @@ p {
   white-space: nowrap;
 }
 
+.event-wgc-match-play .winner-name {
+  font-family: var(--serif);
+}
+
 @media (min-width: 860px) {
   .schedule__card {
     flex-direction: row;

@@ -148,6 +148,12 @@ p {
   padding: 4.5rem 8vw 5rem;
 }
 
+.schedule__loading,
+.schedule__empty {
+  color: var(--ink-soft);
+  font-size: 1rem;
+}
+
 .schedule__group {
   margin-bottom: 3.5rem;
 }
@@ -195,6 +201,17 @@ p {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+}
+
+.schedule__logo-text {
+  font-weight: 700;
+  color: var(--highlight-deep);
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+}
+
+.schedule__meta--empty {
+  min-height: 1.35rem;
 }
 
 @media (min-width: 860px) {

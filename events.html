@@ -213,6 +213,64 @@
         2025: "Bethpage Black Course, Farmingdale, New York, USA"
       };
 
+      const presidentsCupDates = {
+        1994: "Sep 16-18, 1994",
+        1996: "Sep 13-15, 1996",
+        1998: "Dec 11-13, 1998",
+        2000: "Oct 19-22, 2000",
+        2003: "Nov 20-23, 2003",
+        2005: "Sep 22-25, 2005",
+        2007: "Sep 27-30, 2007",
+        2009: "Oct 8-11, 2009",
+        2011: "Nov 17-20, 2011",
+        2013: "Oct 3-6, 2013",
+        2015: "Oct 8-11, 2015",
+        2017: "Sep 28-Oct 1, 2017",
+        2019: "Dec 12-15, 2019",
+        2022: "Sep 22-25, 2022",
+        2024: "Sep 26-29, 2024"
+      };
+
+      const presidentsCupVenues = {
+        1994: "Robert Trent Jones Golf Club, Gainesville, Virginia, USA",
+        1996: "Robert Trent Jones Golf Club, Gainesville, Virginia, USA",
+        1998: "Royal Melbourne Golf Club, Black Rock, Victoria, Australia",
+        2000: "Robert Trent Jones Golf Club, Gainesville, Virginia, USA",
+        2003: "Fancourt Hotel and Country Club (Links Course), George, Western Cape, South Africa",
+        2005: "Robert Trent Jones Golf Club, Gainesville, Virginia, USA",
+        2007: "Royal Montreal Golf Club, Île Bizard, Quebec, Canada",
+        2009: "Harding Park Golf Club, San Francisco, California, USA",
+        2011: "Royal Melbourne Golf Club, Black Rock, Victoria, Australia",
+        2013: "Muirfield Village Golf Club, Dublin, Ohio, USA",
+        2015: "Jack Nicklaus Golf Club Korea, Incheon, South Korea",
+        2017: "Liberty National Golf Club, Jersey City, New Jersey, USA",
+        2019: "Royal Melbourne Golf Club, Melbourne, Victoria, Australia",
+        2022: "Quail Hollow Club, Charlotte, North Carolina, USA",
+        2024: "Royal Montreal Golf Club, Montreal, Quebec, Canada"
+      };
+
+      const seveTrophyDates = {
+        2000: "Apr 14-16, 2000",
+        2002: "Apr 19-21, 2002",
+        2003: "Nov 6-9, 2003",
+        2005: "Sep 22-25, 2005",
+        2007: "Sep 27-30, 2007",
+        2009: "Sep 24-27, 2009",
+        2011: "Sep 15-18, 2011",
+        2013: "Oct 3-6, 2013"
+      };
+
+      const seveTrophyVenues = {
+        2000: "The Old Course, Sunningdale Golf Club, Berkshire, England",
+        2002: "Druids Glen, Newtownmountkennedy, County Wicklow, Ireland",
+        2003: "Campo de Golf Parador El Saler, Valencia, Spain",
+        2005: "Wynyard Golf Club, County Durham, England",
+        2007: "The Heritage Golf & Spa Resort, County Laois, Ireland",
+        2009: "Golf de Saint-Nom-la-Bretèche, Paris, France",
+        2011: "Golf de Saint-Nom-la-Bretèche, Paris, France",
+        2013: "Golf de Saint-Nom-la-Bretèche, Paris, France"
+      };
+
       const winnerMap = {
         "Ryder Cup": {
           1927: "USA",
@@ -372,10 +430,14 @@
           const dateLabel =
             item.dateLabel ||
             (item.event === "Ryder Cup" ? ryderCupDates[item.year] : "") ||
+            (item.event === "Presidents Cup" ? presidentsCupDates[item.year] : "") ||
+            (item.event === "Seve Trophy" ? seveTrophyDates[item.year] : "") ||
             `${item.month} ${item.year}`;
           const venueLabel =
             item.venue ||
             (item.event === "Ryder Cup" ? ryderCupVenues[item.year] : "") ||
+            (item.event === "Presidents Cup" ? presidentsCupVenues[item.year] : "") ||
+            (item.event === "Seve Trophy" ? seveTrophyVenues[item.year] : "") ||
             "";
 
           const winnerLabel = winnerMap[item.event]?.[item.year];

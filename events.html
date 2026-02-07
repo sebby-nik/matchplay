@@ -162,6 +162,16 @@
         "Presidents Cup": "assets/presidents-cup-logo.png"
       };
 
+      const initialsForEvent = (eventName) => {
+        return eventName
+          .split(" ")
+          .filter((part) => part.length)
+          .map((part) => part[0])
+          .slice(0, 3)
+          .join("")
+          .toUpperCase();
+      };
+
       const buildResults = (matches) => {
         const entries = new Map();
         matches.forEach((match) => {
@@ -210,12 +220,12 @@
           const groupCards = panel.lastElementChild.querySelector(".schedule__cards");
           const card = document.createElement("article");
           const logo = logoMap[item.event];
-          card.className = `schedule__card${logo ? " schedule__card--logo" : ""}`;
+          card.className = "schedule__card schedule__card--logo";
 
           const dateLabel = `${item.month} ${item.year}`;
-          const venueLabel = "Venue not listed";
+          const venueLabel = "";
 
-          card.innerHTML = `\n            ${logo ? `<div class=\"schedule__logo\"><img src=\"${logo}\" alt=\"${item.event} logo\" /></div>` : ""}\n            <h3>${item.event} ${item.year}</h3>\n            <p class=\"schedule__meta\">${venueLabel}</p>\n            <div class=\"schedule__date\">${dateLabel}</div>\n          `;\n          groupCards.appendChild(card);\n        });\n      };
+          card.innerHTML = `\n            <div class=\"schedule__logo\">\n              ${logo ? `<img src=\"${logo}\" alt=\"${item.event} logo\" />` : `<span class=\"schedule__logo-text\">${initialsForEvent(item.event)}</span>`}\n            </div>\n            <h3>${item.event} ${item.year}</h3>\n            <p class=\"schedule__meta schedule__meta--empty\">${venueLabel || \"&nbsp;\"}</p>\n            <div class=\"schedule__date\">${dateLabel}</div>\n          `;\n          groupCards.appendChild(card);\n        });\n      };
 
       fetch("data.json")\n        .then((response) => response.json())\n        .then((data) => {\n          const results = buildResults(data.matches || []);\n          renderResults(results);\n        })\n        .catch(() => {\n          const panel = document.querySelector(\".schedule__panel[data-panel='results']\");\n          if (panel) {\n            panel.innerHTML = \"<p class=\\\"schedule__empty\\\">Unable to load past events.</p>\";\n          }\n        });\n    </script>
   </body>

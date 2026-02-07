@@ -237,6 +237,17 @@ p {
   object-fit: contain;
 }
 
+.schedule__logo-text {
+  font-weight: 700;
+  color: var(--highlight-deep);
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+}
+
+.schedule__meta--empty {
+  min-height: 1.35rem;
+}
+
 @media (min-width: 860px) {
   .schedule__card--logo {
     flex-direction: row;

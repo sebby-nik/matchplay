@@ -9,6 +9,21 @@ const linealChampionStats = document.getElementById("linealChampionStats");
 const linealChampionRecord = document.getElementById("linealChampionRecord");
 
 const EVENT_ORDER = ["WGC Match Play", "Presidents Cup", "Seve Trophy", "Ryder Cup"];
+const MONTH_ORDER = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December"
+];
+
 const ROUND_ORDER = [
   "Pool Play",
   "Round of 64",
@@ -197,6 +212,11 @@ const getEventIndex = (event) => {
   return idx === -1 ? EVENT_ORDER.length : idx;
 };
 
+const getMonthIndex = (month) => {
+  const idx = MONTH_ORDER.indexOf(month);
+  return idx === -1 ? MONTH_ORDER.length : idx;
+};
+
 const uniqueMatches = (matches) => {
   const seen = new Set();
   const result = [];
@@ -228,6 +248,8 @@ const orderMatches = (matches) =>
     .slice()
     .sort((a, b) => {
       if (a.year !== b.year) return a.year - b.year;
+      const monthDiff = getMonthIndex(a.month) - getMonthIndex(b.month);
+      if (monthDiff !== 0) return monthDiff;
       const eventDiff = getEventIndex(a.event) - getEventIndex(b.event);
       if (eventDiff !== 0) return eventDiff;
       const roundDiff = getRoundIndex(a.round) - getRoundIndex(b.round);

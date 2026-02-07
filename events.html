@@ -125,21 +125,24 @@
 
     <script src="app.js"></script>
     <script>
-      const scheduleButtons = Array.from(document.querySelectorAll(".schedule__toggle-btn"));
-      const schedulePanels = Array.from(document.querySelectorAll(".schedule__panel"));
-
-      scheduleButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          const view = button.dataset.view;
-          scheduleButtons.forEach((btn) => {
-            const active = btn === button;
-            btn.classList.toggle("is-active", active);
-            btn.setAttribute("aria-selected", active ? "true" : "false");
-          });
-          schedulePanels.forEach((panel) => {
-            panel.classList.toggle("is-active", panel.dataset.panel === view);
-          });
+      const setScheduleView = (view) => {
+        const scheduleButtons = Array.from(document.querySelectorAll(".schedule__toggle-btn"));
+        const schedulePanels = Array.from(document.querySelectorAll(".schedule__panel"));
+        scheduleButtons.forEach((btn) => {
+          const active = btn.dataset.view === view;
+          btn.classList.toggle("is-active", active);
+          btn.setAttribute("aria-selected", active ? "true" : "false");
         });
+        schedulePanels.forEach((panel) => {
+          panel.classList.toggle("is-active", panel.dataset.panel === view);
+        });
+      };
+
+      document.addEventListener("click", (event) => {
+        const button = event.target.closest(".schedule__toggle-btn");
+        if (!button) return;
+        event.preventDefault();
+        setScheduleView(button.dataset.view);
       });
 
       const MONTH_ORDER = [

@@ -166,12 +166,14 @@ p {
   color: var(--ink-soft);
   cursor: pointer;
   font-family: var(--sans);
+  transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
 }
 
 .schedule__toggle-btn.is-active {
   background: var(--panel);
   color: var(--accent);
   box-shadow: 0 10px 24px rgba(22, 27, 38, 0.12);
+  transform: translateY(-1px);
 }
 
 .schedule__panel {
@@ -216,6 +218,10 @@ p {
   background: var(--accent);
   color: #fff;
   border-color: transparent;
+}
+
+.schedule__filter-btn.is-hidden {
+  display: none;
 }
 
 .schedule__loading,

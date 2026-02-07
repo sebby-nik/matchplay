@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Draw">
+  <rect width="120" height="120" rx="60" fill="#f3eee7"/>
+  <circle cx="60" cy="60" r="46" fill="none" stroke="#9a7b45" stroke-width="6"/>
+  <text x="60" y="67" text-anchor="middle" font-family="Instrument Sans, Arial, sans-serif" font-size="32" fill="#6f5530" font-weight="700">TIE</text>
+</svg>

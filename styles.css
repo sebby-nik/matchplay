@@ -220,6 +220,24 @@ p {
   gap: 0.75rem;
 }
 
+.schedule__card.winner-usa {
+  border-width: 3px;
+  border-color: #b12c2c;
+}
+
+.schedule__card.winner-europe,
+.schedule__card.winner-great-britain,
+.schedule__card.winner-great-britain-and-ireland,
+.schedule__card.winner-continental-europe {
+  border-width: 3px;
+  border-color: #1f4e93;
+}
+
+.schedule__card.winner-international {
+  border-width: 3px;
+  border-color: #1d1f22;
+}
+
 .schedule__logo {
   width: 84px;
   height: 84px;

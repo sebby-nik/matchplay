@@ -616,6 +616,7 @@
           cachedResults = sortByDateDesc(resultsEvents);
           cachedUpcoming = sortByDateAsc(upcomingEvents);
           applyEventFilter("all");
+          updateFiltersForView("upcoming");
         })
         .catch(() => {
           const resultsPanel = document.querySelector(".schedule__panel[data-panel='results']");
@@ -639,6 +640,7 @@
         schedulePanels.forEach((panel) => {
           panel.classList.toggle("is-active", panel.dataset.panel === view);
         });
+        updateFiltersForView(view);
       };
 
       const scheduleToggle = document.querySelector(".schedule__toggle");
@@ -651,8 +653,6 @@
         });
       }
 
-      setScheduleView("upcoming");
-
       const filterButtons = Array.from(document.querySelectorAll(".schedule__filter-btn"));
       filterButtons.forEach((button) => {
         button.addEventListener("click", () => {
@@ -660,6 +660,22 @@
           applyEventFilter(button.dataset.filter);
         });
       });
+
+      const updateFilterAvailability = (panelKey, events) => {
+        const activeFilters = new Set(events.map((item) => item.event));
+        filterButtons.forEach((button) => {
+          if (button.dataset.filter === "all") return;
+          const shouldHide = panelKey === "upcoming" && !activeFilters.has(button.dataset.filter);
+          button.classList.toggle("is-hidden", shouldHide);
+        });
+      };
+
+      const updateFiltersForView = (view) => {
+        const events = view === "upcoming" ? cachedUpcoming : cachedResults;
+        updateFilterAvailability(view, events);
+      };
+
+      setScheduleView("upcoming");
 
       // Ensure mobile nav works even if app.js doesn't bind on this page.
       const navToggle = document.querySelector(".site-nav__toggle");

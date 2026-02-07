@@ -117,6 +117,102 @@
         "Seve Trophy": "assets/seve-trophy-logo.png"
       };
 
+      const ryderCupDates = {
+        1927: "Jun 3-4, 1927",
+        1929: "Apr 26-27, 1929",
+        1931: "Jun 26-27, 1931",
+        1933: "Jun 25-26, 1933",
+        1935: "Sep 28-29, 1935",
+        1937: "Jun 29-30, 1937",
+        1947: "Nov 1-2, 1947",
+        1949: "Sep 16-17, 1949",
+        1951: "Nov 2-4, 1951",
+        1953: "Oct 2-3, 1953",
+        1955: "Nov 5-6, 1955",
+        1957: "Oct 4-5, 1957",
+        1959: "Nov 6-7, 1959",
+        1961: "Oct 13-14, 1961",
+        1963: "Oct 11-13, 1963",
+        1965: "Oct 7-9, 1965",
+        1967: "Oct 20-22, 1967",
+        1969: "Sep 18-20, 1969",
+        1971: "Sep 16-18, 1971",
+        1973: "Sep 20-22, 1973",
+        1975: "Sep 19-21, 1975",
+        1977: "Sep 15-17, 1977",
+        1979: "Sep 14-16, 1979",
+        1981: "Sep 18-20, 1981",
+        1983: "Oct 14-16, 1983",
+        1985: "Sep 13-15, 1985",
+        1987: "Sep 25-27, 1987",
+        1989: "Sep 22-24, 1989",
+        1991: "Sep 27-29, 1991",
+        1993: "Sep 24-26, 1993",
+        1995: "Sep 22-24, 1995",
+        1997: "Sep 26-28, 1997",
+        1999: "Sep 24-26, 1999",
+        2002: "Sep 27-29, 2002",
+        2004: "Sep 17-19, 2004",
+        2006: "Sep 22-24, 2006",
+        2008: "Sep 19-21, 2008",
+        2010: "Oct 1-4, 2010",
+        2012: "Sep 28-30, 2012",
+        2014: "Sep 26-28, 2014",
+        2016: "Sep 30-Oct 2, 2016",
+        2018: "Sep 28-30, 2018",
+        2021: "Sep 24-26, 2021",
+        2023: "Sep 29-Oct 1, 2023",
+        2025: "Sep 25-28, 2025"
+      };
+
+      const ryderCupVenues = {
+        1927: "Worcester Country Club, Worcester, Massachusetts, USA",
+        1929: "Moortown Golf Club, Leeds, England",
+        1931: "Scioto Country Club, Columbus, Ohio, USA",
+        1933: "Southport and Ainsdale Golf Club, Southport, England",
+        1935: "Ridgewood Country Club, Paramus, New Jersey, USA",
+        1937: "Southport and Ainsdale Golf Club, Southport, England",
+        1947: "Portland Golf Club, Portland, Oregon, USA",
+        1949: "Ganton Golf Club, Filey, England",
+        1951: "Pinehurst Country Club (No. 2), Pinehurst, North Carolina, USA",
+        1953: "Wentworth Club (West Course), Virginia Water, England",
+        1955: "Thunderbird Country Club, Palm Springs, California, USA",
+        1957: "Lindrick Golf Club, Worksop, England",
+        1959: "Eldorado Country Club, Indian Wells, California, USA",
+        1961: "Royal Lytham & St Annes Golf Club, Lytham St Annes, England",
+        1963: "East Lake Golf Club, Atlanta, Georgia, USA",
+        1965: "Royal Birkdale Golf Club, Southport, England",
+        1967: "Champions Golf Club, Houston, Texas, USA",
+        1969: "Royal Birkdale Golf Club, Southport, England",
+        1971: "Old Warson Country Club, St. Louis, Missouri, USA",
+        1973: "Muirfield, Gullane, Scotland",
+        1975: "Laurel Valley Golf Club, Ligonier, Pennsylvania, USA",
+        1977: "Royal Lytham & St Annes Golf Club, Lytham St Annes, England",
+        1979: "The Greenbrier, White Sulphur Springs, West Virginia, USA",
+        1981: "Walton Heath Golf Club, Surrey, England",
+        1983: "PGA National Golf Club, Palm Beach Gardens, Florida, USA",
+        1985: "The Belfry (Brabazon Course), Sutton Coldfield, England",
+        1987: "Muirfield Village Golf Club, Dublin, Ohio, USA",
+        1989: "The Belfry (Brabazon Course), Sutton Coldfield, England",
+        1991: "Kiawah Island Golf Resort (Ocean Course), Kiawah Island, South Carolina, USA",
+        1993: "The Belfry (Brabazon Course), Sutton Coldfield, England",
+        1995: "Oak Hill Country Club (East Course), Rochester, New York, USA",
+        1997: "Valderrama Golf Club, San Roque, Spain",
+        1999: "The Country Club, Brookline, Massachusetts, USA",
+        2002: "The Belfry (Brabazon Course), Sutton Coldfield, England",
+        2004: "Oakland Hills Country Club (South Course), Bloomfield Hills, Michigan, USA",
+        2006: "The K Club (Palmer North Course), Straffan, Ireland",
+        2008: "Valhalla Golf Club, Louisville, Kentucky, USA",
+        2010: "Celtic Manor Resort (Twenty Ten Course), Newport, Wales",
+        2012: "Medinah Country Club (Course No. 3), Medinah, Illinois, USA",
+        2014: "Gleneagles (PGA Centenary Course), Perthshire, Scotland",
+        2016: "Hazeltine National Golf Club, Chaska, Minnesota, USA",
+        2018: "Le Golf National (Albatros Course), Guyancourt, France",
+        2021: "Whistling Straits (Straits Course), Haven, Wisconsin, USA",
+        2023: "Marco Simone Golf and Country Club, Guidonia Montecelio, Italy",
+        2025: "Bethpage Black Course, Farmingdale, New York, USA"
+      };
+
       const winnerMap = {
         "Ryder Cup": {
           1927: "USA",
@@ -273,8 +369,14 @@
           const logo = logoMap[item.event];
           card.className = "schedule__card schedule__card--logo";
 
-          const dateLabel = item.dateLabel || `${item.month} ${item.year}`;
-          const venueLabel = item.venue || "";
+          const dateLabel =
+            item.dateLabel ||
+            (item.event === "Ryder Cup" ? ryderCupDates[item.year] : "") ||
+            `${item.month} ${item.year}`;
+          const venueLabel =
+            item.venue ||
+            (item.event === "Ryder Cup" ? ryderCupVenues[item.year] : "") ||
+            "";
 
           const winnerLabel = winnerMap[item.event]?.[item.year];
           const winnerAsset = winnerLabel ? winnerAssetMap[winnerLabel] : "assets/winner-placeholder.svg";

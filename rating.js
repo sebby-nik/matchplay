@@ -389,9 +389,34 @@ const formatDelta = (delta) => {
   return "0";
 };
 
+const getDisplayMatchList = (player) => {
+  if (selectedEvents.size === 0) return player.matchList;
+  return player.matchList.filter((match) => selectedEvents.has(match.event));
+};
+
+const withDisplayStats = (player) => {
+  const displayMatchList = getDisplayMatchList(player);
+  let displayWins = 0;
+  let displayDraws = 0;
+  let displayLosses = 0;
+  displayMatchList.forEach((match) => {
+    if (match.result === "win") displayWins += 1;
+    else if (match.result === "halved") displayDraws += 1;
+    else if (match.result === "loss") displayLosses += 1;
+  });
+  return {
+    ...player,
+    displayMatchList,
+    displayMatches: displayMatchList.length,
+    displayWins,
+    displayDraws,
+    displayLosses
+  };
+};
+
 const renderPlayerDetailContent = (player) => {
   const flag = flagFromCountry(player.country);
-  const matches = player.matchList
+  const matches = (player.displayMatchList || player.matchList)
     .slice()
     .sort((a, b) => b.year - a.year)
     .map((match) => {
@@ -424,7 +449,7 @@ const renderPlayerDetailContent = (player) => {
   return `
     <div class="player-detail">
       <h3>${flag ? `${flag} ` : ""}${player.name}</h3>
-      <div class="detail-meta">${player.matches} matches • ${player.wins}-${player.draws}-${player.losses}</div>
+      <div class="detail-meta">${player.displayMatches ?? player.matches} matches • ${player.displayWins ?? player.wins}-${player.displayDraws ?? player.draws}-${player.displayLosses ?? player.losses}</div>
       <div class="match-list">${matches || "<p class=\"muted\">No matches yet.</p>"}</div>
     </div>
   `;
@@ -463,8 +488,8 @@ const renderTable = (players) => {
       <td>${player.rank}</td>
       <td>${player.name}${flag ? ` <span class="flag">${flag}</span>` : ""}</td>
       <td>${Math.round(player.rating)}</td>
-      <td>${player.matches}</td>
-      <td>${player.wins}-${player.draws}-${player.losses}</td>
+      <td>${player.displayMatches ?? player.matches}</td>
+      <td>${player.displayWins ?? player.wins}-${player.displayDraws ?? player.draws}-${player.displayLosses ?? player.losses}</td>
       <td title="Peak rating: ${Math.round(player.peak)}">
         <div class="trend-cell">
           ${renderSparkline(player.history, "trend-sparkline", `Peak rating: ${Math.round(player.peak)}`)}
@@ -480,11 +505,13 @@ const sortPlayers = (players) => {
   const sorted = players.slice().sort((a, b) => {
     const dir = currentSort.direction === "asc" ? 1 : -1;
     if (currentSort.key === "name") return a.name.localeCompare(b.name) * dir;
-    if (currentSort.key === "matches") return (a.matches - b.matches) * dir;
+    if (currentSort.key === "matches") {
+      return ((a.displayMatches ?? a.matches) - (b.displayMatches ?? b.matches)) * dir;
+    }
     if (currentSort.key === "trend") return (a.peak - b.peak) * dir;
     if (currentSort.key === "wdl") {
-      const aRecord = a.wins * 3 + a.draws;
-      const bRecord = b.wins * 3 + b.draws;
+      const aRecord = (a.displayWins ?? a.wins) * 3 + (a.displayDraws ?? a.draws);
+      const bRecord = (b.displayWins ?? b.wins) * 3 + (b.displayDraws ?? b.draws);
       return (aRecord - bRecord) * dir;
     }
     if (currentSort.key === "rank") return (a.rank - b.rank) * dir;
@@ -645,11 +672,9 @@ const applyFilters = () => {
   const currentYear = new Date().getFullYear();
   const activeCutoff = currentYear - 5;
 
-  const filteredPlayers = ratings.filter((player) => {
-    if (
-      selectedEvents.size > 0 &&
-      !player.matchList.some((match) => selectedEvents.has(match.event))
-    ) {
+  const eventScopedPlayers = ratings.map(withDisplayStats);
+  const filteredPlayers = eventScopedPlayers.filter((player) => {
+    if (selectedEvents.size > 0 && player.displayMatches === 0) {
       return false;
     }
     if (selectedCountries.size > 0 && !selectedCountries.has(player.country)) {
@@ -658,7 +683,9 @@ const applyFilters = () => {
     return activeOnlyToggle && activeOnlyToggle.checked ? player.lastYear >= activeCutoff : true;
   });
 
-  const minFiltered = filteredPlayers.filter((player) => player.matches >= minMatches);
+  const minFiltered = filteredPlayers.filter(
+    (player) => (player.displayMatches ?? player.matches) >= minMatches
+  );
   const baseRanked = minFiltered
     .slice()
     .sort((a, b) => b.rating - a.rating)
@@ -695,7 +722,7 @@ const updateLeaderCard = (player) => {
 
   ratingLeaderName.textContent = player.name;
   ratingLeaderRating.textContent = `Rating ${Math.round(player.rating)}`;
-  ratingLeaderMeta.textContent = `${player.matches} matches · ${player.wins}-${player.draws}-${player.losses} W-D-L`;
+  ratingLeaderMeta.textContent = `${player.displayMatches ?? player.matches} matches · ${player.displayWins ?? player.wins}-${player.displayDraws ?? player.draws}-${player.displayLosses ?? player.losses} W-D-L`;
   ratingLeaderStats.innerHTML = `
     <span>Peak ${Math.round(player.peak)}</span>
   `;

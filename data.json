@@ -3583,9 +3583,9 @@
       "player_country": "US",
       "opponent": "Rory McIlroy",
       "opponent_country": "GB",
-      "result": "loss",
+      "result": "win",
       "score": "1 up",
-      "points": 0,
+      "points": 1,
       "month": "September"
     },
     {
@@ -3648,9 +3648,9 @@
       "player_country": "GB",
       "opponent": "Justin Thomas",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "1 up",
-      "points": 1,
+      "points": 0,
       "month": "September"
     },
     {
@@ -3882,9 +3882,9 @@
       "player_country": "US",
       "opponent": "Tyrrell Hatton",
       "opponent_country": "GB",
-      "result": "loss",
+      "result": "win",
       "score": "4 & 3",
-      "points": 0,
+      "points": 1,
       "month": "September"
     },
     {
@@ -4025,9 +4025,9 @@
       "player_country": "GB",
       "opponent": "Justin Thomas",
       "opponent_country": "US",
-      "result": "win",
+      "result": "loss",
       "score": "4 & 3",
-      "points": 1,
+      "points": 0,
       "month": "September"
     },
     {

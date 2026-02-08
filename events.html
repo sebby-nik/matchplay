@@ -75,25 +75,45 @@
     </header>
 
     <section class="schedule">
-      <div class="schedule__toggle" role="tablist" aria-label="Events view">
-        <button class="schedule__toggle-btn is-active" type="button" data-view="upcoming" role="tab" aria-selected="true">
-          Upcoming
-        </button>
-        <button class="schedule__toggle-btn" type="button" data-view="results" role="tab" aria-selected="false">
-          Results
-        </button>
-      </div>
+      <div class="schedule__controls">
+        <div class="schedule__toggle" role="tablist" aria-label="Events view">
+          <button class="schedule__toggle-btn is-active" type="button" data-view="upcoming" role="tab" aria-selected="true">
+            Upcoming
+          </button>
+          <button class="schedule__toggle-btn" type="button" data-view="results" role="tab" aria-selected="false">
+            Results
+          </button>
+        </div>
 
-      <div class="schedule__filters">
-        <label class="schedule__filter-label" for="eventTypeFilter">Event Type</label>
-        <div class="schedule__filter-select">
-          <select id="eventTypeFilter" class="schedule__filter-dropdown">
-            <option value="all">All</option>
-            <option value="Ryder Cup">Ryder Cup</option>
-            <option value="Presidents Cup">Presidents Cup</option>
-            <option value="WGC Match Play">WGC Match Play</option>
-            <option value="Seve Trophy">Seve Trophy</option>
-          </select>
+        <div class="country-filter schedule__event-filter">
+          <span class="country-filter__label">Event Type</span>
+          <details class="country-filter__dropdown" id="eventTypeDropdown">
+            <summary class="country-filter__summary">
+              <span id="eventTypeSummary">All</span>
+            </summary>
+            <div class="country-filter__panel">
+              <label class="country-filter__item">
+                <input type="radio" name="eventType" value="all" checked />
+                <span class="country-filter__text">All</span>
+              </label>
+              <label class="country-filter__item">
+                <input type="radio" name="eventType" value="Ryder Cup" />
+                <span class="country-filter__text">Ryder Cup</span>
+              </label>
+              <label class="country-filter__item">
+                <input type="radio" name="eventType" value="Presidents Cup" />
+                <span class="country-filter__text">Presidents Cup</span>
+              </label>
+              <label class="country-filter__item">
+                <input type="radio" name="eventType" value="WGC Match Play" />
+                <span class="country-filter__text">WGC Match Play</span>
+              </label>
+              <label class="country-filter__item">
+                <input type="radio" name="eventType" value="Seve Trophy" />
+                <span class="country-filter__text">Seve Trophy</span>
+              </label>
+            </div>
+          </details>
         </div>
       </div>
 
@@ -661,36 +681,48 @@
 
       const updateFilterAvailability = (panelKey, events) => {
         const activeFilters = new Set(events.map((item) => item.event));
-        const filterSelect = document.getElementById("eventTypeFilter");
-        if (!filterSelect) return;
-        Array.from(filterSelect.options).forEach((option) => {
-          if (option.value === "all") {
-            option.disabled = false;
+        const inputs = Array.from(document.querySelectorAll("input[name='eventType']"));
+        inputs.forEach((input) => {
+          if (input.value === "all") {
+            input.disabled = false;
+            input.closest(".country-filter__item")?.classList.remove("is-disabled");
             return;
           }
-          const shouldDisable = panelKey === "upcoming" && !activeFilters.has(option.value);
-          option.disabled = shouldDisable;
+          const shouldDisable = panelKey === "upcoming" && !activeFilters.has(input.value);
+          input.disabled = shouldDisable;
+          input.closest(".country-filter__item")?.classList.toggle("is-disabled", shouldDisable);
         });
       };
 
       const updateFiltersForView = (view) => {
         const events = view === "upcoming" ? cachedUpcoming : cachedResults;
         updateFilterAvailability(view, events);
-        const filterSelect = document.getElementById("eventTypeFilter");
-        if (filterSelect && filterSelect.options[filterSelect.selectedIndex]?.disabled) {
-          filterSelect.value = "all";
-          applyEventFilter("all");
+        const activeInput = document.querySelector("input[name='eventType']:checked");
+        if (activeInput?.disabled) {
+          const allInput = document.querySelector("input[name='eventType'][value='all']");
+          if (allInput) {
+            allInput.checked = true;
+            updateEventTypeSummary("All");
+            applyEventFilter("all");
+          }
         }
+      };
+
+      const updateEventTypeSummary = (value) => {
+        const summary = document.getElementById("eventTypeSummary");
+        if (summary) summary.textContent = value;
       };
 
       setScheduleView("upcoming");
 
-      const filterSelect = document.getElementById("eventTypeFilter");
-      if (filterSelect) {
-        filterSelect.addEventListener("change", () => {
-          applyEventFilter(filterSelect.value);
+      const eventTypeInputs = Array.from(document.querySelectorAll("input[name='eventType']"));
+      eventTypeInputs.forEach((input) => {
+        input.addEventListener("change", () => {
+          if (!input.checked) return;
+          updateEventTypeSummary(input.value === "all" ? "All" : input.value);
+          applyEventFilter(input.value);
         });
-      }
+      });
 
       // Ensure mobile nav works even if app.js doesn't bind on this page.
       const navToggle = document.querySelector(".site-nav__toggle");

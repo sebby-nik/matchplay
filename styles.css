@@ -176,6 +176,14 @@ p {
   transform: translateY(-1px);
 }
 
+.schedule__controls {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+}
+
 .schedule__panel {
   display: none;
 }
@@ -184,54 +192,17 @@ p {
   display: block;
 }
 
-.schedule__filters {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin-bottom: 2rem;
+.schedule__event-filter .country-filter__dropdown {
+  min-width: 220px;
 }
 
-.schedule__filter-label {
-  font-weight: 600;
-  color: var(--ink-soft);
+.schedule__event-filter .country-filter__panel {
+  min-width: 220px;
 }
 
-.schedule__filter-select {
-  position: relative;
-}
-
-.schedule__filter-dropdown {
-  appearance: none;
-  border: 1px solid var(--line);
-  background: var(--panel);
-  color: var(--ink);
-  padding: 0.55rem 2.25rem 0.55rem 0.9rem;
-  border-radius: 999px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
-  font-family: var(--sans);
-  min-width: 200px;
-}
-
-.schedule__filter-select::after {
-  content: "";
-  position: absolute;
-  right: 0.9rem;
-  top: 50%;
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 6px solid var(--ink-soft);
-  transform: translateY(-30%);
+.country-filter__item.is-disabled {
+  opacity: 0.5;
   pointer-events: none;
-}
-
-.schedule__filter-dropdown:focus {
-  outline: 2px solid rgba(29, 36, 51, 0.25);
-  outline-offset: 2px;
 }
 
 .schedule__loading,

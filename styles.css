@@ -184,6 +184,10 @@ p {
   margin-bottom: 2.5rem;
 }
 
+.schedule__controls .country-filter__dropdown {
+  margin-top: 0;
+}
+
 .schedule__panel {
   display: none;
 }

@@ -86,30 +86,25 @@
         </div>
 
         <div class="country-filter schedule__event-filter">
-          <span class="country-filter__label">Event Type</span>
           <details class="country-filter__dropdown" id="eventTypeDropdown">
             <summary class="country-filter__summary">
-              <span id="eventTypeSummary">All</span>
+              <span id="eventTypeSummary">All events</span>
             </summary>
             <div class="country-filter__panel">
               <label class="country-filter__item">
-                <input type="radio" name="eventType" value="all" checked />
-                <span class="country-filter__text">All</span>
-              </label>
-              <label class="country-filter__item">
-                <input type="radio" name="eventType" value="Ryder Cup" />
+                <input type="checkbox" name="eventType" value="Ryder Cup" checked />
                 <span class="country-filter__text">Ryder Cup</span>
               </label>
               <label class="country-filter__item">
-                <input type="radio" name="eventType" value="Presidents Cup" />
+                <input type="checkbox" name="eventType" value="Presidents Cup" checked />
                 <span class="country-filter__text">Presidents Cup</span>
               </label>
               <label class="country-filter__item">
-                <input type="radio" name="eventType" value="WGC Match Play" />
+                <input type="checkbox" name="eventType" value="WGC Match Play" checked />
                 <span class="country-filter__text">WGC Match Play</span>
               </label>
               <label class="country-filter__item">
-                <input type="radio" name="eventType" value="Seve Trophy" />
+                <input type="checkbox" name="eventType" value="Seve Trophy" checked />
                 <span class="country-filter__text">Seve Trophy</span>
               </label>
             </div>
@@ -625,12 +620,11 @@
 
       let cachedUpcoming = [];
       let cachedResults = [];
-      let activeFilter = "all";
+      let activeFilters = new Set(["Ryder Cup", "Presidents Cup", "WGC Match Play", "Seve Trophy"]);
 
-      const applyEventFilter = (filterValue) => {
-        activeFilter = filterValue;
-        const upcoming = filterValue === "all" ? cachedUpcoming : cachedUpcoming.filter((item) => item.event === filterValue);
-        const results = filterValue === "all" ? cachedResults : cachedResults.filter((item) => item.event === filterValue);
+      const applyEventFilter = () => {
+        const upcoming = cachedUpcoming.filter((item) => activeFilters.has(item.event));
+        const results = cachedResults.filter((item) => activeFilters.has(item.event));
         renderSchedule("upcoming", sortByDateAsc(upcoming), "No upcoming events listed yet.", false);
         renderSchedule("results", sortByDateDesc(results), "No results listed yet.", true);
       };
@@ -641,7 +635,8 @@
           const upcomingEvents = Array.isArray(data.events) ? data.events : [];
           cachedResults = sortByDateDesc(resultsEvents);
           cachedUpcoming = sortByDateAsc(upcomingEvents);
-          applyEventFilter("all");
+          updateEventTypeSummary();
+          applyEventFilter();
           updateFiltersForView("upcoming");
         })
         .catch(() => {
@@ -680,15 +675,10 @@
       }
 
       const updateFilterAvailability = (panelKey, events) => {
-        const activeFilters = new Set(events.map((item) => item.event));
+        const availableFilters = new Set(events.map((item) => item.event));
         const inputs = Array.from(document.querySelectorAll("input[name='eventType']"));
         inputs.forEach((input) => {
-          if (input.value === "all") {
-            input.disabled = false;
-            input.closest(".country-filter__item")?.classList.remove("is-disabled");
-            return;
-          }
-          const shouldDisable = panelKey === "upcoming" && !activeFilters.has(input.value);
+          const shouldDisable = panelKey === "upcoming" && !availableFilters.has(input.value);
           input.disabled = shouldDisable;
           input.closest(".country-filter__item")?.classList.toggle("is-disabled", shouldDisable);
         });
@@ -697,20 +687,32 @@
       const updateFiltersForView = (view) => {
         const events = view === "upcoming" ? cachedUpcoming : cachedResults;
         updateFilterAvailability(view, events);
-        const activeInput = document.querySelector("input[name='eventType']:checked");
-        if (activeInput?.disabled) {
-          const allInput = document.querySelector("input[name='eventType'][value='all']");
-          if (allInput) {
-            allInput.checked = true;
-            updateEventTypeSummary("All");
-            applyEventFilter("all");
-          }
+        const disabledSelected = Array.from(document.querySelectorAll("input[name='eventType']"))
+          .filter((input) => input.checked && input.disabled);
+        disabledSelected.forEach((input) => {
+          input.checked = false;
+          activeFilters.delete(input.value);
+        });
+        if (activeFilters.size === 0) {
+          const enabledInputs = Array.from(document.querySelectorAll("input[name='eventType']"))
+            .filter((input) => !input.disabled);
+          enabledInputs.forEach((input) => {
+            input.checked = true;
+            activeFilters.add(input.value);
+          });
         }
+        updateEventTypeSummary();
+        applyEventFilter();
       };
 
-      const updateEventTypeSummary = (value) => {
+      const updateEventTypeSummary = () => {
         const summary = document.getElementById("eventTypeSummary");
-        if (summary) summary.textContent = value;
+        if (!summary) return;
+        if (activeFilters.size === 4) {
+          summary.textContent = "All events";
+          return;
+        }
+        summary.textContent = `${activeFilters.size} selected`;
       };
 
       setScheduleView("upcoming");
@@ -718,9 +720,17 @@
       const eventTypeInputs = Array.from(document.querySelectorAll("input[name='eventType']"));
       eventTypeInputs.forEach((input) => {
         input.addEventListener("change", () => {
-          if (!input.checked) return;
-          updateEventTypeSummary(input.value === "all" ? "All" : input.value);
-          applyEventFilter(input.value);
+          if (input.checked) {
+            activeFilters.add(input.value);
+          } else {
+            activeFilters.delete(input.value);
+          }
+          if (activeFilters.size === 0) {
+            input.checked = true;
+            activeFilters.add(input.value);
+          }
+          updateEventTypeSummary();
+          applyEventFilter();
         });
       });
 

@@ -1,22 +1,29 @@
-# Ryder Cup Matchplay Database
+# Matchplay Rankings
 
-A lightweight, static MVP for browsing individual player records across major matchplay events. This project is designed to grow into a complete historical archive, starting with a clean data model and a simple, fast UI.
+A lightweight static site for browsing matchplay history and ratings across major events. The site is designed as a clean, fast archive that can expand with richer historical data and metadata.
 
 ## Features
-- Player search with sortable rankings
-- Full match list per player
-- Event-level filters (Ryder Cup, Presidents Cup, WGC Match Play, Seve Trophy)
+- Player ratings table with filters and sorting
+- Player records with head-to-head summaries
+- Lineal Championship tracker
+- Events schedule page with Upcoming/Results toggle
+- Results cards with winner badges and event metadata
+- Mobile-friendly navigation and filters
 
 ## Structure
-- `index.html` — main page layout
+- `index.html` — player ratings
+- `records.html` — player records
+- `lineal.html` — lineal championship
+- `events.html` — upcoming/results schedule
+- `faq.html`, `about.html` — supporting content
 - `styles.css` — site styles
-- `app.js` — UI logic + filtering
-- `data.json` — match data source
+- `app.js` — shared UI logic + filtering
+- `data.json` — match data source and upcoming events
 
 ## Run Locally
 Open `index.html` in your browser.
 
 ## Next Steps
-- Populate `data.json` with full matchplay data
-- Add additional matchplay events
-- Add richer metadata (rounds, venues, field size)
+- Add player headshots for WGC Match Play winners and expand to other events
+- Extend venue/date metadata to more events
+- Continue enriching match data coverage

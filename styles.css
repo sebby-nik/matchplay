@@ -197,31 +197,41 @@ p {
   color: var(--ink-soft);
 }
 
-.schedule__filter-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+.schedule__filter-select {
+  position: relative;
 }
 
-.schedule__filter-btn {
+.schedule__filter-dropdown {
+  appearance: none;
   border: 1px solid var(--line);
   background: var(--panel);
   color: var(--ink);
-  padding: 0.45rem 0.9rem;
+  padding: 0.55rem 2.25rem 0.55rem 0.9rem;
   border-radius: 999px;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   cursor: pointer;
+  font-family: var(--sans);
+  min-width: 200px;
 }
 
-.schedule__filter-btn.is-active {
-  background: var(--accent);
-  color: #fff;
-  border-color: transparent;
+.schedule__filter-select::after {
+  content: "";
+  position: absolute;
+  right: 0.9rem;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid var(--ink-soft);
+  transform: translateY(-30%);
+  pointer-events: none;
 }
 
-.schedule__filter-btn.is-hidden {
-  display: none;
+.schedule__filter-dropdown:focus {
+  outline: 2px solid rgba(29, 36, 51, 0.25);
+  outline-offset: 2px;
 }
 
 .schedule__loading,

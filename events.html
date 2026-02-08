@@ -85,13 +85,15 @@
       </div>
 
       <div class="schedule__filters">
-        <span class="schedule__filter-label">Event Type</span>
-        <div class="schedule__filter-group" role="group" aria-label="Filter by event type">
-          <button class="schedule__filter-btn is-active" type="button" data-filter="all">All</button>
-          <button class="schedule__filter-btn" type="button" data-filter="Ryder Cup">Ryder Cup</button>
-          <button class="schedule__filter-btn" type="button" data-filter="Presidents Cup">Presidents Cup</button>
-          <button class="schedule__filter-btn" type="button" data-filter="WGC Match Play">WGC Match Play</button>
-          <button class="schedule__filter-btn" type="button" data-filter="Seve Trophy">Seve Trophy</button>
+        <label class="schedule__filter-label" for="eventTypeFilter">Event Type</label>
+        <div class="schedule__filter-select">
+          <select id="eventTypeFilter" class="schedule__filter-dropdown">
+            <option value="all">All</option>
+            <option value="Ryder Cup">Ryder Cup</option>
+            <option value="Presidents Cup">Presidents Cup</option>
+            <option value="WGC Match Play">WGC Match Play</option>
+            <option value="Seve Trophy">Seve Trophy</option>
+          </select>
         </div>
       </div>
 
@@ -603,8 +605,10 @@
 
       let cachedUpcoming = [];
       let cachedResults = [];
+      let activeFilter = "all";
 
       const applyEventFilter = (filterValue) => {
+        activeFilter = filterValue;
         const upcoming = filterValue === "all" ? cachedUpcoming : cachedUpcoming.filter((item) => item.event === filterValue);
         const results = filterValue === "all" ? cachedResults : cachedResults.filter((item) => item.event === filterValue);
         renderSchedule("upcoming", sortByDateAsc(upcoming), "No upcoming events listed yet.", false);
@@ -655,29 +659,38 @@
         });
       }
 
-      const filterButtons = Array.from(document.querySelectorAll(".schedule__filter-btn"));
-      filterButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          filterButtons.forEach((btn) => btn.classList.toggle("is-active", btn === button));
-          applyEventFilter(button.dataset.filter);
-        });
-      });
-
       const updateFilterAvailability = (panelKey, events) => {
         const activeFilters = new Set(events.map((item) => item.event));
-        filterButtons.forEach((button) => {
-          if (button.dataset.filter === "all") return;
-          const shouldHide = panelKey === "upcoming" && !activeFilters.has(button.dataset.filter);
-          button.classList.toggle("is-hidden", shouldHide);
+        const filterSelect = document.getElementById("eventTypeFilter");
+        if (!filterSelect) return;
+        Array.from(filterSelect.options).forEach((option) => {
+          if (option.value === "all") {
+            option.disabled = false;
+            return;
+          }
+          const shouldDisable = panelKey === "upcoming" && !activeFilters.has(option.value);
+          option.disabled = shouldDisable;
         });
       };
 
       const updateFiltersForView = (view) => {
         const events = view === "upcoming" ? cachedUpcoming : cachedResults;
         updateFilterAvailability(view, events);
+        const filterSelect = document.getElementById("eventTypeFilter");
+        if (filterSelect && filterSelect.options[filterSelect.selectedIndex]?.disabled) {
+          filterSelect.value = "all";
+          applyEventFilter("all");
+        }
       };
 
       setScheduleView("upcoming");
+
+      const filterSelect = document.getElementById("eventTypeFilter");
+      if (filterSelect) {
+        filterSelect.addEventListener("change", () => {
+          applyEventFilter(filterSelect.value);
+        });
+      }
 
       // Ensure mobile nav works even if app.js doesn't bind on this page.
       const navToggle = document.querySelector(".site-nav__toggle");

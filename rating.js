@@ -359,20 +359,11 @@ const computeRatings = (matches) => {
 };
 
 const buildRatingsCacheKey = () => {
-  const eventsKey = Array.from(selectedEvents).sort().join("|");
-  const countriesKey = Array.from(selectedCountries).sort().join("|");
-  return `events:${eventsKey}::countries:${countriesKey}`;
+  return "all-matches";
 };
 
 const getMatchesForRatings = () => {
-  let matches = allMatches.slice();
-  if (selectedEvents.size > 0) {
-    matches = matches.filter((match) => selectedEvents.has(match.event));
-  }
-  if (selectedCountries.size > 0) {
-    matches = matches.filter((match) => selectedCountries.has(match.player_country));
-  }
-  return matches;
+  return allMatches;
 };
 
 const getCachedRatings = () => {
@@ -655,6 +646,12 @@ const applyFilters = () => {
   const activeCutoff = currentYear - 5;
 
   const filteredPlayers = ratings.filter((player) => {
+    if (
+      selectedEvents.size > 0 &&
+      !player.matchList.some((match) => selectedEvents.has(match.event))
+    ) {
+      return false;
+    }
     if (selectedCountries.size > 0 && !selectedCountries.has(player.country)) {
       return false;
     }

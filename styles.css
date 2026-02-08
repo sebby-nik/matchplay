@@ -197,18 +197,6 @@ p {
   display: block;
 }
 
-.schedule__event-filter .country-filter__dropdown {
-  min-width: 220px;
-}
-
-.schedule__event-filter .country-filter__panel {
-  min-width: 220px;
-}
-
-.country-filter__item.is-disabled {
-  opacity: 0.5;
-  pointer-events: none;
-}
 
 .schedule__loading,
 .schedule__empty {

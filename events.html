@@ -85,31 +85,6 @@
           </button>
         </div>
 
-        <div class="country-filter schedule__event-filter">
-          <details class="country-filter__dropdown" id="eventTypeDropdown">
-            <summary class="country-filter__summary">
-              <span id="eventTypeSummary">All events</span>
-            </summary>
-            <div class="country-filter__panel">
-              <label class="country-filter__item">
-                <input type="checkbox" name="eventType" value="Ryder Cup" checked />
-                <span class="country-filter__text">Ryder Cup</span>
-              </label>
-              <label class="country-filter__item">
-                <input type="checkbox" name="eventType" value="Presidents Cup" checked />
-                <span class="country-filter__text">Presidents Cup</span>
-              </label>
-              <label class="country-filter__item">
-                <input type="checkbox" name="eventType" value="WGC Match Play" checked />
-                <span class="country-filter__text">WGC Match Play</span>
-              </label>
-              <label class="country-filter__item">
-                <input type="checkbox" name="eventType" value="Seve Trophy" checked />
-                <span class="country-filter__text">Seve Trophy</span>
-              </label>
-            </div>
-          </details>
-        </div>
       </div>
 
       <div class="schedule__panel is-active" data-panel="upcoming" role="tabpanel" aria-live="polite">
@@ -620,15 +595,7 @@
 
       let cachedUpcoming = [];
       let cachedResults = [];
-      let activeFilters = new Set(["Ryder Cup", "Presidents Cup", "WGC Match Play", "Seve Trophy"]);
-      let availableUpcomingFilters = new Set(["Ryder Cup", "Presidents Cup", "WGC Match Play", "Seve Trophy"]);
 
-      const applyEventFilter = () => {
-        const upcoming = cachedUpcoming.filter((item) => activeFilters.has(item.event));
-        const results = cachedResults.filter((item) => activeFilters.has(item.event));
-        renderSchedule("upcoming", sortByDateAsc(upcoming), "No upcoming events listed yet.", false);
-        renderSchedule("results", sortByDateDesc(results), "No results listed yet.", true);
-      };
 
       fetchData(["data.json", "./data.json", "/data.json"])
         .then((data) => {
@@ -636,9 +603,8 @@
           const upcomingEvents = Array.isArray(data.events) ? data.events : [];
           cachedResults = sortByDateDesc(resultsEvents);
           cachedUpcoming = sortByDateAsc(upcomingEvents);
-          updateEventTypeSummary();
-          applyEventFilter();
-          updateFiltersForView("upcoming");
+          renderSchedule("results", cachedResults, "No results listed yet.", true);
+          renderSchedule("upcoming", cachedUpcoming, "No upcoming events listed yet.", false);
         })
         .catch(() => {
           const resultsPanel = document.querySelector(".schedule__panel[data-panel='results']");
@@ -675,69 +641,11 @@
         });
       }
 
-      const updateFilterAvailability = (panelKey, events) => {
-        const availableFilters = new Set(events.map((item) => item.event));
-        if (panelKey === "upcoming") {
-          availableUpcomingFilters = availableFilters;
-        }
-        const inputs = Array.from(document.querySelectorAll("input[name='eventType']"));
-        inputs.forEach((input) => {
-          const shouldDisable = panelKey === "upcoming" && !availableFilters.has(input.value);
-          input.disabled = shouldDisable;
-          input.closest(".country-filter__item")?.classList.toggle("is-disabled", shouldDisable);
-        });
-      };
-
-      const updateFiltersForView = (view) => {
-        const events = view === "upcoming" ? cachedUpcoming : cachedResults;
-        updateFilterAvailability(view, events);
-        const disabledSelected = Array.from(document.querySelectorAll("input[name='eventType']"))
-          .filter((input) => input.checked && input.disabled);
-        disabledSelected.forEach((input) => {
-          input.checked = false;
-          activeFilters.delete(input.value);
-        });
-        if (activeFilters.size === 0) {
-          const enabledInputs = Array.from(document.querySelectorAll("input[name='eventType']"))
-            .filter((input) => !input.disabled);
-          enabledInputs.forEach((input) => {
-            input.checked = true;
-            activeFilters.add(input.value);
-          });
-        }
-        updateEventTypeSummary();
-        applyEventFilter();
-      };
-
-      const updateEventTypeSummary = () => {
-        const summary = document.getElementById("eventTypeSummary");
-        if (!summary) return;
-        const available = Array.from(document.querySelectorAll("input[name='eventType']")).filter((input) => !input.disabled).length || 0;
-        if (activeFilters.size === available) {
-          summary.textContent = "All events";
-        } else {
-          summary.textContent = `${activeFilters.size} selected`;
-        }
-      };
+      const updateFiltersForView = () => {};
 
       setScheduleView("upcoming");
 
-      const eventTypeInputs = Array.from(document.querySelectorAll("input[name='eventType']"));
-      eventTypeInputs.forEach((input) => {
-        input.addEventListener("change", () => {
-          if (input.checked) {
-            activeFilters.add(input.value);
-          } else {
-            activeFilters.delete(input.value);
-          }
-          if (activeFilters.size === 0) {
-            input.checked = true;
-            activeFilters.add(input.value);
-          }
-          updateEventTypeSummary();
-          applyEventFilter();
-        });
-      });
+      // no event type filter
 
       // Ensure mobile nav works even if app.js doesn't bind on this page.
       const navToggle = document.querySelector(".site-nav__toggle");

@@ -621,6 +621,7 @@
       let cachedUpcoming = [];
       let cachedResults = [];
       let activeFilters = new Set(["Ryder Cup", "Presidents Cup", "WGC Match Play", "Seve Trophy"]);
+      let availableUpcomingFilters = new Set(["Ryder Cup", "Presidents Cup", "WGC Match Play", "Seve Trophy"]);
 
       const applyEventFilter = () => {
         const upcoming = cachedUpcoming.filter((item) => activeFilters.has(item.event));
@@ -676,6 +677,9 @@
 
       const updateFilterAvailability = (panelKey, events) => {
         const availableFilters = new Set(events.map((item) => item.event));
+        if (panelKey === "upcoming") {
+          availableUpcomingFilters = availableFilters;
+        }
         const inputs = Array.from(document.querySelectorAll("input[name='eventType']"));
         inputs.forEach((input) => {
           const shouldDisable = panelKey === "upcoming" && !availableFilters.has(input.value);
@@ -708,11 +712,12 @@
       const updateEventTypeSummary = () => {
         const summary = document.getElementById("eventTypeSummary");
         if (!summary) return;
-        if (activeFilters.size === 4) {
+        const available = Array.from(document.querySelectorAll("input[name='eventType']")).filter((input) => !input.disabled).length || 0;
+        if (activeFilters.size === available) {
           summary.textContent = "All events";
-          return;
+        } else {
+          summary.textContent = `${activeFilters.size} selected`;
         }
-        summary.textContent = `${activeFilters.size} selected`;
       };
 
       setScheduleView("upcoming");

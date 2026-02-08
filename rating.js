@@ -71,6 +71,7 @@ let selectedPlayers = new Set();
 let allEvents = [];
 let allCountries = [];
 let currentSort = { key: "rating", direction: "desc" };
+let ratingsCache = new Map();
 
 const normalize = (value) => {
   if (!value) return "";
@@ -357,6 +358,39 @@ const computeRatings = (matches) => {
   return Array.from(ratings.values());
 };
 
+const buildRatingsCacheKey = () => {
+  const eventsKey = Array.from(selectedEvents).sort().join("|");
+  const countriesKey = Array.from(selectedCountries).sort().join("|");
+  return `events:${eventsKey}::countries:${countriesKey}`;
+};
+
+const getMatchesForRatings = () => {
+  let matches = allMatches.slice();
+  if (selectedEvents.size > 0) {
+    matches = matches.filter((match) => selectedEvents.has(match.event));
+  }
+  if (selectedCountries.size > 0) {
+    matches = matches.filter((match) => selectedCountries.has(match.player_country));
+  }
+  return matches;
+};
+
+const getCachedRatings = () => {
+  const key = buildRatingsCacheKey();
+  if (ratingsCache.has(key)) {
+    return ratingsCache.get(key);
+  }
+  const ratings = computeRatings(getMatchesForRatings());
+  ratingsCache.set(key, ratings);
+
+  if (ratingsCache.size > 64) {
+    const oldestKey = ratingsCache.keys().next().value;
+    ratingsCache.delete(oldestKey);
+  }
+
+  return ratings;
+};
+
 const formatDelta = (delta) => {
   const value = Math.round(delta);
   if (value > 0) return `+${value}`;
@@ -616,17 +650,7 @@ const addPlayerSelection = (name) => {
 
 const applyFilters = () => {
   const minMatches = Number(minMatchesInput.value || 1);
-  let matches = allMatches.slice();
-
-  if (selectedEvents.size > 0) {
-    matches = matches.filter((match) => selectedEvents.has(match.event));
-  }
-
-  if (selectedCountries.size > 0) {
-    matches = matches.filter((match) => selectedCountries.has(match.player_country));
-  }
-
-  const ratings = computeRatings(matches);
+  const ratings = getCachedRatings();
   const currentYear = new Date().getFullYear();
   const activeCutoff = currentYear - 5;
 
@@ -740,11 +764,11 @@ const populateFilters = () => {
   updateCountrySummary();
 
   if (allMatches.length > 0) {
-    const matchCounts = Array.from(
-      new Set(allMatches.map((match) => match.player))
-    ).map(
-      (name) => allMatches.filter((match) => match.player === name).length
-    );
+    const matchCountMap = new Map();
+    allMatches.forEach((match) => {
+      matchCountMap.set(match.player, (matchCountMap.get(match.player) || 0) + 1);
+    });
+    const matchCounts = Array.from(matchCountMap.values());
     const maxMatches = Math.max(...matchCounts, 1);
     minMatchesInput.max = String(maxMatches);
   }
@@ -766,6 +790,7 @@ fetch("data.json")
   .then((data) => {
     allMatches = (data.matches || []).filter((match) => match.result !== "not played");
     allPlayers = Array.from(new Set(allMatches.map((match) => match.player))).sort();
+    ratingsCache = new Map();
     populateFilters();
     applyFilters();
     updateSortIndicators();

@@ -593,16 +593,33 @@
         }, Promise.reject());
       };
 
+      const normalizeEventsPayload = (payload) => {
+        if (!payload || typeof payload !== "object") {
+          return { upcomingEvents: [], resultsEvents: [] };
+        }
+
+        if (Array.isArray(payload.upcoming_events) || Array.isArray(payload.results_events)) {
+          return {
+            upcomingEvents: Array.isArray(payload.upcoming_events) ? payload.upcoming_events : [],
+            resultsEvents: Array.isArray(payload.results_events) ? payload.results_events : []
+          };
+        }
+
+        return {
+          upcomingEvents: Array.isArray(payload.events) ? payload.events : [],
+          resultsEvents: buildEventList(Array.isArray(payload.matches) ? payload.matches : [])
+        };
+      };
+
       let cachedUpcoming = [];
       let cachedResults = [];
 
 
-      fetchData(["data.json", "./data.json", "/data.json"])
-        .then((data) => {
-          const resultsEvents = buildEventList(data.matches || []);
-          const upcomingEvents = Array.isArray(data.events) ? data.events : [];
-          cachedResults = sortByDateDesc(resultsEvents);
-          cachedUpcoming = sortByDateAsc(upcomingEvents);
+      fetchData(["events-data.json", "./events-data.json", "/events-data.json", "data.json", "./data.json", "/data.json"])
+        .then((payload) => {
+          const { resultsEvents, upcomingEvents } = normalizeEventsPayload(payload);
+          cachedResults = sortByDateDesc(resultsEvents.slice());
+          cachedUpcoming = sortByDateAsc(upcomingEvents.slice());
           renderSchedule("results", cachedResults, "No results listed yet.", true);
           renderSchedule("upcoming", cachedUpcoming, "No upcoming events listed yet.", false);
         })

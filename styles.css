@@ -255,7 +255,8 @@ p {
   border-color: #1d1f22;
 }
 
-.schedule__card.event-wgc-match-play {
+.schedule__card.event-wgc-match-play,
+.schedule__card.event-pga-championship {
   border-width: 3px;
   border-color: var(--sport-gold-deep);
 }

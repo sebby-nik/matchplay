@@ -61,6 +61,9 @@ const ROUND_ORDER = [
 const BASE_RATING = 1000;
 const YEAR_DECAY = 0.99;
 const FIXED_LEADER_NAME = "Kevin Kisner";
+const CALIBRATION_BIN = 25;
+const CALIBRATION_MIN_MATCHES = 8;
+const CALIBRATION_PRIOR = 1;
 
 let allMatches = [];
 let allPlayers = [];
@@ -73,6 +76,7 @@ let allEvents = [];
 let allCountries = [];
 let currentSort = { key: "rating", direction: "desc" };
 let ratingsCache = new Map();
+let outcomeCalibration = null;
 
 const normalize = (value) => {
   if (!value) return "";
@@ -251,6 +255,62 @@ const sortMatches = (matches) =>
 const expectedScore = (rating, opponentRating) =>
   1 / (1 + Math.pow(10, (opponentRating - rating) / 400));
 
+const getCalibrationBin = (delta) => Math.round(delta / CALIBRATION_BIN) * CALIBRATION_BIN;
+
+const initCalibration = () => ({
+  bins: new Map(),
+  total: 0
+});
+
+const recordCalibration = (calibration, delta, result) => {
+  if (!calibration) return;
+  const bin = getCalibrationBin(delta);
+  if (!calibration.bins.has(bin)) {
+    calibration.bins.set(bin, { wins: 0, draws: 0, losses: 0, total: 0 });
+  }
+  const bucket = calibration.bins.get(bin);
+  if (result === "win") bucket.wins += 1;
+  else if (result === "loss") bucket.losses += 1;
+  else bucket.draws += 1;
+  bucket.total += 1;
+  calibration.total += 1;
+};
+
+const finalizeCalibration = (calibration) => {
+  if (!calibration) return null;
+  const bins = {};
+  calibration.bins.forEach((bucket, bin) => {
+    const total = bucket.total + CALIBRATION_PRIOR * 3;
+    bins[bin] = {
+      wins: (bucket.wins + CALIBRATION_PRIOR) / total,
+      draws: (bucket.draws + CALIBRATION_PRIOR) / total,
+      losses: (bucket.losses + CALIBRATION_PRIOR) / total,
+      total: bucket.total
+    };
+  });
+  return { bins, total: calibration.total };
+};
+
+const clamp01 = (value) => Math.max(0, Math.min(1, value));
+
+const getOutcomeProbabilityFromRatings = (rating, opponentRating) => {
+  const delta = rating - opponentRating;
+  const baseWin = expectedScore(rating, opponentRating);
+  const baseLoss = 1 - baseWin;
+  if (!outcomeCalibration) {
+    return { win: baseWin, draw: 0, loss: baseLoss, source: "elo" };
+  }
+  const bin = getCalibrationBin(delta);
+  const bucket = outcomeCalibration.bins[String(bin)];
+  if (!bucket || bucket.total < CALIBRATION_MIN_MATCHES) {
+    return { win: baseWin, draw: 0, loss: baseLoss, source: "elo" };
+  }
+  const win = clamp01(bucket.wins);
+  const draw = clamp01(bucket.draws);
+  const loss = clamp01(1 - win - draw);
+  return { win, draw, loss, source: "calibrated", bin };
+};
+
 const kFactor = (matchesPlayed) => {
   if (matchesPlayed < 10) return 40;
   if (matchesPlayed < 30) return 30;
@@ -299,6 +359,7 @@ const addMatchToPlayer = (player, match, opponent, result, delta) => {
 const computeRatings = (matches) => {
   const ordered = sortMatches(matches);
   const ratings = new Map();
+  const calibration = initCalibration();
   let currentYear = null;
 
   ordered.forEach((match) => {
@@ -323,6 +384,7 @@ const computeRatings = (matches) => {
 
     const playerBefore = player.rating;
     const opponentBefore = opponent.rating;
+    recordCalibration(calibration, player.rating - opponent.rating, match.result);
 
     player.rating = player.rating + playerK * (score - playerExpected);
     opponent.rating = opponent.rating + opponentK * ((1 - score) - opponentExpected);
@@ -356,6 +418,11 @@ const computeRatings = (matches) => {
     addMatchToPlayer(opponent, match, match.player, opponentResult, opponentDelta);
   });
 
+  outcomeCalibration = finalizeCalibration(calibration);
+  if (typeof window !== "undefined") {
+    window.matchplayOutcomeCalibration = outcomeCalibration;
+    window.getOutcomeProbabilityFromRatings = getOutcomeProbabilityFromRatings;
+  }
   return Array.from(ratings.values());
 };
 

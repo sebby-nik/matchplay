@@ -60,6 +60,7 @@ const ROUND_ORDER = [
 
 const BASE_RATING = 1000;
 const YEAR_DECAY = 0.99;
+const FIXED_LEADER_NAME = "Kevin Kisner";
 
 let allMatches = [];
 let allPlayers = [];
@@ -382,6 +383,11 @@ const getCachedRatings = () => {
   return ratings;
 };
 
+const getFixedLeaderPlayer = () => {
+  const ratings = getCachedRatings();
+  return ratings.find((player) => player.name === FIXED_LEADER_NAME) || null;
+};
+
 const formatDelta = (delta) => {
   const value = Math.round(delta);
   if (value > 0) return `+${value}`;
@@ -700,7 +706,7 @@ const applyFilters = () => {
 
   currentPlayers = searched;
   if (summary) summary.textContent = `${searched.length} players`;
-  updateLeaderCard(searched[0]);
+  updateLeaderCard(getFixedLeaderPlayer() || searched[0]);
   renderFilterChips();
   renderPlayerChips();
   renderTable(searched);
@@ -722,7 +728,7 @@ const updateLeaderCard = (player) => {
 
   ratingLeaderName.textContent = player.name;
   ratingLeaderRating.textContent = `Rating ${Math.round(player.rating)}`;
-  ratingLeaderMeta.textContent = `${player.displayMatches ?? player.matches} matches · ${player.displayWins ?? player.wins}-${player.displayDraws ?? player.draws}-${player.displayLosses ?? player.losses} W-D-L`;
+  ratingLeaderMeta.textContent = `${player.matches} matches · ${player.wins}-${player.draws}-${player.losses} W-D-L`;
   ratingLeaderStats.innerHTML = `
     <span>Peak ${Math.round(player.peak)}</span>
   `;

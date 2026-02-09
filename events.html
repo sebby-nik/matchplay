@@ -119,7 +119,8 @@
         "Ryder Cup": "assets/ryder-cup-logo.png",
         "Presidents Cup": "assets/presidents-cup-logo.png",
         "WGC Match Play": "assets/wgc-matchplay-logo.png",
-        "Seve Trophy": "assets/seve-trophy-logo.png"
+        "Seve Trophy": "assets/seve-trophy-logo.png",
+        "PGA Championship": "assets/pga-champ-logo.png"
       };
 
       const ryderCupDates = {
@@ -303,6 +304,10 @@
         2023: "Sam Burns"
       };
 
+      const pgaChampionshipWinners = {
+        1916: "Jim Barnes"
+      };
+
       const wgcWinnerImages = {
         "Sam Burns": "https://commons.wikimedia.org/wiki/Special:FilePath/Sam_Burns_golfer_interview.png",
         "Scottie Scheffler": "https://commons.wikimedia.org/wiki/Special:FilePath/ScottieScheffler.jpg",
@@ -323,7 +328,8 @@
         "Kevin Sutherland": "assets/winner-placeholder.svg",
         "Steve Stricker": "https://commons.wikimedia.org/wiki/Special:FilePath/Steve_Stricker.jpg",
         "Darren Clarke": "https://commons.wikimedia.org/wiki/Special:FilePath/DarrenClarke.jpg",
-        "Jeff Maggert": "assets/winner-placeholder.svg"
+        "Jeff Maggert": "assets/winner-placeholder.svg",
+        "Jim Barnes": "assets/winner-placeholder.svg"
       };
 
       const wgcMatchPlayDates = {
@@ -353,6 +359,10 @@
         2023: "Mar 22-26, 2023"
       };
 
+      const pgaChampionshipDates = {
+        1916: "Oct 10-14, 1916"
+      };
+
       const wgcMatchPlayVenues = {
         1999: "La Costa Resort and Spa, Carlsbad, California, USA",
         2000: "La Costa Resort and Spa, Carlsbad, California, USA",
@@ -378,6 +388,10 @@
         2021: "Austin Country Club, Austin, Texas, USA",
         2022: "Austin Country Club, Austin, Texas, USA",
         2023: "Austin Country Club, Austin, Texas, USA"
+      };
+
+      const pgaChampionshipVenues = {
+        1916: "Siwanoy CC, Bronxville, N.Y., USA"
       };
 
       const winnerMap = {
@@ -542,6 +556,7 @@
             (item.event === "Presidents Cup" ? presidentsCupDates[item.year] : "") ||
             (item.event === "Seve Trophy" ? seveTrophyDates[item.year] : "") ||
             (item.event === "WGC Match Play" ? wgcMatchPlayDates[item.year] : "") ||
+            (item.event === "PGA Championship" ? pgaChampionshipDates[item.year] : "") ||
             `${item.month} ${item.year}`;
           const venueLabel =
             item.venue ||
@@ -549,16 +564,19 @@
             (item.event === "Presidents Cup" ? presidentsCupVenues[item.year] : "") ||
             (item.event === "Seve Trophy" ? seveTrophyVenues[item.year] : "") ||
             (item.event === "WGC Match Play" ? wgcMatchPlayVenues[item.year] : "") ||
+            (item.event === "PGA Championship" ? pgaChampionshipVenues[item.year] : "") ||
             "";
 
           const winnerLabel = winnerMap[item.event]?.[item.year];
-          const wgcWinner = item.event === "WGC Match Play" ? wgcMatchPlayWinners[item.year] : null;
-          const winnerAsset = wgcWinner
-            ? (wgcWinnerImages[wgcWinner] || "assets/winner-placeholder.svg")
+          const playerWinner =
+            (item.event === "WGC Match Play" ? wgcMatchPlayWinners[item.year] : null) ||
+            (item.event === "PGA Championship" ? pgaChampionshipWinners[item.year] : null);
+          const winnerAsset = playerWinner
+            ? (wgcWinnerImages[playerWinner] || "assets/winner-placeholder.svg")
             : winnerLabel
               ? winnerAssetMap[winnerLabel]
               : "assets/winner-placeholder.svg";
-          const winnerAlt = wgcWinner ? `${wgcWinner} winner` : winnerLabel ? `${winnerLabel} winner` : "Winner";
+          const winnerAlt = playerWinner ? `${playerWinner} winner` : winnerLabel ? `${winnerLabel} winner` : "Winner";
           const winnerClass = winnerLabel ? `winner-${winnerLabel.toLowerCase().replace(/[^a-z0-9]+/g, "-")}` : "";
           const eventClass = `event-${item.event.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
           const isPresidentsTie = item.event === "Presidents Cup" && item.year === 2003;
@@ -578,7 +596,7 @@
               <p class="schedule__meta schedule__meta--empty">${venueLabel || "&nbsp;"}</p>
               <div class="schedule__date">${dateLabel}</div>
             </div>
-            ${showWinner ? `<div class="schedule__winner">${wgcWinner ? `<span class="winner-name">${wgcWinner}</span>` : ""}<span class="winner-badge"><img src="${winnerAsset}" alt="${winnerAlt}" /></span></div>` : ""}
+            ${showWinner ? `<div class="schedule__winner">${playerWinner ? `<span class="winner-name">${playerWinner}</span>` : ""}<span class="winner-badge"><img src="${winnerAsset}" alt="${winnerAlt}" /></span></div>` : ""}
           `;
           groupCards.appendChild(card);
         });

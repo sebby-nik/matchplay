@@ -256,7 +256,8 @@ p {
 }
 
 .schedule__card.event-wgc-match-play,
-.schedule__card.event-pga-championship {
+.schedule__card.event-pga-championship,
+.schedule__card.event-olympics {
   border-width: 3px;
   border-color: var(--sport-gold-deep);
 }

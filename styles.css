@@ -563,6 +563,93 @@ p {
   margin: 0;
 }
 
+.headtohead__selectors {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.headtohead__picker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.headtohead__label {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.headtohead__vs {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+
+.headtohead__summary {
+  margin-bottom: 1.5rem;
+}
+
+.headtohead__summary.is-filled {
+  text-align: left;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.headtohead__summary-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.headtohead__names {
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  color: var(--ink);
+}
+
+.headtohead__record {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.headtohead__record span {
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(17, 24, 39, 0.06);
+  font-size: 0.85rem;
+}
+
+.headtohead__matches h3 {
+  margin: 0 0 0.75rem;
+}
+
+@media (max-width: 860px) {
+  .headtohead__selectors {
+    grid-template-columns: 1fr;
+  }
+
+  .headtohead__vs {
+    text-align: center;
+  }
+}
+
 .contact-title-button {
   border: 0;
   background: #111827;
@@ -925,7 +1012,7 @@ label {
   border: 1px solid var(--line);
   border-radius: 12px;
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
-  z-index: 30;
+  z-index: 120;
   max-height: 220px;
   overflow: auto;
   display: none;
@@ -944,6 +1031,11 @@ label {
 
 .player-suggestion:hover {
   background: #f3f6fb;
+}
+
+.player-suggestion--muted {
+  color: var(--ink-soft);
+  cursor: default;
 }
 
 .range-label {

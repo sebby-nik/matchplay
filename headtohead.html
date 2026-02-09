@@ -82,24 +82,67 @@
     </header>
 
     <main class="layout layout--sport">
-      <section class="panel panel--sport">
+      <section class="panel panel--sport headtohead">
         <div class="panel__header">
           <div class="panel__title-row">
             <h2>Head-to-Head</h2>
           </div>
           <p class="muted">
-            This view is ready for the head-to-head selector, matchup summary, and match list.
+            Select two players to compare their matchplay history across the archive.
           </p>
         </div>
         <div class="panel__body">
-          <div class="empty-state">
+          <div class="headtohead__selectors">
+            <div class="headtohead__picker">
+              <label class="headtohead__label" for="playerSearchA">Player 1</label>
+              <div class="player-search">
+                <div id="playerChipsA" class="player-search__chips"></div>
+                <input id="playerSearchA" type="search" placeholder="Search player" />
+                <div id="playerSuggestionsA" class="player-search__suggestions"></div>
+              </div>
+            </div>
+            <div class="headtohead__vs" aria-hidden="true">VS</div>
+            <div class="headtohead__picker">
+              <label class="headtohead__label" for="playerSearchB">Player 2</label>
+              <div class="player-search">
+                <div id="playerChipsB" class="player-search__chips"></div>
+                <input id="playerSearchB" type="search" placeholder="Search player" />
+                <div id="playerSuggestionsB" class="player-search__suggestions"></div>
+              </div>
+            </div>
+          </div>
+
+          <div id="headtoheadSummary" class="headtohead__summary empty-state">
             <h3>Build a matchup</h3>
             <p>Select two players to compare their matchplay history.</p>
+          </div>
+
+          <div class="headtohead__matches">
+            <h3>Match List</h3>
+            <div class="table-wrap">
+              <table class="rank-table">
+                <thead>
+                  <tr>
+                    <th>Year</th>
+                    <th>Event</th>
+                    <th>Round</th>
+                    <th>Result</th>
+                    <th>Score</th>
+                  </tr>
+                </thead>
+                <tbody id="headtoheadMatchesBody">
+                  <tr>
+                    <td colspan="5" class="muted">Select two players to see their matches.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </section>
     </main>
 
     <script src="app.js"></script>
+    <script src="headtohead.js"></script>
   </body>
 </html>

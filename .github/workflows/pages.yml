@@ -26,15 +26,23 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Prepare static site artifact
+        shell: bash
         run: |
           mkdir -p _site
-          rsync -a --delete \
-            --exclude '.git/' \
-            --exclude '.github/' \
-            --exclude 'exports/' \
-            --exclude '*.pdf' \
-            ./ _site/
+          shopt -s dotglob nullglob
+          for item in * .*; do
+            case "$item" in
+              "."|".."|"_site"|".git"|".github"|"exports")
+                continue
+                ;;
+            esac
+            if [[ "$item" =~ \.[Pp][Dd][Ff]$ ]]; then
+              continue
+            fi
+            cp -R "$item" _site/
+          done
           touch _site/.nojekyll
+          du -sh _site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

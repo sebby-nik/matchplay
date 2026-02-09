@@ -120,7 +120,18 @@
         "Presidents Cup": "assets/presidents-cup-logo.png",
         "WGC Match Play": "assets/wgc-matchplay-logo.png",
         "Seve Trophy": "assets/seve-trophy-logo.png",
-        "PGA Championship": "assets/pga-champ-logo.png"
+        "PGA Championship": "assets/pga-champ-logo.png",
+        Olympics: "assets/olympics-logo.png"
+      };
+
+      const olympicsDates = {
+        1904: "Sep 19-24, 1904"
+      };
+      const olympicsVenues = {
+        1904: "Glen Echo Country Club, Normandy, Missouri, USA"
+      };
+      const olympicsWinners = {
+        1904: "George Lyon"
       };
 
       const ryderCupDates = {
@@ -671,6 +682,7 @@
             (item.event === "Seve Trophy" ? seveTrophyDates[item.year] : "") ||
             (item.event === "WGC Match Play" ? wgcMatchPlayDates[item.year] : "") ||
             (item.event === "PGA Championship" ? pgaChampionshipDates[item.year] : "") ||
+            (item.event === "Olympics" ? olympicsDates[item.year] : "") ||
             `${item.month} ${item.year}`;
           const venueLabel =
             item.venue ||
@@ -679,12 +691,14 @@
             (item.event === "Seve Trophy" ? seveTrophyVenues[item.year] : "") ||
             (item.event === "WGC Match Play" ? wgcMatchPlayVenues[item.year] : "") ||
             (item.event === "PGA Championship" ? pgaChampionshipVenues[item.year] : "") ||
+            (item.event === "Olympics" ? olympicsVenues[item.year] : "") ||
             "";
 
           const winnerLabel = winnerMap[item.event]?.[item.year];
           const playerWinner =
             (item.event === "WGC Match Play" ? wgcMatchPlayWinners[item.year] : null) ||
-            (item.event === "PGA Championship" ? pgaChampionshipWinners[item.year] : null);
+            (item.event === "PGA Championship" ? pgaChampionshipWinners[item.year] : null) ||
+            (item.event === "Olympics" ? olympicsWinners[item.year] : null);
           const winnerAsset = playerWinner
             ? (wgcWinnerImages[playerWinner] || "assets/winner-placeholder.svg")
             : winnerLabel

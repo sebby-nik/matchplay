@@ -8,7 +8,7 @@ const linealChampionMeta = document.getElementById("linealChampionMeta");
 const linealChampionStats = document.getElementById("linealChampionStats");
 const linealChampionRecord = document.getElementById("linealChampionRecord");
 
-const EVENT_ORDER = ["WGC Match Play", "Presidents Cup", "Seve Trophy", "Ryder Cup"];
+const EVENT_ORDER = ["WGC Match Play", "Olympics", "Presidents Cup", "Seve Trophy", "Ryder Cup"];
 const MONTH_ORDER = [
   "January",
   "February",

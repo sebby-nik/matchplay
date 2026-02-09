@@ -59,6 +59,12 @@
   ],
   "results_events": [
     {
+      "event": "Olympics",
+      "year": 1904,
+      "month": "September",
+      "venue": ""
+    },
+    {
       "event": "PGA Championship",
       "year": 1916,
       "month": "October",

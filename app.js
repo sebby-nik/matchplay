@@ -892,6 +892,9 @@ const closeNav = () => {
   navLinks.classList.remove("is-open");
   navBackdrop.classList.remove("is-open");
   navToggle.setAttribute("aria-expanded", "false");
+  document.querySelectorAll(".site-nav__dropdown[open]").forEach((dropdown) => {
+    dropdown.removeAttribute("open");
+  });
 };
 
 if (navToggle && navLinks && navBackdrop) {

@@ -573,10 +573,6 @@ p {
   z-index: 1;
 }
 
-.headtohead .panel__body {
-  padding: 0 2rem 2rem;
-}
-
 .headtohead__picker {
   display: flex;
   flex-direction: column;
@@ -644,45 +640,6 @@ p {
   margin: 0 0 0.75rem;
 }
 
-.headtohead__probabilities {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-}
-
-.probability-card {
-  border: 1px solid var(--line);
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 0.9rem 1rem;
-}
-
-.probability-card h4 {
-  margin: 0;
-  font-family: var(--sans);
-  font-size: 0.85rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--ink-soft);
-}
-
-.probability-card p {
-  margin: 0.35rem 0 0;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--ink);
-  line-height: 1.1;
-}
-
-.headtohead__probability-meta {
-  grid-column: 1 / -1;
-  margin: 0;
-  color: var(--ink-soft);
-  font-size: 0.85rem;
-}
-
 @media (max-width: 860px) {
   .headtohead__selectors {
     grid-template-columns: 1fr;
@@ -690,14 +647,6 @@ p {
 
   .headtohead__vs {
     text-align: center;
-  }
-
-  .headtohead .panel__body {
-    padding: 0 1rem 1.25rem;
-  }
-
-  .headtohead__probabilities {
-    grid-template-columns: 1fr;
   }
 }
 

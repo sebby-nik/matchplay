@@ -104,14 +104,8 @@ const renderSuggestions = (value, listEl, currentSelection, otherSelection) => {
     return;
   }
 
-  if (!query) {
-    listEl.classList.remove("is-open");
-    listEl.innerHTML = "";
-    return;
-  }
-
   const pool = allPlayers.filter((name) => name !== currentSelection && name !== otherSelection);
-  const results = pool.filter((name) => normalize(name).includes(query)).slice(0, 8);
+  const results = (query ? pool.filter((name) => normalize(name).includes(query)) : pool).slice(0, 12);
 
   if (!results.length) {
     listEl.classList.remove("is-open");
@@ -170,9 +164,12 @@ const bindSearch = (input, suggestionsEl, side) => {
   if (!input || !suggestionsEl) return;
 
   input.addEventListener("focus", () => {
-    const query = normalize(input.value.trim());
-    if (!query) return;
-    renderSuggestions(input.value, suggestionsEl, side === "A" ? selectedA : selectedB, side === "A" ? selectedB : selectedA);
+    renderSuggestions(
+      input.value,
+      suggestionsEl,
+      side === "A" ? selectedA : selectedB,
+      side === "A" ? selectedB : selectedA
+    );
   });
 
   input.addEventListener("input", () => {
@@ -188,9 +185,7 @@ const bindSearch = (input, suggestionsEl, side) => {
     if (event.key !== "Enter") return;
     event.preventDefault();
     const query = normalize(input.value.trim());
-    const exact = allPlayers
-      .filter((name) => name !== (side === "A" ? selectedB : selectedA))
-      .find((name) => normalize(name) === query);
+    const exact = allPlayers.find((name) => normalize(name) === query);
     if (exact) selectPlayer(side, exact);
   });
 

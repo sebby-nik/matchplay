@@ -30,7 +30,7 @@ const ratingLeaderRating = document.getElementById("ratingLeaderRating");
 const ratingLeaderMeta = document.getElementById("ratingLeaderMeta");
 const ratingLeaderStats = document.getElementById("ratingLeaderStats");
 
-const EVENT_ORDER = ["WGC Match Play", "Olympics", "Presidents Cup", "Seve Trophy", "Ryder Cup"];
+const EVENT_ORDER = ["WGC Match Play", "Olympics", "PGA Championship", "Presidents Cup", "Seve Trophy", "Eurasia Cup", "Ryder Cup"];
 const MONTH_ORDER = [
   "January",
   "February",
@@ -131,6 +131,8 @@ const countryNameFromCode = (code) => {
     BE: "Belgium",
     JP: "Japan",
     KR: "South Korea",
+    MY: "Malaysia",
+    BD: "Bangladesh",
     AR: "Argentina",
     ES: "Spain",
     DE: "Germany",

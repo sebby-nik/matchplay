@@ -96,6 +96,8 @@ const countryNameFromCode = (code) => {
     BE: "Belgium",
     JP: "Japan",
     KR: "South Korea",
+    MY: "Malaysia",
+    BD: "Bangladesh",
     AR: "Argentina",
     ES: "Spain",
     DE: "Germany",

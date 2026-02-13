@@ -8,7 +8,7 @@ const linealChampionMeta = document.getElementById("linealChampionMeta");
 const linealChampionStats = document.getElementById("linealChampionStats");
 const linealChampionRecord = document.getElementById("linealChampionRecord");
 
-const EVENT_ORDER = ["WGC Match Play", "Olympics", "Presidents Cup", "Seve Trophy", "Ryder Cup"];
+const EVENT_ORDER = ["WGC Match Play", "Olympics", "PGA Championship", "Presidents Cup", "Seve Trophy", "Eurasia Cup", "Ryder Cup"];
 const MONTH_ORDER = [
   "January",
   "February",
@@ -156,6 +156,8 @@ const countryNameFromCode = (code) => {
     BE: "Belgium",
     JP: "Japan",
     KR: "South Korea",
+    MY: "Malaysia",
+    BD: "Bangladesh",
     AR: "Argentina",
     ES: "Spain",
     DE: "Germany",

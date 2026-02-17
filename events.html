@@ -125,6 +125,7 @@
         "Presidents Cup": "assets/presidents-cup-logo.png",
         "WGC Match Play": "assets/wgc-matchplay-logo.png",
         "Seve Trophy": "assets/seve-trophy-logo.png",
+        "The Royal Trophy": "assets/royal-trophy-logo.png",
         "PGA Championship": "assets/pga-champ-logo.png",
         "Eurasia Cup": "assets/eurasia-cup-logo.png",
         Olympics: "assets/olympics-logo.png"
@@ -292,6 +293,14 @@
         2009: "Golf de Saint-Nom-la-Bretèche, Paris, France",
         2011: "Golf de Saint-Nom-la-Bretèche, Paris, France",
         2013: "Golf de Saint-Nom-la-Bretèche, Paris, France"
+      };
+
+      const royalTrophyDates = {
+        2006: "Jan 7-8, 2006"
+      };
+
+      const royalTrophyVenues = {
+        2006: "Amata Spring Country Club, Chonburi, Thailand"
       };
 
       const eurasiaCupDates = {
@@ -616,6 +625,9 @@
           2014: "Tie",
           2016: "Europe",
           2018: "Europe"
+        },
+        "The Royal Trophy": {
+          2006: "Europe"
         }
       };
 
@@ -703,6 +715,7 @@
             (item.event === "Ryder Cup" ? ryderCupDates[item.year] : "") ||
             (item.event === "Presidents Cup" ? presidentsCupDates[item.year] : "") ||
             (item.event === "Seve Trophy" ? seveTrophyDates[item.year] : "") ||
+            (item.event === "The Royal Trophy" ? royalTrophyDates[item.year] : "") ||
             (item.event === "Eurasia Cup" ? eurasiaCupDates[item.year] : "") ||
             (item.event === "WGC Match Play" ? wgcMatchPlayDates[item.year] : "") ||
             (item.event === "PGA Championship" ? pgaChampionshipDates[item.year] : "") ||
@@ -713,6 +726,7 @@
             (item.event === "Ryder Cup" ? ryderCupVenues[item.year] : "") ||
             (item.event === "Presidents Cup" ? presidentsCupVenues[item.year] : "") ||
             (item.event === "Seve Trophy" ? seveTrophyVenues[item.year] : "") ||
+            (item.event === "The Royal Trophy" ? royalTrophyVenues[item.year] : "") ||
             (item.event === "Eurasia Cup" ? eurasiaCupVenues[item.year] : "") ||
             (item.event === "WGC Match Play" ? wgcMatchPlayVenues[item.year] : "") ||
             (item.event === "PGA Championship" ? pgaChampionshipVenues[item.year] : "") ||

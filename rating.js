@@ -30,7 +30,16 @@ const ratingLeaderRating = document.getElementById("ratingLeaderRating");
 const ratingLeaderMeta = document.getElementById("ratingLeaderMeta");
 const ratingLeaderStats = document.getElementById("ratingLeaderStats");
 
-const EVENT_ORDER = ["WGC Match Play", "Olympics", "PGA Championship", "Presidents Cup", "Seve Trophy", "Eurasia Cup", "Ryder Cup"];
+const EVENT_ORDER = [
+  "WGC Match Play",
+  "Olympics",
+  "PGA Championship",
+  "Presidents Cup",
+  "Seve Trophy",
+  "Eurasia Cup",
+  "The Royal Trophy",
+  "Ryder Cup"
+];
 const MONTH_ORDER = [
   "January",
   "February",

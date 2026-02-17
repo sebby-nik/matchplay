@@ -250,7 +250,8 @@ p {
   border-color: #1f4e93;
 }
 
-.schedule__card.winner-international {
+.schedule__card.winner-international,
+.schedule__card.winner-asia {
   border-width: 3px;
   border-color: #1d1f22;
 }

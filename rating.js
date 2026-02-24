@@ -73,6 +73,10 @@ const FIXED_LEADER_NAME = "Kevin Kisner";
 const CALIBRATION_BIN = 25;
 const CALIBRATION_MIN_MATCHES = 8;
 const CALIBRATION_PRIOR = 1;
+const MOV_MARGIN_CAP = 10;
+const MOV_MULTIPLIER_MIN = 0.75;
+const MOV_MULTIPLIER_MAX = 2.0;
+const MOV_NEUTRAL_SCORES = new Set(["ret", "wd", "won", "by default", "conceded"]);
 
 let allMatches = [];
 let allPlayers = [];
@@ -266,6 +270,62 @@ const sortMatches = (matches) =>
 const expectedScore = (rating, opponentRating) =>
   1 / (1 + Math.pow(10, (opponentRating - rating) / 400));
 
+const normalizeScoreText = (value) =>
+  (value || "")
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, " ");
+
+const parseMarginFromScore = (scoreText) => {
+  const score = normalizeScoreText(scoreText);
+  if (!score) return { margin: null, kind: "unknown" };
+  if (score === "halved") return { margin: 0, kind: "halved" };
+  if (MOV_NEUTRAL_SCORES.has(score)) return { margin: null, kind: "special" };
+
+  if (/^\d+h$/.test(score)) {
+    return { margin: 1, kind: "playoff_holes" };
+  }
+
+  const andMatch = score.match(/^(\d+)\s*(?:&|and)\s*(\d+)$/);
+  if (andMatch) {
+    return { margin: Number(andMatch[1]), kind: "and" };
+  }
+
+  const andUpMatch = score.match(/^(\d+)\s+and\s+up$/);
+  if (andUpMatch) {
+    return { margin: Number(andUpMatch[1]), kind: "up" };
+  }
+
+  const upMatch = score.match(/^(\d+)\s*-?\s*up(?:\s*\(\d+\))?$/);
+  if (upMatch) {
+    return { margin: Number(upMatch[1]), kind: "up" };
+  }
+
+  return { margin: null, kind: "unknown" };
+};
+
+const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
+const computeMovMultiplier = (result, scoreText, playerRating, opponentRating) => {
+  if (result === "halved") return 1;
+
+  const parsed = parseMarginFromScore(scoreText);
+  if (!Number.isFinite(parsed.margin) || parsed.margin <= 0) {
+    return 1;
+  }
+
+  const margin = clamp(parsed.margin, 1, MOV_MARGIN_CAP);
+  const winnerRating = result === "win" ? playerRating : opponentRating;
+  const loserRating = result === "win" ? opponentRating : playerRating;
+  const winnerDelta = winnerRating - loserRating;
+  const rawMultiplier = Math.log(margin + 1) * (2.2 / (winnerDelta * 0.001 + 2.2));
+
+  if (!Number.isFinite(rawMultiplier) || rawMultiplier <= 0) {
+    return 1;
+  }
+  return clamp(rawMultiplier, MOV_MULTIPLIER_MIN, MOV_MULTIPLIER_MAX);
+};
+
 const getCalibrationBin = (delta) => Math.round(delta / CALIBRATION_BIN) * CALIBRATION_BIN;
 
 const initCalibration = () => ({
@@ -396,9 +456,10 @@ const computeRatings = (matches) => {
     const playerBefore = player.rating;
     const opponentBefore = opponent.rating;
     recordCalibration(calibration, player.rating - opponent.rating, match.result);
+    const movMultiplier = computeMovMultiplier(match.result, match.score, player.rating, opponent.rating);
 
-    player.rating = player.rating + playerK * (score - playerExpected);
-    opponent.rating = opponent.rating + opponentK * ((1 - score) - opponentExpected);
+    player.rating = player.rating + playerK * movMultiplier * (score - playerExpected);
+    opponent.rating = opponent.rating + opponentK * movMultiplier * ((1 - score) - opponentExpected);
 
     player.matches += 1;
     opponent.matches += 1;

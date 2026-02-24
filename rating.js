@@ -69,7 +69,7 @@ const ROUND_ORDER = [
 
 const BASE_RATING = 1000;
 const YEAR_DECAY = 0.99;
-const FIXED_LEADER_NAME = "Matt Kuchar";
+const FIXED_LEADER_NAME = "Rory McIlroy";
 const CALIBRATION_BIN = 25;
 const CALIBRATION_MIN_MATCHES = 8;
 const CALIBRATION_PRIOR = 1;

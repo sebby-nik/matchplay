@@ -75,7 +75,7 @@ const CALIBRATION_MIN_MATCHES = 8;
 const CALIBRATION_PRIOR = 1;
 const MOV_MARGIN_CAP = 10;
 const MOV_MULTIPLIER_MIN = 0.75;
-const MOV_MULTIPLIER_MAX = 2.0;
+const MOV_MULTIPLIER_MAX = 1.8;
 const MOV_NEUTRAL_SCORES = new Set(["ret", "wd", "won", "by default", "conceded"]);
 
 let allMatches = [];

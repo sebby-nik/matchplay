@@ -1905,22 +1905,6 @@ input[type="range"] {
   font-weight: 600;
 }
 
-.lineal-card__subtitle {
-  min-height: 1.5rem;
-  margin: 0.15rem 0 0.85rem;
-}
-
-.lineal-card__subtitle span {
-  display: inline-flex;
-  align-items: center;
-  background: rgba(17, 24, 39, 0.12);
-  color: #111827;
-  padding: 0.35rem 0.6rem;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
 .lineal-card__meta {
   color: inherit;
   font-size: 0.95rem;

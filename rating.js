@@ -27,7 +27,6 @@ const controlsPanelClose = document.getElementById("controlsPanelClose");
 const tableHeaders = document.querySelectorAll(".rank-table th[data-sort]");
 const ratingLeaderName = document.getElementById("ratingLeaderName");
 const ratingLeaderRating = document.getElementById("ratingLeaderRating");
-const ratingLeaderSubtitle = document.getElementById("ratingLeaderSubtitle");
 const ratingLeaderMeta = document.getElementById("ratingLeaderMeta");
 const ratingLeaderStats = document.getElementById("ratingLeaderStats");
 
@@ -861,7 +860,6 @@ const updateLeaderCard = (player) => {
   if (!player) {
     ratingLeaderName.textContent = "—";
     ratingLeaderRating.textContent = "Rating —";
-    if (ratingLeaderSubtitle) ratingLeaderSubtitle.innerHTML = "";
     ratingLeaderMeta.textContent = "";
     ratingLeaderStats.innerHTML = "";
     return;
@@ -870,11 +868,9 @@ const updateLeaderCard = (player) => {
   const pointsPerMatch = player.matches > 0 ? (player.wins + player.draws * 0.5) / player.matches : 0;
   ratingLeaderName.textContent = player.name;
   ratingLeaderRating.textContent = `Rating ${Math.round(player.rating)}`;
-  if (ratingLeaderSubtitle) {
-    ratingLeaderSubtitle.innerHTML = `<span>Peak ${Math.round(player.peak)}</span>`;
-  }
   ratingLeaderMeta.textContent = `${player.matches} matches · ${player.wins}-${player.draws}-${player.losses} W-D-L`;
   ratingLeaderStats.innerHTML = `
+    <span>Peak ${Math.round(player.peak)}</span>
     <span>PPM ${pointsPerMatch.toFixed(2)}</span>
   `;
 };

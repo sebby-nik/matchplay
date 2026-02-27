@@ -116,18 +116,21 @@
           <details class="faq-item" open>
             <summary>Which matches are included in the rankings?</summary>
             <p>
-              Singles matchplay results from the Ryder Cup (since 1927), Presidents Cup (since 1994), and WGC Match Play (since 1999)
-              are included. Foursome and four-ball formats are currently excluded but will be added at a later date.
+              The archive includes singles matchplay results from Ryder Cup, Presidents Cup, WGC Match Play,
+              Seve Trophy, Eurasia Cup, The Royal Trophy, Paul Lawrie Match Play, the PGA Championship
+              matchplay era (1916-1957), and the 1904 Olympic individual matchplay event. Team formats
+              like foursomes and fourballs are excluded.
             </p>
           </details>
           <details class="faq-item">
             <summary>How are player ratings calculated?</summary>
             <p>
-              Ratings are calculated using an Elo-style system. Every new player starts at a rating of 1000,
-              and then gains or loses points after each match based on the result and the difference between
-              their rating and their opponent's rating. This ensures that strength of schedule is taken into
-              account. There is also a K factor which increases the amount of points new players can earn, 
-              and a decay which means inactive players' ratings slowly drop.
+              Ratings use an Elo-style model. Every player starts at 1000. Matches are processed in
+              chronological order, and expected result is calculated from rating difference. Win/draw/loss
+              are scored as 1/0.5/0, with K-factor by experience (40 for first 10 matches, 30 for 10-29 matches,
+              then 20). Match score margin (for example 1 up vs 6 & 5) adjusts rating movement via a capped
+              multiplier, and ratings decay slightly each new year toward baseline (0.99). Filters on the page
+              change display only; ratings are always calculated from the full dataset.
             </p>
           </details>
           <details class="faq-item">
@@ -147,22 +150,22 @@
           <details class="faq-item">
             <summary>Why do some players have fewer matches?</summary>
             <p>
-              The archive focuses on singles matchplay events only, so players who primarily
-              competed in team formats or in different eras may have fewer recorded matches.
+              Match totals depend on who appeared in singles matchplay events captured in the archive.
+              Players from eras or tours with fewer recorded events will naturally have fewer matches.
             </p>
           </details>
           <details class="faq-item">
             <summary>How often is the data updated?</summary>
             <p>
-              The archive is updated after each new matchplay event. We publish updates as new
-              results become available and verified.
+              Updates are manual and continuous. New events and historical corrections are added
+              after results are sourced and verified.
             </p>
           </details>
           <details class="faq-item">
             <summary>Can I compare two players head-to-head?</summary>
             <p>
-              Head-to-head comparisons are in progress. For now, use player filters to
-              review individual match lists and records.
+              Not in a dedicated tool at the moment. For now, use Player Records and table filters
+              to review each player's match list and outcomes.
             </p>
           </details>
           <details class="faq-item">
@@ -182,10 +185,9 @@
           <details class="faq-item">
             <summary>Where does the data come from?</summary>
             <p>
-              The dataset is compiled from official event results and curated to align names,
-              rounds, and scores across competitions. A range of sources from Wikipedia to 
-              the PGA Tour to the Ryder Cup are used. They have been compiled with the help
-              of AI tools but always sense checked by a Human before being published here.
+              The dataset is compiled from official event records and historical result sources,
+              then manually curated to standardize player names, rounds, scores, and countries
+              across events. Entries are reviewed before publication.
             </p>
           </details>
         </div>

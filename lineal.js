@@ -10,6 +10,7 @@ const linealChampionRecord = document.getElementById("linealChampionRecord");
 
 const EVENT_ORDER = [
   "WGC Match Play",
+  "Paul Lawrie Match Play",
   "Olympics",
   "PGA Championship",
   "Presidents Cup",

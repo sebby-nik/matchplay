@@ -124,6 +124,7 @@
         "Ryder Cup": "assets/ryder-cup-logo.png",
         "Presidents Cup": "assets/presidents-cup-logo.png",
         "WGC Match Play": "assets/wgc-matchplay-logo.png",
+        "Paul Lawrie Match Play": "assets/paul-lawrie-match-play-logo.png",
         "Seve Trophy": "assets/seve-trophy-logo.png",
         "The Royal Trophy": "assets/royal-trophy-logo.png",
         "PGA Championship": "assets/pga-champ-logo.png",
@@ -327,6 +328,18 @@
         2018: "Glenmarie Golf and Country Club, Shah Alam, Selangor, Malaysia"
       };
 
+      const paulLawrieMatchPlayDates = {
+        2015: "Jul 31-Aug 2, 2015"
+      };
+
+      const paulLawrieMatchPlayVenues = {
+        2015: "Murcar Links, Aberdeen, Scotland"
+      };
+
+      const paulLawrieMatchPlayWinners = {
+        2015: "Kiradech Aphibarnrat"
+      };
+
       const wgcMatchPlayWinners = {
         1999: "Jeff Maggert",
         2000: "Darren Clarke",
@@ -417,7 +430,8 @@
         "Steve Stricker": "https://commons.wikimedia.org/wiki/Special:FilePath/Steve_Stricker.jpg",
         "Darren Clarke": "https://commons.wikimedia.org/wiki/Special:FilePath/DarrenClarke.jpg",
         "Jeff Maggert": "assets/winner-placeholder.svg",
-        "Jim Barnes": "assets/winner-placeholder.svg"
+        "Jim Barnes": "assets/winner-placeholder.svg",
+        "Kiradech Aphibarnrat": "assets/winner-placeholder.svg"
       };
 
       const wgcMatchPlayDates = {
@@ -736,6 +750,7 @@
             (item.event === "Seve Trophy" ? seveTrophyDates[item.year] : "") ||
             (item.event === "The Royal Trophy" ? royalTrophyDates[item.year] : "") ||
             (item.event === "Eurasia Cup" ? eurasiaCupDates[item.year] : "") ||
+            (item.event === "Paul Lawrie Match Play" ? paulLawrieMatchPlayDates[item.year] : "") ||
             (item.event === "WGC Match Play" ? wgcMatchPlayDates[item.year] : "") ||
             (item.event === "PGA Championship" ? pgaChampionshipDates[item.year] : "") ||
             (item.event === "Olympics" ? olympicsDates[item.year] : "") ||
@@ -747,6 +762,7 @@
             (item.event === "Seve Trophy" ? seveTrophyVenues[item.year] : "") ||
             (item.event === "The Royal Trophy" ? royalTrophyVenues[item.year] : "") ||
             (item.event === "Eurasia Cup" ? eurasiaCupVenues[item.year] : "") ||
+            (item.event === "Paul Lawrie Match Play" ? paulLawrieMatchPlayVenues[item.year] : "") ||
             (item.event === "WGC Match Play" ? wgcMatchPlayVenues[item.year] : "") ||
             (item.event === "PGA Championship" ? pgaChampionshipVenues[item.year] : "") ||
             (item.event === "Olympics" ? olympicsVenues[item.year] : "") ||
@@ -755,6 +771,7 @@
           const winnerLabel = winnerMap[item.event]?.[item.year];
           const playerWinner =
             (item.event === "WGC Match Play" ? wgcMatchPlayWinners[item.year] : null) ||
+            (item.event === "Paul Lawrie Match Play" ? paulLawrieMatchPlayWinners[item.year] : null) ||
             (item.event === "PGA Championship" ? pgaChampionshipWinners[item.year] : null) ||
             (item.event === "Olympics" ? olympicsWinners[item.year] : null);
           const winnerAsset = playerWinner

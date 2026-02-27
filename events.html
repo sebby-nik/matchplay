@@ -124,6 +124,8 @@
         "Ryder Cup": "assets/ryder-cup-logo.png",
         "Presidents Cup": "assets/presidents-cup-logo.png",
         "WGC Match Play": "assets/wgc-matchplay-logo.png",
+        "The World Match Play Championship": "assets/world-match-play-championship-logo.png",
+        "World Match Play Championship": "assets/world-match-play-championship-logo.png",
         "Paul Lawrie Match Play": "assets/paul-lawrie-match-play-logo.png",
         "Seve Trophy": "assets/seve-trophy-logo.png",
         "The Royal Trophy": "assets/royal-trophy-logo.png",
@@ -334,16 +336,28 @@
         2017: "Aug 17-20, 2017"
       };
 
+      const worldMatchPlayChampionshipDates = {
+        1964: "Oct 9-11, 1964"
+      };
+
       const paulLawrieMatchPlayVenues = {
         2015: "Murcar Links, Aberdeen, Scotland",
         2016: "Archerfield Links, North Berwick, Scotland",
         2017: "Bad Griesbach, Bad Griesbach, Germany"
       };
 
+      const worldMatchPlayChampionshipVenues = {
+        1964: "Wentworth Club (West Course), Virginia Water, England"
+      };
+
       const paulLawrieMatchPlayWinners = {
         2015: "Kiradech Aphibarnrat",
         2016: "Anthony Wall",
         2017: "Adrián Otaegui"
+      };
+
+      const worldMatchPlayChampionshipWinners = {
+        1964: "Arnold Palmer"
       };
 
       const wgcMatchPlayWinners = {
@@ -776,6 +790,8 @@
           const card = document.createElement("article");
           const logo = logoMap[item.event];
           card.className = "schedule__card schedule__card--logo";
+          const isWorldMatchPlayChampionship =
+            item.event === "The World Match Play Championship" || item.event === "World Match Play Championship";
 
           const dateLabel =
             item.dateLabel ||
@@ -785,6 +801,7 @@
             (item.event === "The Royal Trophy" ? royalTrophyDates[item.year] : "") ||
             (item.event === "Eurasia Cup" ? eurasiaCupDates[item.year] : "") ||
             (item.event === "Paul Lawrie Match Play" ? paulLawrieMatchPlayDates[item.year] : "") ||
+            (isWorldMatchPlayChampionship ? worldMatchPlayChampionshipDates[item.year] : "") ||
             (item.event === "WGC Match Play" ? wgcMatchPlayDates[item.year] : "") ||
             (item.event === "PGA Championship" ? pgaChampionshipDates[item.year] : "") ||
             (item.event === "Olympics" ? olympicsDates[item.year] : "") ||
@@ -797,6 +814,7 @@
             (item.event === "The Royal Trophy" ? royalTrophyVenues[item.year] : "") ||
             (item.event === "Eurasia Cup" ? eurasiaCupVenues[item.year] : "") ||
             (item.event === "Paul Lawrie Match Play" ? paulLawrieMatchPlayVenues[item.year] : "") ||
+            (isWorldMatchPlayChampionship ? worldMatchPlayChampionshipVenues[item.year] : "") ||
             (item.event === "WGC Match Play" ? wgcMatchPlayVenues[item.year] : "") ||
             (item.event === "PGA Championship" ? pgaChampionshipVenues[item.year] : "") ||
             (item.event === "Olympics" ? olympicsVenues[item.year] : "") ||
@@ -816,6 +834,7 @@
           const playerWinner =
             (item.event === "WGC Match Play" ? wgcMatchPlayWinners[item.year] : null) ||
             (item.event === "Paul Lawrie Match Play" ? paulLawrieMatchPlayWinners[item.year] : null) ||
+            (isWorldMatchPlayChampionship ? worldMatchPlayChampionshipWinners[item.year] : null) ||
             (item.event === "PGA Championship" ? pgaChampionshipWinners[item.year] : null) ||
             (item.event === "Olympics" ? olympicsWinners[item.year] : null);
           const winnerAsset = playerWinner

@@ -379,8 +379,17 @@ p {
 }
 
 .schedule__countdown {
-  font-size: 0.78rem;
-  color: var(--ink-soft);
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--accent-soft);
+  color: var(--highlight-deep);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   font-weight: 600;
 }
 

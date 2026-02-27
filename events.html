@@ -720,6 +720,34 @@
         });
       };
 
+      const getDaysUntilStart = (dateStart) => {
+        if (typeof dateStart !== "string") return null;
+        const parts = dateStart.split("-");
+        if (parts.length !== 3) return null;
+
+        const year = Number(parts[0]);
+        const monthIndex = Number(parts[1]) - 1;
+        const day = Number(parts[2]);
+        if (
+          Number.isNaN(year) ||
+          Number.isNaN(monthIndex) ||
+          Number.isNaN(day)
+        ) {
+          return null;
+        }
+
+        const today = new Date();
+        const startUtc = Date.UTC(year, monthIndex, day);
+        const todayUtc = Date.UTC(
+          today.getUTCFullYear(),
+          today.getUTCMonth(),
+          today.getUTCDate()
+        );
+        const dayMs = 24 * 60 * 60 * 1000;
+        const daysUntil = Math.ceil((startUtc - todayUtc) / dayMs);
+        return daysUntil >= 0 ? daysUntil : null;
+      };
+
       const renderSchedule = (panelKey, items, emptyMessage, showWinner) => {
         const panel = document.querySelector(`.schedule__panel[data-panel='${panelKey}']`);
         panel.innerHTML = "";
@@ -773,6 +801,16 @@
             (item.event === "PGA Championship" ? pgaChampionshipVenues[item.year] : "") ||
             (item.event === "Olympics" ? olympicsVenues[item.year] : "") ||
             "";
+          const hasScheduledDate = panelKey === "upcoming" && !/tba/i.test(String(dateLabel));
+          const daysUntilStart = hasScheduledDate ? getDaysUntilStart(item.dateStart) : null;
+          let countdownLabel = "";
+          if (daysUntilStart === 0) {
+            countdownLabel = "Starts today";
+          } else if (daysUntilStart === 1) {
+            countdownLabel = "1 day to go";
+          } else if (daysUntilStart !== null) {
+            countdownLabel = `${daysUntilStart} days to go`;
+          }
 
           const winnerLabel = winnerMap[item.event]?.[item.year];
           const playerWinner =
@@ -804,6 +842,7 @@
               <h3>${item.event} ${item.year}</h3>
               <p class="schedule__meta schedule__meta--empty">${venueLabel || "&nbsp;"}</p>
               <div class="schedule__date">${dateLabel}</div>
+              ${countdownLabel ? `<div class="schedule__countdown">${countdownLabel}</div>` : ""}
             </div>
             ${showWinner ? `<div class="schedule__winner">${playerWinner ? `<span class="winner-name">${playerWinner}</span>` : ""}<span class="winner-badge"><img src="${winnerAsset}" alt="${winnerAlt}" /></span></div>` : ""}
           `;

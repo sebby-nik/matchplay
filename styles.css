@@ -378,6 +378,12 @@ p {
   font-weight: 600;
 }
 
+.schedule__countdown {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
 .schedule__meta {
   color: var(--ink-soft);
   margin: 0;

@@ -148,7 +148,62 @@ const ALIASES = {
   "Yang Yong-eun": ["Y.E. Yang"]
 };
 
+const asText = (value, fallback = "") => {
+  if (value === null || value === undefined) return fallback;
+  const text = String(value).trim();
+  return text || fallback;
+};
+
+const asNumber = (value, fallback = 0) => {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : fallback;
+};
+
+const escapeHtml = (value) =>
+  asText(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+const normalizeResult = (value) => {
+  const result = asText(value).toLowerCase();
+  if (["win", "loss", "halved", "not played"].includes(result)) return result;
+  if (["draw", "tie", "tied", "half"].includes(result)) return "halved";
+  return "";
+};
+
+const normalizeMatch = (match) => {
+  if (!match || typeof match !== "object") return null;
+  const player = asText(match.player);
+  const opponent = asText(match.opponent);
+  const year = asNumber(match.year, NaN);
+  const result = normalizeResult(match.result);
+  if (!player || !opponent || !Number.isFinite(year) || !result) return null;
+  return {
+    event: asText(match.event, "Unknown event"),
+    year,
+    round: asText(match.round, "Singles"),
+    player,
+    player_country: asText(match.player_country).toUpperCase(),
+    opponent,
+    opponent_country: asText(match.opponent_country).toUpperCase(),
+    result,
+    score: asText(match.score),
+    month: asText(match.month)
+  };
+};
+
+const normalizeMatches = (data) => {
+  const source = Array.isArray(data?.matches) ? data.matches : [];
+  return source
+    .map(normalizeMatch)
+    .filter((match) => match && match.result !== "not played");
+};
+
 const flagFromCountry = (code) => {
+  code = asText(code);
   if (!code) return "";
   const base = 0x1f1e6;
   return code
@@ -160,6 +215,7 @@ const flagFromCountry = (code) => {
 };
 
 const countryNameFromCode = (code) => {
+  code = asText(code).toUpperCase();
   if (!code) return "";
   const names = {
     US: "United States",
@@ -204,7 +260,7 @@ const countryNameFromCode = (code) => {
 };
 
 const normalizeName = (value) =>
-  value
+  asText(value)
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-zA-Z0-9 ]/g, "")
@@ -238,7 +294,8 @@ const getMonthIndex = (month) => {
 const uniqueMatches = (matches) => {
   const seen = new Set();
   const result = [];
-  matches.forEach((match) => {
+  (Array.isArray(matches) ? matches : []).forEach((match) => {
+    if (!match?.player || !match?.opponent) return;
     const players = [match.player, match.opponent].sort().join(" vs ");
     const key = `${match.event}|${match.year}|${match.round}|${players}|${match.score}`;
     if (seen.has(key)) return;
@@ -252,6 +309,7 @@ const getOpponent = (match, champion) =>
   match.player === champion ? match.opponent : match.player;
 
 const getChampionResult = (match, champion) => {
+  if (!match || !champion) return "";
   if (match.result === "halved") return "Draw";
   const championIsPlayer = match.player === champion;
   const playerWon = match.result === "win";
@@ -272,7 +330,7 @@ const orderMatches = (matches) =>
       if (eventDiff !== 0) return eventDiff;
       const roundDiff = getRoundIndex(a.round) - getRoundIndex(b.round);
       if (roundDiff !== 0) return roundDiff;
-      return a.player.localeCompare(b.player);
+      return asText(a.player).localeCompare(asText(b.player));
     });
 
 const matchPlayers = (match, champion, opponent) => {
@@ -479,44 +537,60 @@ const buildReigns = (timeline, grants, retirements) => {
   return reigns;
 };
 
-const renderChampionCard = (reigns, overallStats, log) => {
-  if (!linealChampionName || !linealChampionMeta || !linealChampionStats || reigns.length === 0) return;
-  const current = reigns[reigns.length - 1];
-  if (siteMetadata?.currentLinealChampion && siteMetadata.currentLinealChampion !== current.champion) {
-    console.warn(
-      `Lineal metadata current champion (${siteMetadata.currentLinealChampion}) differs from computed champion (${current.champion}).`
-    );
-  }
-  linealChampionName.textContent = current.champion;
-  const titleEntry = current.startEntry;
-  const sinceText = titleEntry
-    ? `Champion since defeating ${titleEntry.defeated || titleEntry.opponent} at ${titleEntry.event}`
-    : current.startLabel || "Champion since inaugural grant";
-  linealChampionMeta.textContent = sinceText;
-  if (linealCurrentIntro) {
-    linealCurrentIntro.textContent =
-      siteMetadata?.currentLinealChampionSummary && siteMetadata.currentLinealChampion === current.champion
-        ? siteMetadata.currentLinealChampionSummary
-        : `${current.champion} is the current Lineal Champion. ${sinceText}.`;
-  }
+const getCurrentReign = (reigns, currentChampion) => {
+  if (!Array.isArray(reigns) || !reigns.length || !currentChampion) return null;
+  const latestReign = reigns[reigns.length - 1];
+  if (latestReign?.champion === currentChampion) return latestReign;
+  return [...reigns].reverse().find((reign) => reign.champion === currentChampion) || null;
+};
 
-  const championReigns = reigns.filter((reign) => reign.champion === current.champion);
+const getSinceText = (currentReign) => {
+  if (!currentReign) return "";
+  const titleEntry = currentReign.startEntry;
+  if (titleEntry) {
+    const defeated = titleEntry.defeated || titleEntry.opponent;
+    const eventLabel = [titleEntry.year, titleEntry.event].filter(Boolean).join(" ");
+    const event = eventLabel ? ` at ${eventLabel}` : "";
+    return `Champion since defeating ${defeated}${event}`;
+  }
+  return currentReign.startLabel || "Champion since inaugural grant";
+};
+
+const renderCurrentIntro = (currentChampion, currentReign) => {
+  if (!linealCurrentIntro) return;
+  const sinceText = getSinceText(currentReign);
+  linealCurrentIntro.textContent = `${currentChampion} is the current Lineal Champion. ${sinceText}.`;
+};
+
+const renderChampionCard = (currentChampion, reigns, overallStats, log) => {
+  if (!linealChampionName || !linealChampionMeta || !linealChampionStats) return;
+  const current = getCurrentReign(reigns, currentChampion);
+  if (!current) {
+    renderChampionCardState("Champion unavailable", true);
+    return;
+  }
+  linealChampionName.textContent = currentChampion;
+  const sinceText = getSinceText(current);
+  linealChampionMeta.textContent = sinceText;
+  renderCurrentIntro(currentChampion, current);
+
+  const championReigns = reigns.filter((reign) => reign.champion === currentChampion);
   const reignCount = championReigns.length;
   const championEntries = (log || []).filter(
-    (entry) => entry.championBefore === current.champion || entry.opponent === current.champion
+    (entry) => entry.championBefore === currentChampion || entry.opponent === currentChampion
   );
   const totalMatches = championEntries.length;
   const totalWins = championEntries.filter((entry) => {
-    if (entry.championBefore === current.champion) {
+    if (entry.championBefore === currentChampion) {
       return entry.championResult === "Win";
     }
-    return entry.opponent === current.champion && entry.championResult === "Loss";
+    return entry.opponent === currentChampion && entry.championResult === "Loss";
   }).length;
   const titleWins = championEntries.filter(
-    (entry) => entry.opponent === current.champion && entry.championResult === "Loss"
+    (entry) => entry.opponent === currentChampion && entry.championResult === "Loss"
   ).length;
   const totalDefenses = Math.max(totalWins - titleWins, 0);
-  const overall = overallStats.get(current.champion) || { wins: 0, draws: 0, losses: 0 };
+  const overall = overallStats.get(currentChampion) || { wins: 0, draws: 0, losses: 0 };
   if (linealChampionRecord) {
     linealChampionRecord.textContent = `${overall.wins}-${overall.draws}-${overall.losses}`;
   }
@@ -541,7 +615,11 @@ const renderChampionCardState = (message, isError = false) => {
       ? "Unable to load lineal championship data. Please refresh or try again later."
       : "Building the lineal championship history.";
   }
-  if (linealChampionStats) linealChampionStats.innerHTML = "";
+  if (linealChampionStats) {
+    linealChampionStats.innerHTML = isError
+      ? "<span>Data unavailable</span><span>Lineage preserved when data returns</span>"
+      : "<span>Calculating lineage</span>";
+  }
   if (linealCurrentIntro) linealCurrentIntro.textContent = isError ? "The current champion could not be loaded." : "Loading current champion details.";
 };
 
@@ -587,8 +665,8 @@ const renderChampionsList = (reigns, countryMap) => {
       <div class="lineal-champion__index">${index + 1}</div>
       <div class="lineal-champion__year">${yearMatch}</div>
       <div class="lineal-champion__name">
-        ${flag ? `<span class="lineal-champion__flag" title="${countryName}">${flag}</span>` : ""}
-        <span>${reign.champion}</span>
+        ${flag ? `<span class="lineal-champion__flag" title="${escapeHtml(countryName)}">${flag}</span>` : ""}
+        <span>${escapeHtml(reign.champion)}</span>
       </div>
       <div class="lineal-champion__record">${record}</div>
       <div class="lineal-champion__crowns" aria-label="${reignCount} reigns">${crowns}</div>
@@ -607,18 +685,20 @@ const renderMatchLog = (entries) => {
   entries.forEach((entry, index) => {
     const isStart = index === 0 || entries[index - 1].titleChange;
     const isEnd = entry.titleChange || index === entries.length - 1;
+    const result = asText(entry.championResult, "Draw");
+    const resultClass = result.toLowerCase();
     const row = document.createElement("tr");
-    row.classList.add("lineal-row", "lineal-group-row", `lineal-row--${entry.championResult.toLowerCase()}`);
+    row.classList.add("lineal-row", "lineal-group-row", `lineal-row--${resultClass}`);
     if (isStart) row.classList.add("lineal-group-start");
     if (isEnd) row.classList.add("lineal-group-end");
     row.innerHTML = `
-      <td>${entry.year}</td>
-      <td>${entry.event}</td>
-      <td>${entry.championBefore}</td>
-      <td>${entry.opponent}</td>
-      <td><span class="lineal-result lineal-result--${entry.championResult.toLowerCase()}">${entry.championResult}</span></td>
-      <td>${entry.score || "-"}</td>
-      <td>${entry.round}</td>
+      <td>${escapeHtml(entry.year)}</td>
+      <td>${escapeHtml(entry.event)}</td>
+      <td>${escapeHtml(entry.championBefore)}</td>
+      <td>${escapeHtml(entry.opponent)}</td>
+      <td><span class="lineal-result lineal-result--${resultClass}">${escapeHtml(result)}</span></td>
+      <td>${escapeHtml(entry.score || "-")}</td>
+      <td>${escapeHtml(entry.round)}</td>
     `;
     linealMatches.append(row);
   });
@@ -638,11 +718,11 @@ Promise.all([
     .catch(() => null)
 ])
   .then(([data, metadata]) => {
-    siteMetadata = metadata;
+    siteMetadata = metadata && typeof metadata === "object" ? metadata : null;
     if (lastUpdatedNote && siteMetadata?.lastUpdated) {
       lastUpdatedNote.textContent = `Last updated ${siteMetadata.lastUpdated}.`;
     }
-    const matches = (data.matches || []).filter((match) => match.result !== "not played");
+    const matches = normalizeMatches(data);
     if (matches.length === 0) {
       throw new Error("Lineal data did not include any playable matches");
     }
@@ -676,10 +756,16 @@ Promise.all([
         opponentStats.wins += 1;
       }
     });
-    const { log, grants, retirements } = buildLinealLog(matches);
+    const { log, champion: currentChampion, grants, retirements } = buildLinealLog(matches);
+    if (!currentChampion) {
+      throw new Error("Current lineal champion could not be calculated");
+    }
     const reigns = buildReigns(log, grants, retirements);
+    if (!reigns.length) {
+      throw new Error("Lineal reign history could not be calculated");
+    }
     renderMatchLog(log);
-    renderChampionCard(reigns, overallStats, log);
+    renderChampionCard(currentChampion, reigns, overallStats, log);
     renderChampionsList(reigns, countryMap);
   })
   .catch((error) => {

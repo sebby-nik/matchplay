@@ -426,11 +426,19 @@ p {
   font-weight: 700;
   text-decoration: none;
   color: var(--ink);
+  letter-spacing: 0;
+  white-space: nowrap;
 }
 
 .site-nav__brand img {
   width: 36px;
   height: 36px;
+  display: block;
+  flex: 0 0 auto;
+}
+
+.site-nav__brand span {
+  font-size: 0.95rem;
 }
 
 .site-nav__links {
@@ -541,6 +549,12 @@ p {
     box-shadow: none;
     padding: 0.25rem 0 0.35rem 0.35rem;
     min-width: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .site-nav__brand span {
+    display: none;
   }
 }
 .site-nav__link {

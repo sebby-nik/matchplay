@@ -123,6 +123,11 @@
         (adsbygoogle = window.adsbygoogle || []).push({});
       </script>
     </div>
+    <footer class="footer">
+      <div class="footer__content">
+        <p class="footer__note">Event schedule data. <span id="lastUpdatedNote">Last updated unavailable</span></p>
+      </div>
+    </footer>
 
     <script>
       (() => {
@@ -936,6 +941,30 @@
         }, Promise.reject());
       };
 
+      const formatUpdatedDate = (value) => {
+        if (!value) return "";
+        const [year, month, day] = String(value).split("-").map(Number);
+        if (!year || !month || !day) return "";
+        const date = new Date(Date.UTC(year, month - 1, day));
+        return new Intl.DateTimeFormat("en-GB", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+          timeZone: "UTC"
+        }).format(date);
+      };
+
+      const renderLastUpdatedNote = (metadata) => {
+        const note = document.getElementById("lastUpdatedNote");
+        if (!note) return;
+        const updated = formatUpdatedDate(
+          metadata?.eventsUpdatedAt || metadata?.dataUpdatedAt || metadata?.lastUpdated
+        );
+        note.textContent = updated
+          ? `Last updated: ${updated}`
+          : "Last updated unavailable";
+      };
+
       const normalizeEventsPayload = (payload) => {
         if (!payload || typeof payload !== "object") {
           return { upcomingEvents: [], resultsEvents: [] };
@@ -958,8 +987,12 @@
       let cachedResults = [];
 
 
-      fetchData(["events-data.json", "./events-data.json", "/events-data.json", "data.json", "./data.json", "/data.json"])
-        .then((payload) => {
+      Promise.all([
+        fetchData(["events-data.json", "./events-data.json", "/events-data.json", "data.json", "./data.json", "/data.json"]),
+        fetchData(["site-data.json", "./site-data.json", "/site-data.json"]).catch(() => null)
+      ])
+        .then(([payload, metadata]) => {
+          renderLastUpdatedNote(metadata);
           const { resultsEvents, upcomingEvents } = normalizeEventsPayload(payload);
           cachedResults = sortByDateDesc(resultsEvents.slice());
           cachedUpcoming = sortByDateAsc(upcomingEvents.slice());
@@ -967,6 +1000,7 @@
           renderSchedule("upcoming", cachedUpcoming, "No upcoming events listed yet.", false);
         })
         .catch(() => {
+          renderLastUpdatedNote(null);
           const resultsPanel = document.querySelector(".schedule__panel[data-panel='results']");
           const upcomingPanel = document.querySelector(".schedule__panel[data-panel='upcoming']");
           if (resultsPanel) {

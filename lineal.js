@@ -154,6 +154,30 @@ const asText = (value, fallback = "") => {
   return text || fallback;
 };
 
+const formatUpdatedDate = (value) => {
+  if (!value) return "";
+  const [year, month, day] = String(value).split("-").map(Number);
+  if (!year || !month || !day) return "";
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC"
+  }).format(date);
+};
+
+const getLinealUpdatedDate = () =>
+  formatUpdatedDate(siteMetadata?.linealUpdatedAt || siteMetadata?.dataUpdatedAt || siteMetadata?.lastUpdated);
+
+const renderLastUpdatedNote = () => {
+  if (!lastUpdatedNote) return;
+  const updated = getLinealUpdatedDate();
+  lastUpdatedNote.textContent = updated
+    ? `Last updated: ${updated}`
+    : "Last updated unavailable";
+};
+
 const asNumber = (value, fallback = 0) => {
   const number = Number(value);
   return Number.isFinite(number) ? number : fallback;
@@ -597,7 +621,7 @@ const renderChampionCard = (currentChampion, reigns, overallStats, log) => {
   linealChampionStats.innerHTML = `
     <span>${totalMatches} matches</span>
     <span>${totalDefenses} defenses</span>
-    ${siteMetadata?.lastUpdated ? `<span>Updated ${siteMetadata.lastUpdated}</span>` : ""}
+    ${getLinealUpdatedDate() ? `<span>Updated ${getLinealUpdatedDate()}</span>` : ""}
   `;
 
   const crownEl = document.querySelector(".lineal-card__crown");
@@ -719,9 +743,7 @@ Promise.all([
 ])
   .then(([data, metadata]) => {
     siteMetadata = metadata && typeof metadata === "object" ? metadata : null;
-    if (lastUpdatedNote && siteMetadata?.lastUpdated) {
-      lastUpdatedNote.textContent = `Last updated ${siteMetadata.lastUpdated}.`;
-    }
+    renderLastUpdatedNote();
     const matches = normalizeMatches(data);
     if (matches.length === 0) {
       throw new Error("Lineal data did not include any playable matches");
@@ -770,6 +792,7 @@ Promise.all([
   })
   .catch((error) => {
     const message = error.message || "Unable to load lineal data.";
+    renderLastUpdatedNote();
     renderChampionCardState(message, true);
     renderChampionsListState(message, true);
     renderMatchLogState(message, true);

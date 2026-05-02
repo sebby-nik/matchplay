@@ -130,6 +130,30 @@ const normalize = (value) => {
     .toLowerCase();
 };
 
+const formatUpdatedDate = (value) => {
+  if (!value) return "";
+  const [year, month, day] = String(value).split("-").map(Number);
+  if (!year || !month || !day) return "";
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC"
+  }).format(date);
+};
+
+const getRankingsUpdatedDate = () =>
+  formatUpdatedDate(siteMetadata?.rankingsUpdatedAt || siteMetadata?.dataUpdatedAt || siteMetadata?.lastUpdated);
+
+const renderLastUpdatedNote = () => {
+  if (!lastUpdatedNote) return;
+  const updated = getRankingsUpdatedDate();
+  lastUpdatedNote.textContent = updated
+    ? `Last updated: ${updated}`
+    : "Last updated unavailable";
+};
+
 const asText = (value, fallback = "") => {
   if (value === null || value === undefined) return fallback;
   const text = String(value).trim();
@@ -998,7 +1022,7 @@ const updateLeaderCard = (player, state = "") => {
   ratingLeaderStats.innerHTML = `
     <span>Peak ${peak}</span>
     <span>PPM ${pointsPerMatch.toFixed(2)}</span>
-    ${siteMetadata?.lastUpdated ? `<span>Updated ${siteMetadata.lastUpdated}</span>` : ""}
+    ${getRankingsUpdatedDate() ? `<span>Updated ${getRankingsUpdatedDate()}</span>` : ""}
   `;
 };
 
@@ -1099,9 +1123,7 @@ Promise.all([
 ])
   .then(([data, metadata]) => {
     siteMetadata = metadata && typeof metadata === "object" ? metadata : null;
-    if (lastUpdatedNote && siteMetadata?.lastUpdated) {
-      lastUpdatedNote.textContent = `Last updated ${siteMetadata.lastUpdated}.`;
-    }
+    renderLastUpdatedNote();
     allMatches = normalizeMatches(data);
     if (allMatches.length === 0) {
       throw new Error("Ratings data did not include any playable matches");
@@ -1114,6 +1136,7 @@ Promise.all([
   })
   .catch((error) => {
     if (summary) summary.textContent = "Ratings unavailable";
+    renderLastUpdatedNote();
     updateLeaderCard(null, "error");
     setRatingTableState(error.message || "Unable to load ratings data.", true);
   });

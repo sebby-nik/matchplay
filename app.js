@@ -77,6 +77,30 @@ const normalize = (value) => {
     .toLowerCase();
 };
 
+const formatUpdatedDate = (value) => {
+  if (!value) return "";
+  const [year, month, day] = String(value).split("-").map(Number);
+  if (!year || !month || !day) return "";
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC"
+  }).format(date);
+};
+
+const getRecordsUpdatedDate = () =>
+  formatUpdatedDate(siteMetadata?.recordsUpdatedAt || siteMetadata?.dataUpdatedAt || siteMetadata?.lastUpdated);
+
+const renderLastUpdatedNote = () => {
+  if (!lastUpdatedNote) return;
+  const updated = getRecordsUpdatedDate();
+  lastUpdatedNote.textContent = updated
+    ? `Last updated: ${updated}`
+    : "Last updated unavailable";
+};
+
 const flagFromCountry = (code) => {
   if (!code) return "";
   const base = 0x1f1e6;
@@ -632,9 +656,7 @@ Promise.all([
 ])
   .then(([data, metadata]) => {
     siteMetadata = metadata;
-    if (lastUpdatedNote && siteMetadata?.lastUpdated) {
-      lastUpdatedNote.textContent = `Last updated ${siteMetadata.lastUpdated}.`;
-    }
+    renderLastUpdatedNote();
     allMatches = (data.matches || []).filter((match) => match.result !== "not played");
     if (allMatches.length === 0) {
       throw new Error("Records data did not include any playable matches");
@@ -647,6 +669,7 @@ Promise.all([
   })
   .catch((error) => {
     if (summary) summary.textContent = "Records unavailable";
+    renderLastUpdatedNote();
     setRecordsTableState(error.message || "Unable to load records data.", true);
   });
 

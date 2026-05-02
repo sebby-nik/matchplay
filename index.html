@@ -140,11 +140,14 @@
             <span class="rating-rank-badge" aria-hidden="true">#1</span>
             <p class="lineal-card__label">Top Rated Player</p>
             <div class="lineal-card__title-row">
-              <h2 class="lineal-card__name" id="ratingLeaderName">—</h2>
+              <h2 class="lineal-card__name" id="ratingLeaderName">Ratings loading</h2>
               <span class="lineal-card__record" id="ratingLeaderRating">Rating —</span>
             </div>
-            <div class="lineal-card__meta" id="ratingLeaderMeta"></div>
-            <div class="lineal-card__stats" id="ratingLeaderStats"></div>
+            <div class="lineal-card__meta" id="ratingLeaderMeta">Computing matchplay ratings from the archive.</div>
+            <div class="lineal-card__stats" id="ratingLeaderStats">
+              <span>Singles matchplay only</span>
+              <span>Elo-based ratings</span>
+            </div>
           </div>
           <div class="image-slot image-slot--photo">
             <img
@@ -295,6 +298,6 @@
       </div>
     </footer>
 
-    <script src="rating.js?v=phase1-trust"></script>
+    <script src="rating.js?v=ratings-defensive-states"></script>
   </body>
 </html>

@@ -80,6 +80,12 @@ const MOV_MARGIN_CAP = 10;
 const MOV_MULTIPLIER_MIN = 0.75;
 const MOV_MULTIPLIER_MAX = 1.8;
 const MOV_NEUTRAL_SCORES = new Set(["ret", "wd", "won", "by default", "conceded"]);
+const DEFAULT_LEADER_COPY = {
+  name: "Ratings loading",
+  rating: "Rating —",
+  meta: "Computing matchplay ratings from the archive.",
+  stats: ["Singles matchplay only", "Elo-based ratings"]
+};
 
 let allMatches = [];
 let allPlayers = [];
@@ -124,7 +130,63 @@ const normalize = (value) => {
     .toLowerCase();
 };
 
+const asText = (value, fallback = "") => {
+  if (value === null || value === undefined) return fallback;
+  const text = String(value).trim();
+  return text || fallback;
+};
+
+const asNumber = (value, fallback = 0) => {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : fallback;
+};
+
+const escapeHtml = (value) =>
+  asText(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+const normalizeResult = (value) => {
+  const result = asText(value).toLowerCase();
+  if (["win", "loss", "halved", "not played"].includes(result)) return result;
+  if (["draw", "tie", "tied", "half"].includes(result)) return "halved";
+  return "";
+};
+
+const normalizeMatch = (match) => {
+  if (!match || typeof match !== "object") return null;
+  const player = asText(match.player);
+  const opponent = asText(match.opponent);
+  const year = asNumber(match.year, NaN);
+  const result = normalizeResult(match.result);
+  if (!player || !opponent || !Number.isFinite(year) || !result) return null;
+  return {
+    event: asText(match.event, "Unknown event"),
+    year,
+    round: asText(match.round, "Singles"),
+    player,
+    player_country: asText(match.player_country).toUpperCase(),
+    opponent,
+    opponent_country: asText(match.opponent_country).toUpperCase(),
+    result,
+    score: asText(match.score),
+    points: asNumber(match.points, result === "win" ? 1 : result === "halved" ? 0.5 : 0),
+    month: asText(match.month)
+  };
+};
+
+const normalizeMatches = (data) => {
+  const source = Array.isArray(data?.matches) ? data.matches : [];
+  return source
+    .map(normalizeMatch)
+    .filter((match) => match && match.result !== "not played");
+};
+
 const flagFromCountry = (code) => {
+  code = asText(code);
   if (!code) return "";
   const base = 0x1f1e6;
   return code
@@ -136,6 +198,7 @@ const flagFromCountry = (code) => {
 };
 
 const countryNameFromCode = (code) => {
+  code = asText(code).toUpperCase();
   if (!code) return "";
   const names = {
     US: "United States",
@@ -186,12 +249,12 @@ const renderSummaryChips = (items, type) => {
   const extra = items.length - visible.length;
   const chips = visible
     .map(
-      (item) => `<span class="multi-pill" title="${item.replace(/\"/g, "&quot;")}">${item}</span>`
+      (item) => `<span class="multi-pill" title="${escapeHtml(item)}">${escapeHtml(item)}</span>`
     )
     .join("");
   const more =
     extra > 0
-      ? `<span class="multi-pill multi-pill--more" title="${items.join(", ").replace(/\"/g, "&quot;")}">+${extra}</span>`
+      ? `<span class="multi-pill multi-pill--more" title="${escapeHtml(items.join(", "))}">+${extra}</span>`
       : "";
   return `
     <span class="multi-summary__chips">${chips}${more}</span>
@@ -200,7 +263,8 @@ const renderSummaryChips = (items, type) => {
 };
 
 const renderSparkline = (values, className = "", label = "") => {
-  if (!values || values.length < 2) return "";
+  values = Array.isArray(values) ? values.filter(Number.isFinite) : [];
+  if (values.length < 2) return "";
   const tail = values.slice(-10);
   const slope = tail[tail.length - 1] - tail[0];
   const trendClass = slope > 1 ? "sparkline--up" : slope < -1 ? "sparkline--down" : "sparkline--flat";
@@ -248,6 +312,7 @@ const uniqueMatches = (matches) => {
   const seen = new Set();
   const result = [];
   matches.forEach((match) => {
+    if (!match?.player || !match?.opponent) return;
     const players = [match.player, match.opponent].sort().join(" vs ");
     const key = `${match.event}|${match.year}|${match.round}|${players}|${match.score}`;
     if (seen.has(key)) return;
@@ -258,7 +323,7 @@ const uniqueMatches = (matches) => {
 };
 
 const sortMatches = (matches) =>
-  uniqueMatches(matches)
+  uniqueMatches(Array.isArray(matches) ? matches : [])
     .slice()
     .sort((a, b) => {
       if (a.year !== b.year) return a.year - b.year;
@@ -268,7 +333,7 @@ const sortMatches = (matches) =>
       if (eventDiff !== 0) return eventDiff;
       const roundDiff = getRoundIndex(a.round) - getRoundIndex(b.round);
       if (roundDiff !== 0) return roundDiff;
-      return a.player.localeCompare(b.player);
+      return asText(a.player).localeCompare(asText(b.player));
     });
 
 const expectedScore = (rating, opponentRating) =>
@@ -399,6 +464,8 @@ const applyYearDecay = (ratings) => {
 };
 
 const ensurePlayer = (ratings, name, country) => {
+  name = asText(name);
+  if (!name) return null;
   if (!ratings.has(name)) {
     ratings.set(name, {
       name,
@@ -420,6 +487,7 @@ const ensurePlayer = (ratings, name, country) => {
 };
 
 const addMatchToPlayer = (player, match, opponent, result, delta) => {
+  if (!player || !match) return;
   player.matchList.push({
     event: match.event,
     year: match.year,
@@ -438,6 +506,7 @@ const computeRatings = (matches) => {
   let currentYear = null;
 
   ordered.forEach((match) => {
+    if (!match.player || !match.opponent) return;
     if (currentYear === null) currentYear = match.year;
     if (match.year !== currentYear) {
       applyYearDecay(ratings);
@@ -446,6 +515,7 @@ const computeRatings = (matches) => {
 
     const player = ensurePlayer(ratings, match.player, match.player_country);
     const opponent = ensurePlayer(ratings, match.opponent, match.opponent_country);
+    if (!player || !opponent) return;
 
     const playerExpected = expectedScore(player.rating, opponent.rating);
     const opponentExpected = expectedScore(opponent.rating, player.rating);
@@ -499,7 +569,7 @@ const computeRatings = (matches) => {
     window.matchplayOutcomeCalibration = outcomeCalibration;
     window.getOutcomeProbabilityFromRatings = getOutcomeProbabilityFromRatings;
   }
-  return Array.from(ratings.values());
+  return Array.from(ratings.values()).filter((player) => player.matches > 0 && Number.isFinite(player.rating));
 };
 
 const buildRatingsCacheKey = () => {
@@ -534,8 +604,9 @@ const formatDelta = (delta) => {
 };
 
 const getDisplayMatchList = (player) => {
-  if (selectedEvents.size === 0) return player.matchList;
-  return player.matchList.filter((match) => selectedEvents.has(match.event));
+  const matchList = Array.isArray(player?.matchList) ? player.matchList : [];
+  if (selectedEvents.size === 0) return matchList;
+  return matchList.filter((match) => selectedEvents.has(match.event));
 };
 
 const withDisplayStats = (player) => {
@@ -577,13 +648,13 @@ const renderPlayerDetailContent = (player) => {
       return `
         <div class="match-row ${resultClass}">
           <div>
-            <strong>${match.event} ${match.year}</strong> — ${match.opponent}
-            <div class="meta">${match.round || "Singles"}</div>
+            <strong>${escapeHtml(match.event)} ${escapeHtml(match.year)}</strong> — ${escapeHtml(match.opponent)}
+            <div class="meta">${escapeHtml(match.round || "Singles")}</div>
           </div>
           <div>
             <span class="rating-delta ${deltaClass}">${deltaValue}</span>
             <div class="match-result">${label}</div>
-            <span class="meta">${match.score || ""}</span>
+            <span class="meta">${escapeHtml(match.score || "")}</span>
           </div>
         </div>
       `;
@@ -592,7 +663,7 @@ const renderPlayerDetailContent = (player) => {
 
   return `
     <div class="player-detail">
-      <h3>${flag ? `${flag} ` : ""}${player.name}</h3>
+      <h3>${flag ? `${flag} ` : ""}${escapeHtml(player.name)}</h3>
       <div class="detail-meta">${player.displayMatches ?? player.matches} matches • ${player.displayWins ?? player.wins}-${player.displayDraws ?? player.draws}-${player.displayLosses ?? player.losses}</div>
       <div class="match-list">${matches || "<p class=\"muted\">No matches yet.</p>"}</div>
     </div>
@@ -623,6 +694,7 @@ const renderPlayerDetail = (player, row) => {
 const renderTable = (players) => {
   if (!ratingBody) return;
   ratingBody.innerHTML = "";
+  players = Array.isArray(players) ? players.filter(Boolean) : [];
 
   if (players.length === 0) {
     setRatingTableState("No players match the current filters.");
@@ -633,15 +705,17 @@ const renderTable = (players) => {
     const row = document.createElement("tr");
     row.dataset.player = player.name;
     const flag = flagFromCountry(player.country);
+    const rating = Number.isFinite(player.rating) ? Math.round(player.rating) : "—";
+    const peak = Number.isFinite(player.peak) ? Math.round(player.peak) : "—";
     row.innerHTML = `
-      <td>${player.rank}</td>
-      <td>${player.name}${flag ? ` <span class="flag">${flag}</span>` : ""}</td>
-      <td>${Math.round(player.rating)}</td>
+      <td>${player.rank || "—"}</td>
+      <td>${escapeHtml(player.name)}${flag ? ` <span class="flag">${flag}</span>` : ""}</td>
+      <td>${rating}</td>
       <td>${player.displayMatches ?? player.matches}</td>
       <td>${player.displayWins ?? player.wins}-${player.displayDraws ?? player.draws}-${player.displayLosses ?? player.losses}</td>
-      <td title="Peak rating: ${Math.round(player.peak)}">
+      <td title="Peak rating: ${peak}">
         <div class="trend-cell">
-          ${renderSparkline(player.history, "trend-sparkline", `Peak rating: ${Math.round(player.peak)}`)}
+          ${renderSparkline(player.history, "trend-sparkline", `Peak rating: ${peak}`)}
         </div>
       </td>
     `;
@@ -651,20 +725,20 @@ const renderTable = (players) => {
 };
 
 const sortPlayers = (players) => {
-  const sorted = players.slice().sort((a, b) => {
+  const sorted = (Array.isArray(players) ? players : []).slice().sort((a, b) => {
     const dir = currentSort.direction === "asc" ? 1 : -1;
-    if (currentSort.key === "name") return a.name.localeCompare(b.name) * dir;
+    if (currentSort.key === "name") return asText(a.name).localeCompare(asText(b.name)) * dir;
     if (currentSort.key === "matches") {
       return ((a.displayMatches ?? a.matches) - (b.displayMatches ?? b.matches)) * dir;
     }
-    if (currentSort.key === "trend") return (a.peak - b.peak) * dir;
+    if (currentSort.key === "trend") return (asNumber(a.peak) - asNumber(b.peak)) * dir;
     if (currentSort.key === "wdl") {
       const aRecord = (a.displayWins ?? a.wins) * 3 + (a.displayDraws ?? a.draws);
       const bRecord = (b.displayWins ?? b.wins) * 3 + (b.displayDraws ?? b.draws);
       return (aRecord - bRecord) * dir;
     }
-    if (currentSort.key === "rank") return (a.rank - b.rank) * dir;
-    return (a.rating - b.rating) * dir;
+    if (currentSort.key === "rank") return (asNumber(a.rank) - asNumber(b.rank)) * dir;
+    return (asNumber(a.rating) - asNumber(b.rating)) * dir;
   });
   return sorted;
 };
@@ -680,6 +754,7 @@ const updateSortIndicators = () => {
 };
 
 const updateEventSummary = () => {
+  if (!eventSummary) return;
   if (selectedEvents.size === 0) {
     eventSummary.textContent = "All events";
     return;
@@ -689,6 +764,7 @@ const updateEventSummary = () => {
 };
 
 const syncEventCheckboxes = () => {
+  if (!eventFilter || !eventSelectAll) return;
   eventFilter.querySelectorAll("input[type=\"checkbox\"]").forEach((cb) => {
     if (cb === eventSelectAll) return;
     cb.checked = selectedEvents.has(cb.value);
@@ -698,6 +774,7 @@ const syncEventCheckboxes = () => {
 
 
 const updateCountrySummary = () => {
+  if (!countrySummary) return;
   if (selectedCountries.size === 0) {
     countrySummary.textContent = "All nationalities";
     return;
@@ -711,6 +788,7 @@ const updateCountrySummary = () => {
 };
 
 const syncCountryCheckboxes = () => {
+  if (!countryFilter || !countrySelectAll) return;
   countryFilter.querySelectorAll("input[type=\"checkbox\"]").forEach((cb) => {
     if (cb === countrySelectAll) return;
     cb.checked = selectedCountries.has(cb.value);
@@ -747,7 +825,7 @@ const renderFilterChips = () => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "filter-chip";
-    button.innerHTML = `<span>${chip.label}</span><span class="filter-chip__close">×</span>`;
+    button.innerHTML = `<span>${escapeHtml(chip.label)}</span><span class="filter-chip__close">×</span>`;
     button.addEventListener("click", () => {
       if (chip.type === "event") {
         selectedEvents.delete(chip.value);
@@ -771,7 +849,7 @@ const renderPlayerChips = () => {
   selectedPlayers.forEach((name) => {
     const chip = document.createElement("span");
     chip.className = "player-chip";
-    chip.innerHTML = `<span>${name}</span><button type="button" aria-label="Remove ${name}">×</button>`;
+    chip.innerHTML = `<span>${escapeHtml(name)}</span><button type="button" aria-label="Remove ${escapeHtml(name)}">×</button>`;
     chip.querySelector("button").addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
@@ -785,7 +863,7 @@ const renderPlayerChips = () => {
 
 const showPlayerSuggestions = (query) => {
   if (!playerSuggestions) return;
-  const source = availablePlayers.length ? availablePlayers : allPlayers;
+  const source = (availablePlayers.length ? availablePlayers : allPlayers).filter(Boolean);
   if (!query) {
     playerSuggestions.classList.remove("is-open");
     playerSuggestions.innerHTML = "";
@@ -801,7 +879,7 @@ const showPlayerSuggestions = (query) => {
     return;
   }
   playerSuggestions.innerHTML = matches
-    .map((name) => `<div class="player-suggestion" data-name="${name}">${name}</div>`)
+    .map((name) => `<div class="player-suggestion" data-name="${escapeHtml(name)}">${escapeHtml(name)}</div>`)
     .join("");
   playerSuggestions.classList.add("is-open");
 };
@@ -810,53 +888,69 @@ const addPlayerSelection = (name) => {
   if (!name) return;
   selectedPlayers.add(name);
   renderPlayerChips();
-  searchInput.value = "";
+  if (searchInput) searchInput.value = "";
   showPlayerSuggestions("");
   applyFilters();
 };
 
 const applyFilters = () => {
-  const minMatches = Number(minMatchesInput.value || 1);
-  const ratings = getCachedRatings();
-  const currentYear = new Date().getFullYear();
-  const activeCutoff = currentYear - 5;
+  try {
+    const minMatches = asNumber(minMatchesInput?.value, 1);
+    const ratings = getCachedRatings();
+    const currentYear = new Date().getFullYear();
+    const activeCutoff = currentYear - 5;
 
-  const eventScopedPlayers = ratings.map(withDisplayStats);
-  const filteredPlayers = eventScopedPlayers.filter((player) => {
-    if (selectedEvents.size > 0 && player.displayMatches === 0) {
-      return false;
+    if (!ratings.length) {
+      if (summary) summary.textContent = "No ratings available";
+      updateLeaderCard(null, "empty");
+      renderFilterChips();
+      renderPlayerChips();
+      setRatingTableState("No ratings are available yet.");
+      return;
     }
-    if (selectedCountries.size > 0 && !selectedCountries.has(player.country)) {
-      return false;
-    }
-    return activeOnlyToggle && activeOnlyToggle.checked ? player.lastYear >= activeCutoff : true;
-  });
 
-  const minFiltered = filteredPlayers.filter(
-    (player) => (player.displayMatches ?? player.matches) >= minMatches
-  );
-  const baseRanked = minFiltered
-    .slice()
-    .sort((a, b) => b.rating - a.rating)
-    .map((player, index) => ({ ...player, rank: index + 1 }));
+    const eventScopedPlayers = ratings.map(withDisplayStats);
+    const filteredPlayers = eventScopedPlayers.filter((player) => {
+      if (selectedEvents.size > 0 && player.displayMatches === 0) {
+        return false;
+      }
+      if (selectedCountries.size > 0 && !selectedCountries.has(player.country)) {
+        return false;
+      }
+      return activeOnlyToggle && activeOnlyToggle.checked ? player.lastYear >= activeCutoff : true;
+    });
 
-  const sorted = sortPlayers(baseRanked);
-  availablePlayers = baseRanked.map((player) => player.name);
-  const searched =
-    selectedPlayers.size > 0
-      ? sorted.filter((player) => selectedPlayers.has(player.name))
-      : sorted;
+    const minFiltered = filteredPlayers.filter(
+      (player) => (player.displayMatches ?? player.matches) >= minMatches
+    );
+    const baseRanked = minFiltered
+      .slice()
+      .sort((a, b) => asNumber(b.rating) - asNumber(a.rating))
+      .map((player, index) => ({ ...player, rank: index + 1 }));
 
-  currentPlayers = searched;
-  if (summary) summary.textContent = `${searched.length} players`;
-  updateLeaderCard(baseRanked[0] || searched[0] || null);
-  renderFilterChips();
-  renderPlayerChips();
-  renderTable(searched);
-  updateSortIndicators();
+    const sorted = sortPlayers(baseRanked);
+    availablePlayers = baseRanked.map((player) => player.name).filter(Boolean);
+    const searched =
+      selectedPlayers.size > 0
+        ? sorted.filter((player) => selectedPlayers.has(player.name))
+        : sorted;
 
-  document.querySelectorAll(".detail-row").forEach((node) => node.remove());
-  document.querySelectorAll("tr.is-open").forEach((node) => node.classList.remove("is-open"));
+    currentPlayers = searched;
+    if (summary) summary.textContent = `${searched.length} players`;
+    updateLeaderCard(baseRanked[0] || searched[0] || null);
+    renderFilterChips();
+    renderPlayerChips();
+    renderTable(searched);
+    updateSortIndicators();
+
+    document.querySelectorAll(".detail-row").forEach((node) => node.remove());
+    document.querySelectorAll("tr.is-open").forEach((node) => node.classList.remove("is-open"));
+  } catch (error) {
+    console.warn("Unable to render ratings", error);
+    if (summary) summary.textContent = "Ratings unavailable";
+    updateLeaderCard(null, "error");
+    setRatingTableState("Unable to calculate ratings from the available data.", true);
+  }
 };
 
 const setRatingTableState = (message, isError = false) => {
@@ -871,30 +965,45 @@ const setRatingTableState = (message, isError = false) => {
 const updateLeaderCard = (player, state = "") => {
   if (!ratingLeaderName || !ratingLeaderRating || !ratingLeaderMeta || !ratingLeaderStats) return;
   if (!player) {
-    ratingLeaderName.textContent = state === "error" ? "Ratings unavailable" : state === "loading" ? "Loading ratings" : "No player found";
-    ratingLeaderRating.textContent = "Rating —";
+    ratingLeaderName.textContent =
+      state === "error"
+        ? "Ratings unavailable"
+        : state === "loading"
+          ? DEFAULT_LEADER_COPY.name
+          : "No player found";
+    ratingLeaderRating.textContent = DEFAULT_LEADER_COPY.rating;
     ratingLeaderMeta.textContent =
       state === "error"
         ? "Unable to load ranking data. Please refresh or try again later."
         : state === "loading"
-          ? "Computing matchplay ratings from the archive."
+          ? DEFAULT_LEADER_COPY.meta
           : "Try adjusting the filters.";
-    ratingLeaderStats.innerHTML = "";
+    ratingLeaderStats.innerHTML =
+      state === "error"
+        ? "<span>Data unavailable</span><span>Page content preserved</span>"
+        : DEFAULT_LEADER_COPY.stats.map((stat) => `<span>${stat}</span>`).join("");
     return;
   }
 
-  const pointsPerMatch = player.matches > 0 ? (player.wins + player.draws * 0.5) / player.matches : 0;
-  ratingLeaderName.textContent = player.name;
-  ratingLeaderRating.textContent = `Rating ${Math.round(player.rating)}`;
-  ratingLeaderMeta.textContent = `${player.matches} matches · ${player.wins}-${player.draws}-${player.losses} W-D-L`;
+  const matches = asNumber(player.matches);
+  const wins = asNumber(player.wins);
+  const draws = asNumber(player.draws);
+  const losses = asNumber(player.losses);
+  const rating = Number.isFinite(player.rating) ? Math.round(player.rating) : "—";
+  const peak = Number.isFinite(player.peak) ? Math.round(player.peak) : "—";
+  const pointsPerMatch = matches > 0 ? (wins + draws * 0.5) / matches : 0;
+  ratingLeaderName.textContent = asText(player.name, "Top rated player");
+  ratingLeaderRating.textContent = `Rating ${rating}`;
+  ratingLeaderMeta.textContent = `${matches} matches · ${wins}-${draws}-${losses} W-D-L`;
   ratingLeaderStats.innerHTML = `
-    <span>Peak ${Math.round(player.peak)}</span>
+    <span>Peak ${peak}</span>
     <span>PPM ${pointsPerMatch.toFixed(2)}</span>
     ${siteMetadata?.lastUpdated ? `<span>Updated ${siteMetadata.lastUpdated}</span>` : ""}
   `;
 };
 
 const populateFilters = () => {
+  if (!eventFilter || !countryFilter) return;
   const events = Array.from(new Set(allMatches.map((match) => match.event))).sort();
   allEvents = events.slice();
   eventFilter.innerHTML = "";
@@ -953,7 +1062,7 @@ const populateFilters = () => {
   });
   updateCountrySummary();
 
-  if (allMatches.length > 0) {
+  if (allMatches.length > 0 && minMatchesInput) {
     const matchCountMap = new Map();
     allMatches.forEach((match) => {
       matchCountMap.set(match.player, (matchCountMap.get(match.player) || 0) + 1);
@@ -965,6 +1074,7 @@ const populateFilters = () => {
 };
 
 const handleSort = (key) => {
+  if (!key) return;
   if (currentSort.key === key) {
     currentSort.direction = currentSort.direction === "asc" ? "desc" : "asc";
   } else {
@@ -988,15 +1098,15 @@ Promise.all([
     .catch(() => null)
 ])
   .then(([data, metadata]) => {
-    siteMetadata = metadata;
+    siteMetadata = metadata && typeof metadata === "object" ? metadata : null;
     if (lastUpdatedNote && siteMetadata?.lastUpdated) {
       lastUpdatedNote.textContent = `Last updated ${siteMetadata.lastUpdated}.`;
     }
-    allMatches = (data.matches || []).filter((match) => match.result !== "not played");
+    allMatches = normalizeMatches(data);
     if (allMatches.length === 0) {
       throw new Error("Ratings data did not include any playable matches");
     }
-    allPlayers = Array.from(new Set(allMatches.map((match) => match.player))).sort();
+    allPlayers = Array.from(new Set(allMatches.map((match) => match.player).filter(Boolean))).sort();
     ratingsCache = new Map();
     populateFilters();
     applyFilters();
@@ -1045,19 +1155,20 @@ window.addEventListener("scroll", handleMobileFilterBar);
 window.addEventListener("load", handleMobileFilterBar);
 
 [eventDropdown, countryDropdown].forEach((dropdown) => {
+  if (!dropdown) return;
   dropdown.addEventListener("toggle", () => {
     if (dropdown.open) {
       if (dropdown === eventDropdown) {
         syncEventCheckboxes();
-        eventSearch.value = "";
-        eventFilter.querySelectorAll(".country-filter__item").forEach((item) => {
+        if (eventSearch) eventSearch.value = "";
+        eventFilter?.querySelectorAll(".country-filter__item").forEach((item) => {
           item.classList.remove("is-hidden");
         });
       }
       if (dropdown === countryDropdown) {
         syncCountryCheckboxes();
-        countrySearch.value = "";
-        countryFilter.querySelectorAll(".country-filter__item").forEach((item) => {
+        if (countrySearch) countrySearch.value = "";
+        countryFilter?.querySelectorAll(".country-filter__item").forEach((item) => {
           item.classList.remove("is-hidden");
         });
       }
@@ -1065,7 +1176,7 @@ window.addEventListener("load", handleMobileFilterBar);
   });
 });
 
-eventSearch.addEventListener("input", () => {
+if (eventSearch && eventFilter) eventSearch.addEventListener("input", () => {
   const query = normalize(eventSearch.value.trim());
   eventFilter.querySelectorAll(".country-filter__item").forEach((item) => {
     const text = item.textContent.toLowerCase();
@@ -1073,7 +1184,7 @@ eventSearch.addEventListener("input", () => {
   });
 });
 
-eventSelectAll.addEventListener("change", () => {
+if (eventSelectAll) eventSelectAll.addEventListener("change", () => {
   if (eventSelectAll.checked) {
     selectedEvents = new Set(allEvents);
   } else {
@@ -1084,7 +1195,7 @@ eventSelectAll.addEventListener("change", () => {
   applyFilters();
 });
 
-countrySearch.addEventListener("input", () => {
+if (countrySearch && countryFilter) countrySearch.addEventListener("input", () => {
   const query = normalize(countrySearch.value.trim());
   countryFilter.querySelectorAll(".country-filter__item").forEach((item) => {
     const text = item.textContent.toLowerCase();
@@ -1092,7 +1203,7 @@ countrySearch.addEventListener("input", () => {
   });
 });
 
-countrySelectAll.addEventListener("change", () => {
+if (countrySelectAll) countrySelectAll.addEventListener("change", () => {
   if (countrySelectAll.checked) {
     selectedCountries = new Set(allCountries);
   } else {
@@ -1104,6 +1215,7 @@ countrySelectAll.addEventListener("change", () => {
 });
 
 const bindSummaryClear = (summaryEl, onClear) => {
+  if (!summaryEl) return;
   summaryEl.addEventListener("click", (event) => {
     const target = event.target.closest(".summary-clear");
     if (!target) return;
@@ -1141,7 +1253,7 @@ if (searchInput) {
     if (event.key !== "Enter") return;
     event.preventDefault();
     const query = normalize(searchInput.value.trim());
-    const exact = availablePlayers.find((name) => name.toLowerCase() === query);
+    const exact = availablePlayers.find((name) => normalize(name) === query);
     if (exact) {
       addPlayerSelection(exact);
     }
@@ -1194,6 +1306,7 @@ tableHeaders.forEach((th) => {
 
 const closeDropdownsOnClickOutside = (event) => {
   [eventDropdown, countryDropdown].forEach((dropdown) => {
+    if (!dropdown) return;
     if (!dropdown.open) return;
     if (dropdown.contains(event.target)) return;
     dropdown.open = false;
@@ -1205,6 +1318,7 @@ document.addEventListener("click", closeDropdownsOnClickOutside);
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;
   [eventDropdown, countryDropdown].forEach((dropdown) => {
+    if (!dropdown) return;
     dropdown.open = false;
   });
 });

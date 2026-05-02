@@ -608,6 +608,19 @@ p {
   margin: 0;
 }
 
+.empty-state--error,
+.state-row--error td {
+  color: #991b1b;
+  background: #fff5f5;
+}
+
+.state-row td {
+  padding: 1.4rem 1rem;
+  text-align: center;
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+
 .headtohead__selectors {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);

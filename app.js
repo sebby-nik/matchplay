@@ -29,6 +29,10 @@ const mobileFilterBar = document.getElementById("mobileFilterBar");
 const mobileFilterOverlay = document.getElementById("mobileFilterOverlay");
 const controlsPanel = document.getElementById("controlsPanel");
 const controlsPanelClose = document.getElementById("controlsPanelClose");
+const recordsPlayersStat = document.getElementById("recordsPlayersStat");
+const recordsEventsStat = document.getElementById("recordsEventsStat");
+const recordsMatchesStat = document.getElementById("recordsMatchesStat");
+const lastUpdatedNote = document.getElementById("lastUpdatedNote");
 
 let allMatches = [];
 let currentSort = { key: "points", direction: "desc" };
@@ -42,6 +46,7 @@ let allCountries = [];
 let selectedPlayers = new Set();
 let availablePlayers = [];
 let allPlayers = [];
+let siteMetadata = null;
 
 const normalize = (value) => {
   if (!value) return "";
@@ -187,6 +192,11 @@ const calculatePlayers = (matches) => {
 
 const renderTable = (players) => {
   rankBody.innerHTML = "";
+  if (players.length === 0) {
+    setRecordsTableState("No players match the current filters.");
+    return;
+  }
+
   const maxPpm = Math.max(
     ...players.map((player) => (player.matches < 3 ? 0 : player.ppm)),
     0
@@ -233,6 +243,36 @@ const renderTable = (players) => {
     row.addEventListener("click", () => renderPlayerDetail(player, row));
     rankBody.append(row);
   });
+};
+
+const setRecordsTableState = (message, isError = false) => {
+  if (!rankBody) return;
+  rankBody.innerHTML = `
+    <tr class="state-row ${isError ? "state-row--error" : ""}">
+      <td colspan="6">${message}</td>
+    </tr>
+  `;
+};
+
+const renderRecordsStats = () => {
+  if (!recordsPlayersStat || !recordsEventsStat || !recordsMatchesStat) return;
+  const metadataStats = siteMetadata?.recordStats;
+  const players = new Set();
+  const tournaments = new Set();
+  const uniqueMatches = new Set();
+
+  allMatches.forEach((match) => {
+    if (match.player) players.add(match.player);
+    if (match.opponent) players.add(match.opponent);
+    if (match.event && match.year) tournaments.add(`${match.event}|${match.year}`);
+    const pair = [match.player, match.opponent].sort().join(" vs ");
+    uniqueMatches.add(`${match.event}|${match.year}|${match.round}|${pair}|${match.score}`);
+  });
+
+  const formatCount = (value) => Number(value || 0).toLocaleString("en-US");
+  recordsPlayersStat.textContent = formatCount(metadataStats?.players ?? players.size);
+  recordsEventsStat.textContent = formatCount(metadataStats?.events ?? tournaments.size);
+  recordsMatchesStat.textContent = formatCount(metadataStats?.matches ?? uniqueMatches.size);
 };
 
 const updateCountrySummary = () => {
@@ -579,14 +619,35 @@ const handleSort = (key) => {
   updateSortIndicators();
 };
 
-fetch("data.json")
-  .then((res) => res.json())
-  .then((data) => {
-    allMatches = data.matches || [];
+setRecordsTableState("Loading player records...");
+
+Promise.all([
+  fetch("data.json").then((res) => {
+    if (!res.ok) throw new Error("Unable to load records data");
+    return res.json();
+  }),
+  fetch("site-data.json")
+    .then((res) => (res.ok ? res.json() : null))
+    .catch(() => null)
+])
+  .then(([data, metadata]) => {
+    siteMetadata = metadata;
+    if (lastUpdatedNote && siteMetadata?.lastUpdated) {
+      lastUpdatedNote.textContent = `Last updated ${siteMetadata.lastUpdated}.`;
+    }
+    allMatches = (data.matches || []).filter((match) => match.result !== "not played");
+    if (allMatches.length === 0) {
+      throw new Error("Records data did not include any playable matches");
+    }
     allPlayers = Array.from(new Set(allMatches.map((match) => match.player))).sort();
+    renderRecordsStats();
     populateFilters();
     applyFilters();
     updateSortIndicators();
+  })
+  .catch((error) => {
+    if (summary) summary.textContent = "Records unavailable";
+    setRecordsTableState(error.message || "Unable to load records data.", true);
   });
 
 const toggleFilters = (open) => {

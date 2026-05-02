@@ -29,6 +29,7 @@ const ratingLeaderName = document.getElementById("ratingLeaderName");
 const ratingLeaderRating = document.getElementById("ratingLeaderRating");
 const ratingLeaderMeta = document.getElementById("ratingLeaderMeta");
 const ratingLeaderStats = document.getElementById("ratingLeaderStats");
+const lastUpdatedNote = document.getElementById("lastUpdatedNote");
 
 const EVENT_ORDER = [
   "WGC Match Play",
@@ -72,7 +73,6 @@ const ROUND_ORDER = [
 
 const BASE_RATING = 1000;
 const YEAR_DECAY = 0.99;
-const FIXED_LEADER_NAME = "Rory McIlroy";
 const CALIBRATION_BIN = 25;
 const CALIBRATION_MIN_MATCHES = 8;
 const CALIBRATION_PRIOR = 1;
@@ -93,6 +93,7 @@ let allCountries = [];
 let currentSort = { key: "rating", direction: "desc" };
 let ratingsCache = new Map();
 let outcomeCalibration = null;
+let siteMetadata = null;
 
 const normalize = (value) => {
   if (!value) return "";
@@ -525,11 +526,6 @@ const getCachedRatings = () => {
   return ratings;
 };
 
-const getFixedLeaderPlayer = () => {
-  const ratings = getCachedRatings();
-  return ratings.find((player) => player.name === FIXED_LEADER_NAME) || null;
-};
-
 const formatDelta = (delta) => {
   const value = Math.round(delta);
   if (value > 0) return `+${value}`;
@@ -627,6 +623,11 @@ const renderPlayerDetail = (player, row) => {
 const renderTable = (players) => {
   if (!ratingBody) return;
   ratingBody.innerHTML = "";
+
+  if (players.length === 0) {
+    setRatingTableState("No players match the current filters.");
+    return;
+  }
 
   players.forEach((player) => {
     const row = document.createElement("tr");
@@ -848,7 +849,7 @@ const applyFilters = () => {
 
   currentPlayers = searched;
   if (summary) summary.textContent = `${searched.length} players`;
-  updateLeaderCard(getFixedLeaderPlayer() || searched[0]);
+  updateLeaderCard(baseRanked[0] || searched[0] || null);
   renderFilterChips();
   renderPlayerChips();
   renderTable(searched);
@@ -858,12 +859,26 @@ const applyFilters = () => {
   document.querySelectorAll("tr.is-open").forEach((node) => node.classList.remove("is-open"));
 };
 
-const updateLeaderCard = (player) => {
+const setRatingTableState = (message, isError = false) => {
+  if (!ratingBody) return;
+  ratingBody.innerHTML = `
+    <tr class="state-row ${isError ? "state-row--error" : ""}">
+      <td colspan="6">${message}</td>
+    </tr>
+  `;
+};
+
+const updateLeaderCard = (player, state = "") => {
   if (!ratingLeaderName || !ratingLeaderRating || !ratingLeaderMeta || !ratingLeaderStats) return;
   if (!player) {
-    ratingLeaderName.textContent = "—";
+    ratingLeaderName.textContent = state === "error" ? "Ratings unavailable" : state === "loading" ? "Loading ratings" : "No player found";
     ratingLeaderRating.textContent = "Rating —";
-    ratingLeaderMeta.textContent = "";
+    ratingLeaderMeta.textContent =
+      state === "error"
+        ? "Unable to load ranking data. Please refresh or try again later."
+        : state === "loading"
+          ? "Computing matchplay ratings from the archive."
+          : "Try adjusting the filters.";
     ratingLeaderStats.innerHTML = "";
     return;
   }
@@ -875,6 +890,7 @@ const updateLeaderCard = (player) => {
   ratingLeaderStats.innerHTML = `
     <span>Peak ${Math.round(player.peak)}</span>
     <span>PPM ${pointsPerMatch.toFixed(2)}</span>
+    ${siteMetadata?.lastUpdated ? `<span>Updated ${siteMetadata.lastUpdated}</span>` : ""}
   `;
 };
 
@@ -959,15 +975,37 @@ const handleSort = (key) => {
   updateSortIndicators();
 };
 
-fetch("data.json")
-  .then((res) => res.json())
-  .then((data) => {
+setRatingTableState("Loading ratings...");
+updateLeaderCard(null, "loading");
+
+Promise.all([
+  fetch("data.json").then((res) => {
+    if (!res.ok) throw new Error("Unable to load ratings data");
+    return res.json();
+  }),
+  fetch("site-data.json")
+    .then((res) => (res.ok ? res.json() : null))
+    .catch(() => null)
+])
+  .then(([data, metadata]) => {
+    siteMetadata = metadata;
+    if (lastUpdatedNote && siteMetadata?.lastUpdated) {
+      lastUpdatedNote.textContent = `Last updated ${siteMetadata.lastUpdated}.`;
+    }
     allMatches = (data.matches || []).filter((match) => match.result !== "not played");
+    if (allMatches.length === 0) {
+      throw new Error("Ratings data did not include any playable matches");
+    }
     allPlayers = Array.from(new Set(allMatches.map((match) => match.player))).sort();
     ratingsCache = new Map();
     populateFilters();
     applyFilters();
     updateSortIndicators();
+  })
+  .catch((error) => {
+    if (summary) summary.textContent = "Ratings unavailable";
+    updateLeaderCard(null, "error");
+    setRatingTableState(error.message || "Unable to load ratings data.", true);
   });
 
 const toggleFilters = (open) => {

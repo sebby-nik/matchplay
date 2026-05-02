@@ -7,6 +7,10 @@ const linealChampionName = document.getElementById("linealChampionName");
 const linealChampionMeta = document.getElementById("linealChampionMeta");
 const linealChampionStats = document.getElementById("linealChampionStats");
 const linealChampionRecord = document.getElementById("linealChampionRecord");
+const linealCurrentIntro = document.getElementById("linealCurrentIntro");
+const lastUpdatedNote = document.getElementById("lastUpdatedNote");
+
+let siteMetadata = null;
 
 const EVENT_ORDER = [
   "WGC Match Play",
@@ -478,12 +482,23 @@ const buildReigns = (timeline, grants, retirements) => {
 const renderChampionCard = (reigns, overallStats, log) => {
   if (!linealChampionName || !linealChampionMeta || !linealChampionStats || reigns.length === 0) return;
   const current = reigns[reigns.length - 1];
+  if (siteMetadata?.currentLinealChampion && siteMetadata.currentLinealChampion !== current.champion) {
+    console.warn(
+      `Lineal metadata current champion (${siteMetadata.currentLinealChampion}) differs from computed champion (${current.champion}).`
+    );
+  }
   linealChampionName.textContent = current.champion;
   const titleEntry = current.startEntry;
   const sinceText = titleEntry
     ? `Champion since defeating ${titleEntry.defeated || titleEntry.opponent} at ${titleEntry.event}`
     : current.startLabel || "Champion since inaugural grant";
   linealChampionMeta.textContent = sinceText;
+  if (linealCurrentIntro) {
+    linealCurrentIntro.textContent =
+      siteMetadata?.currentLinealChampionSummary && siteMetadata.currentLinealChampion === current.champion
+        ? siteMetadata.currentLinealChampionSummary
+        : `${current.champion} is the current Lineal Champion. ${sinceText}.`;
+  }
 
   const championReigns = reigns.filter((reign) => reign.champion === current.champion);
   const reignCount = championReigns.length;
@@ -508,6 +523,7 @@ const renderChampionCard = (reigns, overallStats, log) => {
   linealChampionStats.innerHTML = `
     <span>${totalMatches} matches</span>
     <span>${totalDefenses} defenses</span>
+    ${siteMetadata?.lastUpdated ? `<span>Updated ${siteMetadata.lastUpdated}</span>` : ""}
   `;
 
   const crownEl = document.querySelector(".lineal-card__crown");
@@ -517,9 +533,39 @@ const renderChampionCard = (reigns, overallStats, log) => {
   }
 };
 
+const renderChampionCardState = (message, isError = false) => {
+  if (linealChampionName) linealChampionName.textContent = isError ? "Champion unavailable" : message;
+  if (linealChampionRecord) linealChampionRecord.textContent = "Record —";
+  if (linealChampionMeta) {
+    linealChampionMeta.textContent = isError
+      ? "Unable to load lineal championship data. Please refresh or try again later."
+      : "Building the lineal championship history.";
+  }
+  if (linealChampionStats) linealChampionStats.innerHTML = "";
+  if (linealCurrentIntro) linealCurrentIntro.textContent = isError ? "The current champion could not be loaded." : "Loading current champion details.";
+};
+
+const renderChampionsListState = (message, isError = false) => {
+  if (!linealChampions) return;
+  linealChampions.innerHTML = `<li class="empty-state ${isError ? "empty-state--error" : ""}">${message}</li>`;
+};
+
+const renderMatchLogState = (message, isError = false) => {
+  if (!linealMatches) return;
+  linealMatches.innerHTML = `
+    <tr class="state-row ${isError ? "state-row--error" : ""}">
+      <td colspan="7">${message}</td>
+    </tr>
+  `;
+};
+
 const renderChampionsList = (reigns, countryMap) => {
   if (!linealChampions) return;
   linealChampions.innerHTML = "";
+  if (reigns.length === 0) {
+    renderChampionsListState("No lineal champions found.");
+    return;
+  }
   const reignCounts = {};
 
   reigns.forEach((reign, index) => {
@@ -554,6 +600,10 @@ const renderChampionsList = (reigns, countryMap) => {
 const renderMatchLog = (entries) => {
   if (!linealMatches) return;
   linealMatches.innerHTML = "";
+  if (entries.length === 0) {
+    renderMatchLogState("No lineal matches found.");
+    return;
+  }
   entries.forEach((entry, index) => {
     const isStart = index === 0 || entries[index - 1].titleChange;
     const isEnd = entry.titleChange || index === entries.length - 1;
@@ -574,10 +624,28 @@ const renderMatchLog = (entries) => {
   });
 };
 
-fetch("data.json")
-  .then((res) => res.json())
-  .then((data) => {
+renderChampionCardState("Loading champion");
+renderChampionsListState("Loading lineal champions...");
+renderMatchLogState("Loading lineal match log...");
+
+Promise.all([
+  fetch("data.json").then((res) => {
+    if (!res.ok) throw new Error("Unable to load lineal data");
+    return res.json();
+  }),
+  fetch("site-data.json")
+    .then((res) => (res.ok ? res.json() : null))
+    .catch(() => null)
+])
+  .then(([data, metadata]) => {
+    siteMetadata = metadata;
+    if (lastUpdatedNote && siteMetadata?.lastUpdated) {
+      lastUpdatedNote.textContent = `Last updated ${siteMetadata.lastUpdated}.`;
+    }
     const matches = (data.matches || []).filter((match) => match.result !== "not played");
+    if (matches.length === 0) {
+      throw new Error("Lineal data did not include any playable matches");
+    }
     const countryMap = new Map();
     const overallStats = new Map();
     matches.forEach((match) => {
@@ -613,6 +681,12 @@ fetch("data.json")
     renderMatchLog(log);
     renderChampionCard(reigns, overallStats, log);
     renderChampionsList(reigns, countryMap);
+  })
+  .catch((error) => {
+    const message = error.message || "Unable to load lineal data.";
+    renderChampionCardState(message, true);
+    renderChampionsListState(message, true);
+    renderMatchLogState(message, true);
   });
 
 if (linealLogToggle && linealLogBody) {

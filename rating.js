@@ -30,6 +30,8 @@ const ratingLeaderRating = document.getElementById("ratingLeaderRating");
 const ratingLeaderMeta = document.getElementById("ratingLeaderMeta");
 const ratingLeaderStats = document.getElementById("ratingLeaderStats");
 const lastUpdatedNote = document.getElementById("lastUpdatedNote");
+const profileSearchInput = document.getElementById("profileSearchInput");
+const profileSearchResults = document.getElementById("profileSearchResults");
 
 const EVENT_ORDER = [
   "WGC Match Play",
@@ -101,6 +103,7 @@ let ratingsCache = new Map();
 let outcomeCalibration = null;
 let siteMetadata = null;
 let playerSlugMap = new Map();
+let profileSearchIndex = [];
 
 const normalize = (value) => {
   if (!value) return "";
@@ -165,6 +168,74 @@ const renderPlayerLink = (name) => {
   return href
     ? `<a class="player-link" href="${href}">${escapeHtml(name)}</a>`
     : escapeHtml(name);
+};
+
+const getPlayerCountry = (player) => {
+  const code = asText(player?.country || player?.countries?.[0]).toUpperCase();
+  return code || "";
+};
+
+const buildProfileSearchIndex = (players, ratings) => {
+  const ratingMap = new Map((Array.isArray(ratings) ? ratings : []).map((player) => [player.name, player]));
+  profileSearchIndex = (Array.isArray(players) ? players : [])
+    .map((player) => {
+      const rating = ratingMap.get(player.name);
+      const matches = rating?.matches ?? player.matchRows ?? 0;
+      const country = getPlayerCountry(player);
+      const summary = rating
+        ? `Rating ${Math.round(rating.rating)} · ${matches} matches · ${rating.wins}-${rating.draws}-${rating.losses}`
+        : matches
+          ? `${matches} match rows`
+          : "Profile available";
+      return {
+        name: player.name,
+        normalizedName: normalize(player.name),
+        href: getPlayerProfileHref(player.name),
+        country,
+        summary,
+        rating: rating?.rating ?? 0,
+        matches
+      };
+    })
+    .filter((player) => player.name && player.href)
+    .sort((a, b) => a.name.localeCompare(b.name));
+};
+
+const renderProfileSearchResults = (query) => {
+  if (!profileSearchResults) return;
+  const normalizedQuery = normalize(query || "");
+  if (!normalizedQuery) {
+    profileSearchResults.innerHTML = "";
+    profileSearchResults.classList.remove("is-open");
+    return;
+  }
+
+  const matches = profileSearchIndex
+    .filter((player) => player.normalizedName.includes(normalizedQuery))
+    .sort((a, b) => {
+      const aStarts = a.normalizedName.startsWith(normalizedQuery) ? 1 : 0;
+      const bStarts = b.normalizedName.startsWith(normalizedQuery) ? 1 : 0;
+      return bStarts - aStarts || b.rating - a.rating || b.matches - a.matches || a.name.localeCompare(b.name);
+    })
+    .slice(0, 8);
+
+  profileSearchResults.classList.add("is-open");
+  if (matches.length === 0) {
+    profileSearchResults.innerHTML = `<div class="profile-finder__empty">No players found.</div>`;
+    return;
+  }
+
+  profileSearchResults.innerHTML = matches
+    .map((player) => {
+      const flag = flagFromCountry(player.country);
+      return `
+        <a class="profile-finder__result" href="${player.href}">
+          <span class="profile-finder__name">${flag ? `${flag} ` : ""}${escapeHtml(player.name)}</span>
+          <span class="profile-finder__summary">${escapeHtml(player.summary)}</span>
+        </a>
+      `;
+    })
+    .join("");
 };
 
 const asText = (value, fallback = "") => {
@@ -1151,7 +1222,8 @@ Promise.all([
 ])
   .then(([data, playersData, metadata]) => {
     siteMetadata = metadata && typeof metadata === "object" ? metadata : null;
-    playerSlugMap = new Map((playersData?.players || []).map((player) => [player.name, player.slug]));
+    const indexedPlayers = playersData?.players || [];
+    playerSlugMap = new Map(indexedPlayers.map((player) => [player.name, player.slug]));
     renderLastUpdatedNote();
     allMatches = normalizeMatches(data);
     if (allMatches.length === 0) {
@@ -1159,6 +1231,7 @@ Promise.all([
     }
     allPlayers = Array.from(new Set(allMatches.map((match) => match.player).filter(Boolean))).sort();
     ratingsCache = new Map();
+    buildProfileSearchIndex(indexedPlayers, computeRatings(allMatches));
     populateFilters();
     applyFilters();
     updateSortIndicators();
@@ -1326,6 +1399,30 @@ document.addEventListener("click", (event) => {
   if (!playerSuggestions) return;
   if (event.target.closest(".player-search")) return;
   playerSuggestions.classList.remove("is-open");
+});
+
+if (profileSearchInput) {
+  profileSearchInput.addEventListener("input", () => {
+    renderProfileSearchResults(profileSearchInput.value);
+  });
+
+  profileSearchInput.addEventListener("focus", () => {
+    renderProfileSearchResults(profileSearchInput.value);
+  });
+
+  profileSearchInput.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter") return;
+    const firstResult = profileSearchResults?.querySelector(".profile-finder__result");
+    if (!firstResult) return;
+    event.preventDefault();
+    firstResult.click();
+  });
+}
+
+document.addEventListener("click", (event) => {
+  if (!profileSearchResults) return;
+  if (event.target.closest(".profile-finder__search")) return;
+  profileSearchResults.classList.remove("is-open");
 });
 
 if (minMatchesInput) {

@@ -338,6 +338,11 @@ const formatMatchDate = (match) => {
   return month && year ? `${month} ${year}` : year || "Date unavailable";
 };
 
+const getMatchSortValue = (match) => {
+  const year = Number(match.year) || 0;
+  return year * 100 + getIndex(MONTH_ORDER, match.month);
+};
+
 const formatRatingDelta = (value) => {
   if (!Number.isFinite(value)) return "—";
   const rounded = Math.round(value);
@@ -413,6 +418,176 @@ const renderNotableMatchesSection = ({ title, description, matches, playerSlugMa
   </section>
 `;
 
+const buildHeadToHeadRecords = (timeline) => {
+  const records = new Map();
+
+  timeline.forEach((match) => {
+    const opponent = asText(match.opponent);
+    if (!opponent) return;
+    if (!records.has(opponent)) {
+      records.set(opponent, {
+        opponent,
+        opponentCountry: match.opponentCountry || "",
+        matches: 0,
+        wins: 0,
+        draws: 0,
+        losses: 0,
+        points: 0,
+        latestMeeting: "",
+        latestSortValue: 0
+      });
+    }
+
+    const record = records.get(opponent);
+    record.matches += 1;
+    if (match.result === "win") {
+      record.wins += 1;
+      record.points += 1;
+    } else if (match.result === "loss") {
+      record.losses += 1;
+    } else {
+      record.draws += 1;
+      record.points += 0.5;
+    }
+
+    const sortValue = getMatchSortValue(match);
+    if (sortValue >= record.latestSortValue) {
+      record.latestSortValue = sortValue;
+      record.latestMeeting = formatMatchDate(match);
+    }
+  });
+
+  return Array.from(records.values()).map((record) => ({
+    ...record,
+    pointsPerMatch: record.matches ? record.points / record.matches : null
+  }));
+};
+
+const compareHeadToHeadRecords = (a, b, sortKey) => {
+  if (sortKey === "wins") {
+    return b.wins - a.wins || b.matches - a.matches || b.points - a.points || a.opponent.localeCompare(b.opponent);
+  }
+  if (sortKey === "ppm") {
+    return (b.pointsPerMatch ?? -1) - (a.pointsPerMatch ?? -1) || b.matches - a.matches || a.opponent.localeCompare(b.opponent);
+  }
+  if (sortKey === "latest") {
+    return b.latestSortValue - a.latestSortValue || b.matches - a.matches || a.opponent.localeCompare(b.opponent);
+  }
+  return b.matches - a.matches || b.points - a.points || b.wins - a.wins || a.opponent.localeCompare(b.opponent);
+};
+
+const getHeadToHeadOpponentLink = (record, playerSlugMap) => {
+  const href = getPlayerProfileHref(playerSlugMap, record.opponent);
+  const label = `${flagFromCountry(record.opponentCountry)} ${record.opponent}`.trim();
+  return href
+    ? `<a class="player-link" href="${href}">${escapeHtml(label)}</a>`
+    : escapeHtml(label);
+};
+
+const renderHeadToHeadRows = (records, playerSlugMap) =>
+  records
+    .map(
+      (record) => `
+        <tr>
+          <td>${getHeadToHeadOpponentLink(record, playerSlugMap)}</td>
+          <td>${record.matches}</td>
+          <td>${record.wins}</td>
+          <td>${record.draws}</td>
+          <td>${record.losses}</td>
+          <td>${record.points.toFixed(1)}</td>
+          <td>${formatNumber(record.pointsPerMatch, 2)}</td>
+          <td>${escapeHtml(record.latestMeeting || "—")}</td>
+        </tr>
+      `
+    )
+    .join("");
+
+const renderHeadToHeadSection = (records, playerSlugMap) => {
+  const sortedRecords = records.slice().sort((a, b) => compareHeadToHeadRecords(a, b, "matches"));
+  if (sortedRecords.length === 0) {
+    return `
+      <section class="panel panel--sport">
+        <div class="panel__header">
+          <div class="panel__title-row">
+            <h2>Head-to-Head Records</h2>
+          </div>
+        </div>
+        <div class="player-profile-unavailable"><p class="muted">No opponent records are available for this player.</p></div>
+      </section>
+    `;
+  }
+
+  return `
+    <section class="panel panel--sport">
+      <div class="panel__header player-profile-h2h-header">
+        <div>
+          <div class="panel__title-row">
+            <h2>Head-to-Head Records</h2>
+          </div>
+          <p class="muted">Record against every captured opponent, sorted by most frequent opponents first.</p>
+        </div>
+        <div class="player-profile-h2h-controls">
+          <label>
+            <span>Search</span>
+            <input id="headToHeadSearch" type="search" placeholder="Filter opponents" autocomplete="off" />
+          </label>
+          <label>
+            <span>Sort</span>
+            <select id="headToHeadSort">
+              <option value="matches">Matches played</option>
+              <option value="wins">Wins</option>
+              <option value="ppm">Points per match</option>
+              <option value="latest">Latest meeting</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="rank-table">
+          <thead>
+            <tr>
+              <th>Opponent</th>
+              <th>Matches</th>
+              <th>Wins</th>
+              <th>Draws</th>
+              <th>Losses</th>
+              <th>Points</th>
+              <th>PPM</th>
+              <th>Latest</th>
+            </tr>
+          </thead>
+          <tbody id="headToHeadBody">
+            ${renderHeadToHeadRows(sortedRecords, playerSlugMap)}
+          </tbody>
+        </table>
+      </div>
+      <div id="headToHeadEmpty" class="player-profile-unavailable" hidden>
+        <p class="muted">No opponents match that search.</p>
+      </div>
+    </section>
+  `;
+};
+
+const setupHeadToHeadControls = (records, playerSlugMap) => {
+  const body = document.getElementById("headToHeadBody");
+  const empty = document.getElementById("headToHeadEmpty");
+  const search = document.getElementById("headToHeadSearch");
+  const sort = document.getElementById("headToHeadSort");
+  if (!body || !search || !sort) return;
+
+  const update = () => {
+    const query = search.value.trim().toLowerCase();
+    const filtered = records
+      .filter((record) => record.opponent.toLowerCase().includes(query))
+      .sort((a, b) => compareHeadToHeadRecords(a, b, sort.value));
+    body.innerHTML = renderHeadToHeadRows(filtered, playerSlugMap);
+    if (empty) empty.hidden = filtered.length > 0;
+  };
+
+  search.addEventListener("input", update);
+  sort.addEventListener("change", update);
+};
+
 const renderState = ({ title, message, eyebrow = "Player Profile", actionLabel = "Back to player ratings" }) => {
   if (!profileRoot) return;
   profileRoot.innerHTML = `
@@ -462,6 +637,7 @@ const renderProfile = (player, matches, metadata, players = []) => {
   const eventBreakdown = buildEventBreakdown(matches, player.name);
   const bestWins = buildBestWins(timeline);
   const worstLosses = buildWorstLosses(timeline);
+  const headToHeadRecords = buildHeadToHeadRecords(timeline);
 
   if (record.matches === 0 || recentMatches.length === 0) {
     renderEmpty(player);
@@ -540,6 +716,7 @@ const renderProfile = (player, matches, metadata, players = []) => {
           playerSlugMap
         })}
       </div>
+      ${renderHeadToHeadSection(headToHeadRecords, playerSlugMap)}
       <section class="panel panel--sport">
         <div class="panel__header">
           <div class="panel__title-row">
@@ -623,6 +800,7 @@ const renderProfile = (player, matches, metadata, players = []) => {
       </section>
     </main>
   `;
+  setupHeadToHeadControls(headToHeadRecords, playerSlugMap);
 };
 
 Promise.all([

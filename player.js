@@ -324,6 +324,95 @@ const buildEventBreakdown = (matches, playerName) => {
   return Array.from(breakdown.values()).sort(sortEventBreakdown);
 };
 
+const buildPlayerSlugMap = (players) =>
+  new Map((Array.isArray(players) ? players : []).map((entry) => [entry.name, entry.slug]));
+
+const getPlayerProfileHref = (playerSlugMap, name) => {
+  const slug = playerSlugMap.get(name);
+  return slug ? `../${slug}/` : "";
+};
+
+const formatMatchDate = (match) => {
+  const month = asText(match.month);
+  const year = asText(match.year);
+  return month && year ? `${month} ${year}` : year || "Date unavailable";
+};
+
+const formatRatingDelta = (value) => {
+  if (!Number.isFinite(value)) return "—";
+  const rounded = Math.round(value);
+  return rounded > 0 ? `+${rounded}` : String(rounded);
+};
+
+const buildBestWins = (timeline) =>
+  timeline
+    .filter((match) => match.result === "win" && Number.isFinite(match.opponentRatingBefore))
+    .slice()
+    .sort((a, b) => b.opponentRatingBefore - a.opponentRatingBefore || b.ratingDelta - a.ratingDelta)
+    .slice(0, 5);
+
+const buildWorstLosses = (timeline) =>
+  timeline
+    .filter((match) => match.result === "loss" && Number.isFinite(match.opponentRatingBefore))
+    .slice()
+    .sort((a, b) => a.ratingDelta - b.ratingDelta || a.opponentRatingBefore - b.opponentRatingBefore)
+    .slice(0, 5);
+
+const renderOpponentLink = (match, playerSlugMap) => {
+  const href = getPlayerProfileHref(playerSlugMap, match.opponent);
+  const label = `${flagFromCountry(match.opponentCountry)} ${match.opponent}`.trim();
+  return href
+    ? `<a class="player-link" href="${href}">${escapeHtml(label)}</a>`
+    : escapeHtml(label);
+};
+
+const renderNotableMatchesSection = ({ title, description, matches, playerSlugMap }) => `
+  <section class="panel panel--sport">
+    <div class="panel__header">
+      <div class="panel__title-row">
+        <h2>${escapeHtml(title)}</h2>
+      </div>
+      <p class="muted">${escapeHtml(description)}</p>
+    </div>
+    ${
+      matches.length
+        ? `
+          <div class="table-wrap">
+            <table class="rank-table player-profile-notable-table">
+              <thead>
+                <tr>
+                  <th>Opponent</th>
+                  <th>Event</th>
+                  <th>Date</th>
+                  <th>Score</th>
+                  <th>Opponent Elo</th>
+                  <th>Elo change</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${matches
+                  .map(
+                    (match) => `
+                      <tr>
+                        <td>${renderOpponentLink(match, playerSlugMap)}</td>
+                        <td>${escapeHtml(match.event)}</td>
+                        <td>${escapeHtml(formatMatchDate(match))}</td>
+                        <td>${escapeHtml(match.score || (match.result === "win" ? "Win" : "Loss"))}</td>
+                        <td>${Math.round(match.opponentRatingBefore)}</td>
+                        <td>${formatRatingDelta(match.ratingDelta)}</td>
+                      </tr>
+                    `
+                  )
+                  .join("")}
+              </tbody>
+            </table>
+          </div>
+        `
+        : `<div class="player-profile-unavailable"><p class="muted">Not enough rating data is available for this section.</p></div>`
+    }
+  </section>
+`;
+
 const renderState = ({ title, message, eyebrow = "Player Profile", actionLabel = "Back to player ratings" }) => {
   if (!profileRoot) return;
   profileRoot.innerHTML = `
@@ -356,9 +445,10 @@ const renderEmpty = (player) =>
     eyebrow: "Empty Profile"
   });
 
-const renderProfile = (player, matches, metadata) => {
+const renderProfile = (player, matches, metadata, players = []) => {
   const record = calculateRecord(matches, player.name);
   const { rating, timeline } = computePlayerRatingProfile(matches, player.name);
+  const playerSlugMap = buildPlayerSlugMap(players);
   const flag = flagFromCountry(player.country);
   const countryLabel = player.country ? player.country.toUpperCase() : "Country unavailable";
   const updated = formatUpdatedDate(metadata?.dataUpdatedAt || metadata?.lastUpdated);
@@ -370,6 +460,8 @@ const renderProfile = (player, matches, metadata) => {
   const pointsPercentage = record.matches ? (record.points / record.matches) * 100 : null;
   const winPercentage = record.matches ? (record.wins / record.matches) * 100 : null;
   const eventBreakdown = buildEventBreakdown(matches, player.name);
+  const bestWins = buildBestWins(timeline);
+  const worstLosses = buildWorstLosses(timeline);
 
   if (record.matches === 0 || recentMatches.length === 0) {
     renderEmpty(player);
@@ -434,6 +526,20 @@ const renderProfile = (player, matches, metadata) => {
           <strong>${statusLabel}</strong>
         </article>
       </section>
+      <div class="player-profile-notables">
+        ${renderNotableMatchesSection({
+          title: "Best Wins",
+          description: "Wins against the highest-rated opponents, using opponent pre-match Elo.",
+          matches: bestWins,
+          playerSlugMap
+        })}
+        ${renderNotableMatchesSection({
+          title: "Worst Losses",
+          description: "Losses with the biggest negative Elo impact; opponent rating shown is pre-match Elo.",
+          matches: worstLosses,
+          playerSlugMap
+        })}
+      </div>
       <section class="panel panel--sport">
         <div class="panel__header">
           <div class="panel__title-row">
@@ -541,7 +647,7 @@ Promise.all([
     const matches = Array.isArray(matchData?.matches)
       ? matchData.matches.filter((match) => match && match.result !== "not played")
       : [];
-    renderProfile(player, matches, metadata);
+    renderProfile(player, matches, metadata, playersData.players);
   })
   .catch(() => {
     renderError();

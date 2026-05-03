@@ -1807,6 +1807,16 @@ input[type="range"] {
   line-height: 1;
 }
 
+.player-profile-notables {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.player-profile-unavailable {
+  padding: 0 1.5rem 1.5rem;
+}
+
 .is-empty-event {
   color: var(--ink-soft);
 }
@@ -3736,6 +3746,14 @@ input[type="search"] {
 
   .player-profile-stat {
     padding: 0.9rem;
+  }
+
+  .player-profile-notables {
+    grid-template-columns: 1fr;
+  }
+
+  .player-profile-unavailable {
+    padding: 0 1rem 1rem;
   }
 
   .player-profile-matches {

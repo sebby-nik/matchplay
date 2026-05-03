@@ -115,6 +115,13 @@ const escapeHtml = (value) =>
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 
+const renderPlayerLink = (name) => {
+  const href = getPlayerProfileHref(name);
+  return href
+    ? `<a class="player-link" href="${href}">${escapeHtml(name)}</a>`
+    : escapeHtml(name);
+};
+
 const flagFromCountry = (code) => {
   if (!code) return "";
   const base = 0x1f1e6;
@@ -359,12 +366,12 @@ const renderPlayerDetailContent = (player) => {
       return `
         <div class="match-row ${resultClass}">
           <div>
-            <strong>${match.event} ${match.year}</strong> — ${match.opponent}
-            <div class="meta">${match.round || "Singles"}</div>
+            <strong>${escapeHtml(match.event)} ${escapeHtml(match.year)}</strong> — ${renderPlayerLink(match.opponent)}
+            <div class="meta">${escapeHtml(match.round || "Singles")}</div>
           </div>
           <div>
             <div class="match-result">${label}</div>
-            <span class="meta">${match.score || ""}</span>
+            <span class="meta">${escapeHtml(match.score || "")}</span>
           </div>
         </div>
       `;
@@ -373,7 +380,7 @@ const renderPlayerDetailContent = (player) => {
 
   return `
     <div class="player-detail">
-      <h3>${flag ? `${flag} ` : ""}${player.name}</h3>
+      <h3>${flag ? `${flag} ` : ""}${renderPlayerLink(player.name)}</h3>
       <div class="detail-meta">${player.matches} matches • ${player.points.toFixed(1)} points • ${player.wins}-${player.draws}-${player.losses}</div>
       <div class="match-list">${matches || "<p class=\"muted\">No matches yet.</p>"}</div>
     </div>
@@ -945,7 +952,7 @@ const showPlayerSuggestions = (query) => {
     return;
   }
   playerSuggestions.innerHTML = matches
-    .map((name) => `<div class="player-suggestion" data-name="${name}">${name}</div>`)
+    .map((name) => `<div class="player-suggestion" data-name="${escapeHtml(name)}">${renderPlayerLink(name)}</div>`)
     .join("");
   playerSuggestions.classList.add("is-open");
 };
@@ -982,6 +989,7 @@ if (searchInput) {
 
 if (playerSuggestions) {
   playerSuggestions.addEventListener("mousedown", (event) => {
+    if (event.target.closest("a")) return;
     const target = event.target.closest(".player-suggestion");
     if (!target) return;
     event.preventDefault();

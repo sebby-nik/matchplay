@@ -868,7 +868,7 @@ const renderProfile = (player, matches, metadata, players = []) => {
               return `
                 <article class="match-row ${resultClass}">
                   <div>
-                    <strong>${escapeHtml(match.event)} ${escapeHtml(match.year)}</strong> — ${escapeHtml(match.opponent)}
+                    <strong>${escapeHtml(match.event)} ${escapeHtml(match.year)}</strong> — ${renderOpponentLink(match, playerSlugMap)}
                     <div class="meta">${escapeHtml(match.round || "Singles")} · Opponent rating ${Math.round(match.opponentRatingBefore)}</div>
                   </div>
                   <div>

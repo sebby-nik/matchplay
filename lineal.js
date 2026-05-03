@@ -11,6 +11,7 @@ const linealCurrentIntro = document.getElementById("linealCurrentIntro");
 const lastUpdatedNote = document.getElementById("lastUpdatedNote");
 
 let siteMetadata = null;
+let playerSlugMap = new Map();
 
 const EVENT_ORDER = [
   "WGC Match Play",
@@ -190,6 +191,18 @@ const escapeHtml = (value) =>
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
+
+const getPlayerProfileHref = (name) => {
+  const slug = playerSlugMap.get(name);
+  return slug ? `players/${slug}/` : "";
+};
+
+const renderPlayerLink = (name) => {
+  const href = getPlayerProfileHref(name);
+  return href
+    ? `<a class="player-link" href="${href}">${escapeHtml(name)}</a>`
+    : escapeHtml(name);
+};
 
 const normalizeResult = (value) => {
   const result = asText(value).toLowerCase();
@@ -583,7 +596,7 @@ const getSinceText = (currentReign) => {
 const renderCurrentIntro = (currentChampion, currentReign) => {
   if (!linealCurrentIntro) return;
   const sinceText = getSinceText(currentReign);
-  linealCurrentIntro.textContent = `${currentChampion} is the current Lineal Champion. ${sinceText}.`;
+  linealCurrentIntro.innerHTML = `${renderPlayerLink(currentChampion)} is the current Lineal Champion. ${escapeHtml(sinceText)}.`;
 };
 
 const renderChampionCard = (currentChampion, reigns, overallStats, log) => {
@@ -593,7 +606,7 @@ const renderChampionCard = (currentChampion, reigns, overallStats, log) => {
     renderChampionCardState("Champion unavailable", true);
     return;
   }
-  linealChampionName.textContent = currentChampion;
+  linealChampionName.innerHTML = renderPlayerLink(currentChampion);
   const sinceText = getSinceText(current);
   linealChampionMeta.textContent = sinceText;
   renderCurrentIntro(currentChampion, current);
@@ -690,7 +703,7 @@ const renderChampionsList = (reigns, countryMap) => {
       <div class="lineal-champion__year">${yearMatch}</div>
       <div class="lineal-champion__name">
         ${flag ? `<span class="lineal-champion__flag" title="${escapeHtml(countryName)}">${flag}</span>` : ""}
-        <span>${escapeHtml(reign.champion)}</span>
+        <span>${renderPlayerLink(reign.champion)}</span>
       </div>
       <div class="lineal-champion__record">${record}</div>
       <div class="lineal-champion__crowns" aria-label="${reignCount} reigns">${crowns}</div>
@@ -718,8 +731,8 @@ const renderMatchLog = (entries) => {
     row.innerHTML = `
       <td>${escapeHtml(entry.year)}</td>
       <td>${escapeHtml(entry.event)}</td>
-      <td>${escapeHtml(entry.championBefore)}</td>
-      <td>${escapeHtml(entry.opponent)}</td>
+      <td>${renderPlayerLink(entry.championBefore)}</td>
+      <td>${renderPlayerLink(entry.opponent)}</td>
       <td><span class="lineal-result lineal-result--${resultClass}">${escapeHtml(result)}</span></td>
       <td>${escapeHtml(entry.score || "-")}</td>
       <td>${escapeHtml(entry.round)}</td>
@@ -737,12 +750,16 @@ Promise.all([
     if (!res.ok) throw new Error("Unable to load lineal data");
     return res.json();
   }),
+  fetch("players-data.json")
+    .then((res) => (res.ok ? res.json() : null))
+    .catch(() => null),
   fetch("site-data.json")
     .then((res) => (res.ok ? res.json() : null))
     .catch(() => null)
 ])
-  .then(([data, metadata]) => {
+  .then(([data, playersData, metadata]) => {
     siteMetadata = metadata && typeof metadata === "object" ? metadata : null;
+    playerSlugMap = new Map((playersData?.players || []).map((player) => [player.name, player.slug]));
     renderLastUpdatedNote();
     const matches = normalizeMatches(data);
     if (matches.length === 0) {

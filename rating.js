@@ -160,6 +160,13 @@ const getPlayerProfileHref = (name) => {
   return slug ? `players/${slug}/` : "";
 };
 
+const renderPlayerLink = (name) => {
+  const href = getPlayerProfileHref(name);
+  return href
+    ? `<a class="player-link" href="${href}">${escapeHtml(name)}</a>`
+    : escapeHtml(name);
+};
+
 const asText = (value, fallback = "") => {
   if (value === null || value === undefined) return fallback;
   const text = String(value).trim();
@@ -678,7 +685,7 @@ const renderPlayerDetailContent = (player) => {
       return `
         <div class="match-row ${resultClass}">
           <div>
-            <strong>${escapeHtml(match.event)} ${escapeHtml(match.year)}</strong> — ${escapeHtml(match.opponent)}
+            <strong>${escapeHtml(match.event)} ${escapeHtml(match.year)}</strong> — ${renderPlayerLink(match.opponent)}
             <div class="meta">${escapeHtml(match.round || "Singles")}</div>
           </div>
           <div>
@@ -917,7 +924,7 @@ const showPlayerSuggestions = (query) => {
     return;
   }
   playerSuggestions.innerHTML = matches
-    .map((name) => `<div class="player-suggestion" data-name="${escapeHtml(name)}">${escapeHtml(name)}</div>`)
+    .map((name) => `<div class="player-suggestion" data-name="${escapeHtml(name)}">${renderPlayerLink(name)}</div>`)
     .join("");
   playerSuggestions.classList.add("is-open");
 };
@@ -1030,7 +1037,11 @@ const updateLeaderCard = (player, state = "") => {
   const rating = Number.isFinite(player.rating) ? Math.round(player.rating) : "—";
   const peak = Number.isFinite(player.peak) ? Math.round(player.peak) : "—";
   const pointsPerMatch = matches > 0 ? (wins + draws * 0.5) / matches : 0;
-  ratingLeaderName.textContent = asText(player.name, "Top rated player");
+  const leaderName = asText(player.name, "Top rated player");
+  const leaderHref = getPlayerProfileHref(leaderName);
+  ratingLeaderName.innerHTML = leaderHref
+    ? `<a class="player-link" href="${leaderHref}">${escapeHtml(leaderName)}</a>`
+    : escapeHtml(leaderName);
   ratingLeaderRating.textContent = `Rating ${rating}`;
   ratingLeaderMeta.textContent = `${matches} matches · ${wins}-${draws}-${losses} W-D-L`;
   ratingLeaderStats.innerHTML = `
@@ -1303,6 +1314,7 @@ if (searchInput) {
 
 if (playerSuggestions) {
   playerSuggestions.addEventListener("mousedown", (event) => {
+    if (event.target.closest("a")) return;
     const target = event.target.closest(".player-suggestion");
     if (!target) return;
     event.preventDefault();

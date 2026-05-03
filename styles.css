@@ -1690,6 +1690,14 @@ input[type="range"] {
   border-bottom-color: #1d4ed8;
 }
 
+.player-link:focus-visible {
+  border-bottom-color: #1d4ed8;
+  border-radius: 4px;
+  color: #1d4ed8;
+  outline: 3px solid rgba(37, 99, 235, 0.24);
+  outline-offset: 3px;
+}
+
 .ppm-cell {
   display: flex;
   align-items: center;

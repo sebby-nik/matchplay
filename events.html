@@ -161,6 +161,28 @@
         Olympics: "assets/olympics-logo.png"
       };
 
+      let playerSlugMap = new Map();
+
+      const escapeHtml = (value) =>
+        String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+
+      const getPlayerProfileHref = (name) => {
+        const slug = playerSlugMap.get(name);
+        return slug ? `players/${slug}/` : "";
+      };
+
+      const renderPlayerLink = (name) => {
+        const href = getPlayerProfileHref(name);
+        return href
+          ? `<a class="player-link" href="${href}">${escapeHtml(name)}</a>`
+          : escapeHtml(name);
+      };
+
       const olympicsDates = {
         1904: "Sep 19-24, 1904"
       };
@@ -926,7 +948,7 @@
               <div class="schedule__date">${dateLabel}</div>
               ${countdownLabel ? `<div class="schedule__countdown">${countdownLabel}</div>` : ""}
             </div>
-            ${showWinner ? `<div class="schedule__winner">${playerWinner ? `<span class="winner-name">${playerWinner}</span>` : ""}<span class="winner-badge"><img src="${winnerAsset}" alt="${winnerAlt}" /></span></div>` : ""}
+            ${showWinner ? `<div class="schedule__winner">${playerWinner ? `<span class="winner-name">${renderPlayerLink(playerWinner)}</span>` : ""}<span class="winner-badge"><img src="${winnerAsset}" alt="${winnerAlt}" /></span></div>` : ""}
           `;
           groupCards.appendChild(card);
         });
@@ -989,9 +1011,11 @@
 
       Promise.all([
         fetchData(["events-data.json", "./events-data.json", "/events-data.json", "data.json", "./data.json", "/data.json"]),
+        fetchData(["players-data.json", "./players-data.json", "/players-data.json"]).catch(() => null),
         fetchData(["site-data.json", "./site-data.json", "/site-data.json"]).catch(() => null)
       ])
-        .then(([payload, metadata]) => {
+        .then(([payload, playersData, metadata]) => {
+          playerSlugMap = new Map((playersData?.players || []).map((player) => [player.name, player.slug]));
           renderLastUpdatedNote(metadata);
           const { resultsEvents, upcomingEvents } = normalizeEventsPayload(payload);
           cachedResults = sortByDateDesc(resultsEvents.slice());

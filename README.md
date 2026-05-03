@@ -23,6 +23,13 @@ A lightweight static site for browsing matchplay history and ratings across majo
 ## Run Locally
 Open `index.html` in your browser.
 
+## Tests
+Run the lightweight player profile test suite with:
+
+```sh
+node tests/player-profile.test.js
+```
+
 ## Next Steps
 - Add player headshots for WGC Match Play winners and expand to other events
 - Extend venue/date metadata to more events

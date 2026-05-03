@@ -1,0 +1,297 @@
+const assert = require("assert");
+const fs = require("fs");
+const path = require("path");
+const vm = require("vm");
+
+const rootDir = path.resolve(__dirname, "..");
+const readJson = (file) => JSON.parse(fs.readFileSync(path.join(rootDir, file), "utf8"));
+
+const playersData = readJson("players-data.json");
+const matchData = readJson("data.json");
+const siteData = readJson("site-data.json");
+const playableMatches = (matchData.matches || []).filter((match) => match && match.result !== "not played");
+
+const exposePlayerApi = `
+globalThis.__profileTestApi = {
+  buildPlayerSlugMap,
+  getPlayerProfileHref,
+  computePlayerRatingProfile,
+  calculateRecord,
+  buildEventBreakdown,
+  buildHeadToHeadRecords,
+  buildBestWins,
+  buildWorstLosses,
+  renderRatingTimelineSection,
+  renderNotFound,
+  renderProfile,
+  normalizeEventLabel
+};
+`;
+
+const loadPlayerApi = (slug = "rory-mcilroy") => {
+  const root = { innerHTML: "" };
+  const elements = new Map([["playerProfileRoot", root]]);
+  const document = {
+    body: { dataset: { playerSlug: slug } },
+    getElementById: (id) => elements.get(id) || null,
+    querySelector: () => null
+  };
+  const window = {
+    innerWidth: 1024,
+    addEventListener: () => {}
+  };
+  const fetch = () => Promise.resolve({ ok: false, json: async () => ({}) });
+  const context = vm.createContext({
+    console,
+    document,
+    window,
+    fetch,
+    Intl,
+    Date,
+    Math,
+    Number,
+    String,
+    Boolean,
+    Set,
+    Map,
+    Array,
+    Object,
+    JSON,
+    RegExp,
+    Promise,
+    Error
+  });
+  const source = fs.readFileSync(path.join(rootDir, "player.js"), "utf8");
+  vm.runInContext(`${source}\n${exposePlayerApi}`, context, { filename: "player.js" });
+  root.innerHTML = "";
+  return { api: context.__profileTestApi, root };
+};
+
+const slugifyName = (name) =>
+  String(name || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+const byName = new Map(playersData.players.map((player) => [player.name, player]));
+const findPlayer = (name) => {
+  const player = byName.get(name);
+  assert.ok(player, `Expected ${name} to exist in players-data.json`);
+  return player;
+};
+
+const tests = [];
+const test = (name, fn) => tests.push({ name, fn });
+
+test("player slug generation matches the public slug policy", () => {
+  const examples = [
+    ["Tiger Woods", "tiger-woods"],
+    ["Rory McIlroy", "rory-mcilroy"],
+    ["Seve Ballesteros", "seve-ballesteros"],
+    ["Adri\u00e1n Otaegui", "adrian-otaegui"],
+    ["A.J. Chapman", "a-j-chapman"]
+  ];
+
+  examples.forEach(([name, expectedSlug]) => {
+    assert.strictEqual(slugifyName(name), expectedSlug);
+    assert.strictEqual(findPlayer(name).slug, expectedSlug);
+  });
+});
+
+test("duplicate player names and slug collisions stay route-safe", () => {
+  const slugs = playersData.players.map((player) => player.slug);
+  assert.strictEqual(new Set(slugs).size, slugs.length, "Every generated player slug should be unique");
+
+  const groupedByBaseSlug = new Map();
+  playersData.players.forEach((player) => {
+    const baseSlug = slugifyName(player.name);
+    groupedByBaseSlug.set(baseSlug, [...(groupedByBaseSlug.get(baseSlug) || []), player]);
+  });
+
+  const collisionGroups = [...groupedByBaseSlug.values()].filter((group) => group.length > 1);
+  assert.ok(collisionGroups.length > 0, "Fixture should include real-world slug collisions");
+  collisionGroups.forEach((group) => {
+    assert.strictEqual(new Set(group.map((player) => player.slug)).size, group.length);
+    assert.ok(group.some((player) => player.slug !== slugifyName(player.name)));
+  });
+
+  assert.deepStrictEqual(
+    playersData.players.filter((player) => player.name.replace(/\s/g, "") === "J.B.Holmes").map((player) => player.slug).sort(),
+    ["j-b-holmes", "j-b-holmes-us"]
+  );
+});
+
+test("known player profile pages are generated and render populated profile content", () => {
+  const { api, root } = loadPlayerApi();
+  const rory = findPlayer("Rory McIlroy");
+  const profileHtml = fs.readFileSync(path.join(rootDir, "players", rory.slug, "index.html"), "utf8");
+
+  assert.match(profileHtml, /data-player-slug="rory-mcilroy"/);
+  assert.match(profileHtml, /Rory McIlroy Matchplay Record &amp; Ranking \| Matchplay Rankings/);
+  assert.match(profileHtml, /src="\.\.\/\.\.\/player\.js"/);
+
+  api.renderProfile(rory, playableMatches, siteData, playersData.players);
+  assert.match(root.innerHTML, /Rory McIlroy/);
+  assert.match(root.innerHTML, /Profile Summary/);
+  assert.match(root.innerHTML, /Competition Records/);
+  assert.match(root.innerHTML, /Head-to-Head Records/);
+  assert.match(root.innerHTML, /Rating Timeline/);
+});
+
+test("unknown player slugs show a useful not-found state", () => {
+  const { api, root } = loadPlayerApi("unknown-player");
+  api.renderNotFound();
+  assert.match(root.innerHTML, /Player not found/);
+  assert.match(root.innerHTML, /Back to player ratings/);
+});
+
+test("overall record calculations are correct for trust-critical players", () => {
+  const { api } = loadPlayerApi();
+  const rory = api.calculateRecord(playableMatches, "Rory McIlroy");
+  assert.deepStrictEqual(
+    {
+      matches: rory.matches,
+      wins: rory.wins,
+      draws: rory.draws,
+      losses: rory.losses,
+      points: rory.points
+    },
+    { matches: 60, wins: 39, draws: 4, losses: 17, points: 41 }
+  );
+
+  const tiger = api.calculateRecord(playableMatches, "Tiger Woods");
+  assert.deepStrictEqual(
+    {
+      matches: tiger.matches,
+      wins: tiger.wins,
+      draws: tiger.draws,
+      losses: tiger.losses,
+      points: tiger.points
+    },
+    { matches: 65, wins: 47, draws: 2, losses: 16, points: 48 }
+  );
+});
+
+test("event-specific records include normalized marquee competitions", () => {
+  const { api } = loadPlayerApi();
+  const breakdown = api.buildEventBreakdown(playableMatches, "Tiger Woods");
+  const byEvent = new Map(breakdown.map((event) => [event.event, event]));
+
+  assert.ok(byEvent.has("Ryder Cup"));
+  assert.ok(byEvent.has("Presidents Cup"));
+  assert.ok(byEvent.has("WGC / Dell Match Play"));
+  assert.ok(byEvent.has("Seve Trophy"));
+  assert.strictEqual(api.normalizeEventLabel("Dell Match Play"), "WGC / Dell Match Play");
+
+  assert.deepStrictEqual(
+    {
+      matches: byEvent.get("Ryder Cup").matches,
+      wins: byEvent.get("Ryder Cup").wins,
+      draws: byEvent.get("Ryder Cup").draws,
+      losses: byEvent.get("Ryder Cup").losses,
+      points: byEvent.get("Ryder Cup").points
+    },
+    { matches: 8, wins: 4, draws: 2, losses: 2, points: 5 }
+  );
+  assert.deepStrictEqual(
+    {
+      matches: byEvent.get("WGC / Dell Match Play").matches,
+      wins: byEvent.get("WGC / Dell Match Play").wins,
+      losses: byEvent.get("WGC / Dell Match Play").losses,
+      points: byEvent.get("WGC / Dell Match Play").points
+    },
+    { matches: 48, wins: 36, losses: 12, points: 36 }
+  );
+});
+
+test("head-to-head records are derived from player rating timeline", () => {
+  const { api } = loadPlayerApi();
+  const { timeline } = api.computePlayerRatingProfile(playableMatches, "Rory McIlroy");
+  const headToHead = api.buildHeadToHeadRecords(timeline);
+  const scottie = headToHead.find((record) => record.opponent === "Scottie Scheffler");
+
+  assert.ok(scottie, "Expected Rory McIlroy vs Scottie Scheffler head-to-head record");
+  assert.deepStrictEqual(
+    {
+      matches: scottie.matches,
+      wins: scottie.wins,
+      draws: scottie.draws,
+      losses: scottie.losses,
+      points: scottie.points,
+      pointsPerMatch: scottie.pointsPerMatch,
+      latestMeeting: scottie.latestMeeting
+    },
+    {
+      matches: 2,
+      wins: 1,
+      draws: 0,
+      losses: 1,
+      points: 1,
+      pointsPerMatch: 0.5,
+      latestMeeting: "September 2025"
+    }
+  );
+});
+
+test("best wins and worst losses skip entries without opponent ratings", () => {
+  const { api } = loadPlayerApi();
+  assert.deepStrictEqual(api.buildBestWins([{ result: "win", opponent: "Missing Rating" }]), []);
+  assert.deepStrictEqual(api.buildWorstLosses([{ result: "loss", opponent: "Missing Rating", ratingDelta: -10 }]), []);
+
+  const { timeline } = api.computePlayerRatingProfile(playableMatches, "Rory McIlroy");
+  const bestWins = api.buildBestWins(timeline);
+  const worstLosses = api.buildWorstLosses(timeline);
+  assert.ok(bestWins.length > 0);
+  assert.ok(worstLosses.length > 0);
+  assert.ok(bestWins.every((match) => Number.isFinite(match.opponentRatingBefore)));
+  assert.ok(worstLosses.every((match) => Number.isFinite(match.opponentRatingBefore)));
+});
+
+test("rating timeline uses an unavailable state when rating history is insufficient", () => {
+  const { api } = loadPlayerApi();
+  const empty = api.renderRatingTimelineSection([], null);
+  const singlePoint = api.renderRatingTimelineSection([{ ratingAfter: 1000, year: 2024 }], null);
+
+  assert.match(empty, /Not enough match history is available/);
+  assert.doesNotMatch(empty, /player-profile-chart__line/);
+  assert.match(singlePoint, /Not enough match history is available/);
+  assert.doesNotMatch(singlePoint, /player-profile-chart__line/);
+});
+
+test("rankings and records player links resolve to generated profile routes", () => {
+  const { api } = loadPlayerApi();
+  const playerSlugMap = api.buildPlayerSlugMap(playersData.players);
+  assert.strictEqual(api.getPlayerProfileHref(playerSlugMap, "Rory McIlroy"), "../rory-mcilroy/");
+  assert.ok(fs.existsSync(path.join(rootDir, "players", "rory-mcilroy", "index.html")));
+
+  const ratingSource = fs.readFileSync(path.join(rootDir, "rating.js"), "utf8");
+  const recordsSource = fs.readFileSync(path.join(rootDir, "app.js"), "utf8");
+  assert.match(ratingSource, /renderPlayerLink/);
+  assert.match(ratingSource, /class="player-link"/);
+  assert.match(recordsSource, /renderPlayerLink/);
+  assert.match(recordsSource, /class="player-link"/);
+});
+
+(async () => {
+  let failures = 0;
+  for (const { name, fn } of tests) {
+    try {
+      await fn();
+      console.log(`ok - ${name}`);
+    } catch (error) {
+      failures += 1;
+      console.error(`not ok - ${name}`);
+      console.error(error.stack || error);
+    }
+  }
+
+  if (failures > 0) {
+    console.error(`${failures} test${failures === 1 ? "" : "s"} failed`);
+    process.exitCode = 1;
+    return;
+  }
+
+  console.log(`${tests.length} tests passed`);
+})();

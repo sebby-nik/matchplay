@@ -418,6 +418,89 @@ const renderNotableMatchesSection = ({ title, description, matches, playerSlugMa
   </section>
 `;
 
+const renderRatingTimelineSection = (timeline, rating) => {
+  const points = timeline
+    .filter((match) => Number.isFinite(match.ratingAfter))
+    .map((match, index) => ({ ...match, index }));
+
+  if (points.length < 2) {
+    return `
+      <section class="panel panel--sport">
+        <div class="panel__header">
+          <div class="panel__title-row">
+            <h2>Rating Timeline</h2>
+          </div>
+          <p class="muted">Rating history is derived from chronological match data using the same Elo calculation as the profile summary.</p>
+        </div>
+        <div class="player-profile-unavailable"><p class="muted">Not enough match history is available to draw a rating timeline.</p></div>
+      </section>
+    `;
+  }
+
+  const width = 720;
+  const height = 260;
+  const padding = { top: 24, right: 26, bottom: 40, left: 54 };
+  const values = points.map((point) => point.ratingAfter);
+  const minRating = Math.floor((Math.min(...values) - 30) / 10) * 10;
+  const maxRating = Math.ceil((Math.max(...values) + 30) / 10) * 10;
+  const chartWidth = width - padding.left - padding.right;
+  const chartHeight = height - padding.top - padding.bottom;
+  const xFor = (index) => padding.left + (index / Math.max(points.length - 1, 1)) * chartWidth;
+  const yFor = (value) => padding.top + ((maxRating - value) / Math.max(maxRating - minRating, 1)) * chartHeight;
+  const path = points
+    .map((point, index) => `${index === 0 ? "M" : "L"} ${xFor(index).toFixed(1)} ${yFor(point.ratingAfter).toFixed(1)}`)
+    .join(" ");
+  const startYear = points[0]?.year || "";
+  const endYear = points[points.length - 1]?.year || "";
+  const peakPoint = points.reduce((peak, point) => (point.ratingAfter > peak.ratingAfter ? point : peak), points[0]);
+  const currentRating = rating ? Math.round(rating.rating) : Math.round(points[points.length - 1].ratingAfter);
+  const peakRating = rating ? Math.round(rating.peak) : Math.round(peakPoint.ratingAfter);
+  const markerStep = points.length > 80 ? 4 : points.length > 40 ? 2 : 1;
+
+  return `
+    <section class="panel panel--sport">
+      <div class="panel__header player-profile-chart-header">
+        <div>
+          <div class="panel__title-row">
+            <h2>Rating Timeline</h2>
+          </div>
+          <p class="muted">Derived from chronological match data using the same Elo calculation as the profile summary.</p>
+        </div>
+        <div class="player-profile-chart-stats">
+          <span>Current <strong>${currentRating}</strong></span>
+          <span>Peak <strong>${peakRating}</strong></span>
+        </div>
+      </div>
+      <div class="player-profile-chart" role="img" aria-label="Elo rating timeline from ${escapeHtml(startYear)} to ${escapeHtml(endYear)}">
+        <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+          <line class="player-profile-chart__grid" x1="${padding.left}" y1="${yFor(maxRating)}" x2="${width - padding.right}" y2="${yFor(maxRating)}"></line>
+          <line class="player-profile-chart__grid" x1="${padding.left}" y1="${yFor((minRating + maxRating) / 2)}" x2="${width - padding.right}" y2="${yFor((minRating + maxRating) / 2)}"></line>
+          <line class="player-profile-chart__grid" x1="${padding.left}" y1="${yFor(minRating)}" x2="${width - padding.right}" y2="${yFor(minRating)}"></line>
+          <text class="player-profile-chart__label" x="8" y="${yFor(maxRating) + 4}">${maxRating}</text>
+          <text class="player-profile-chart__label" x="8" y="${yFor((minRating + maxRating) / 2) + 4}">${Math.round((minRating + maxRating) / 2)}</text>
+          <text class="player-profile-chart__label" x="8" y="${yFor(minRating) + 4}">${minRating}</text>
+          <text class="player-profile-chart__label" x="${padding.left}" y="${height - 10}">${escapeHtml(startYear)}</text>
+          <text class="player-profile-chart__label player-profile-chart__label--end" x="${width - padding.right}" y="${height - 10}">${escapeHtml(endYear)}</text>
+          <path class="player-profile-chart__line" d="${path}"></path>
+          <circle class="player-profile-chart__peak" cx="${xFor(peakPoint.index).toFixed(1)}" cy="${yFor(peakPoint.ratingAfter).toFixed(1)}" r="5">
+            <title>Peak ${Math.round(peakPoint.ratingAfter)} after ${escapeHtml(peakPoint.event)} ${escapeHtml(formatMatchDate(peakPoint))}</title>
+          </circle>
+          ${points
+            .filter((point, index) => index % markerStep === 0 || index === points.length - 1 || point === peakPoint)
+            .map(
+              (point) => `
+                <circle class="player-profile-chart__point" cx="${xFor(point.index).toFixed(1)}" cy="${yFor(point.ratingAfter).toFixed(1)}" r="3">
+                  <title>${escapeHtml(formatMatchDate(point))} · ${escapeHtml(point.event)} vs ${escapeHtml(point.opponent)} · ${Math.round(point.ratingAfter)} (${formatRatingDelta(point.ratingDelta)})</title>
+                </circle>
+              `
+            )
+            .join("")}
+        </svg>
+      </div>
+    </section>
+  `;
+};
+
 const buildHeadToHeadRecords = (timeline) => {
   const records = new Map();
 
@@ -702,6 +785,7 @@ const renderProfile = (player, matches, metadata, players = []) => {
           <strong>${statusLabel}</strong>
         </article>
       </section>
+      ${renderRatingTimelineSection(timeline, rating)}
       <div class="player-profile-notables">
         ${renderNotableMatchesSection({
           title: "Best Wins",

@@ -1807,6 +1807,79 @@ input[type="range"] {
   line-height: 1;
 }
 
+.player-profile-chart-header {
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.player-profile-chart-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: flex-end;
+}
+
+.player-profile-chart-stats span {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+  font-weight: 800;
+  padding: 0.45rem 0.65rem;
+}
+
+.player-profile-chart-stats strong {
+  color: var(--ink);
+  margin-left: 0.25rem;
+}
+
+.player-profile-chart {
+  padding: 0 1.5rem 1.5rem;
+}
+
+.player-profile-chart svg {
+  display: block;
+  width: 100%;
+  height: clamp(220px, 34vw, 320px);
+  overflow: visible;
+}
+
+.player-profile-chart__grid {
+  stroke: rgba(15, 23, 42, 0.12);
+  stroke-width: 1;
+}
+
+.player-profile-chart__label {
+  fill: var(--ink-soft);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.player-profile-chart__label--end {
+  text-anchor: end;
+}
+
+.player-profile-chart__line {
+  fill: none;
+  stroke: #2563eb;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+}
+
+.player-profile-chart__point {
+  fill: #ffffff;
+  stroke: #2563eb;
+  stroke-width: 2;
+}
+
+.player-profile-chart__peak {
+  fill: #facc15;
+  stroke: #0f172a;
+  stroke-width: 2;
+}
+
 .player-profile-notables {
   display: grid;
   gap: 1.25rem;
@@ -3783,6 +3856,18 @@ input[type="search"] {
 
   .player-profile-stat {
     padding: 0.9rem;
+  }
+
+  .player-profile-chart-header {
+    display: grid;
+  }
+
+  .player-profile-chart-stats {
+    justify-content: flex-start;
+  }
+
+  .player-profile-chart {
+    padding: 0 1rem 1rem;
   }
 
   .player-profile-notables {

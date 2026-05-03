@@ -1807,6 +1807,14 @@ input[type="range"] {
   line-height: 1;
 }
 
+.is-empty-event {
+  color: var(--ink-soft);
+}
+
+.is-empty-event td:first-child {
+  color: var(--ink);
+}
+
 .player-profile-matches {
   display: grid;
   gap: 0.75rem;

@@ -46,6 +46,7 @@ const MOV_MARGIN_CAP = 10;
 const MOV_MULTIPLIER_MIN = 0.75;
 const MOV_MULTIPLIER_MAX = 1.8;
 const MOV_NEUTRAL_SCORES = new Set(["ret", "wd", "won", "by default", "conceded"]);
+const FEATURED_EVENT_LABELS = ["Ryder Cup", "Presidents Cup", "WGC / Dell Match Play", "Seve Trophy"];
 
 const asText = (value, fallback = "") => {
   if (value === null || value === undefined) return fallback;
@@ -99,6 +100,22 @@ const flagFromCountry = (code) => {
 const getIndex = (list, value) => {
   const index = list.indexOf(value);
   return index === -1 ? list.length : index;
+};
+
+const normalizeEventLabel = (event) => {
+  const label = asText(event, "Unknown event");
+  if (/\b(wgc|dell)\b/i.test(label) && /match play/i.test(label)) {
+    return "WGC / Dell Match Play";
+  }
+  return label;
+};
+
+const sortEventBreakdown = (a, b) => {
+  const featuredDiff = getIndex(FEATURED_EVENT_LABELS, a.event) - getIndex(FEATURED_EVENT_LABELS, b.event);
+  if (featuredDiff !== 0) return featuredDiff;
+  const orderDiff = getIndex(EVENT_ORDER.map(normalizeEventLabel), a.event) - getIndex(EVENT_ORDER.map(normalizeEventLabel), b.event);
+  if (orderDiff !== 0) return orderDiff;
+  return a.event.localeCompare(b.event);
 };
 
 const uniqueMatches = (matches) => {
@@ -280,6 +297,33 @@ const calculateRecord = (matches, playerName) => {
   );
 };
 
+const buildEventBreakdown = (matches, playerName) => {
+  const eventTypes = new Set(matches.map((match) => normalizeEventLabel(match.event)));
+  const breakdown = new Map(
+    Array.from(eventTypes).map((event) => [
+      event,
+      { event, matches: 0, wins: 0, draws: 0, losses: 0, points: 0 }
+    ])
+  );
+
+  matches
+    .filter((match) => match.player === playerName)
+    .forEach((match) => {
+      const event = normalizeEventLabel(match.event);
+      if (!breakdown.has(event)) {
+        breakdown.set(event, { event, matches: 0, wins: 0, draws: 0, losses: 0, points: 0 });
+      }
+      const split = breakdown.get(event);
+      split.matches += 1;
+      split.points += Number(match.points || 0);
+      if (match.result === "win") split.wins += 1;
+      if (match.result === "halved") split.draws += 1;
+      if (match.result === "loss") split.losses += 1;
+    });
+
+  return Array.from(breakdown.values()).sort(sortEventBreakdown);
+};
+
 const renderState = ({ title, message, eyebrow = "Player Profile", actionLabel = "Back to player ratings" }) => {
   if (!profileRoot) return;
   profileRoot.innerHTML = `
@@ -325,20 +369,7 @@ const renderProfile = (player, matches, metadata) => {
   const pointsPerMatch = record.matches ? record.points / record.matches : null;
   const pointsPercentage = record.matches ? (record.points / record.matches) * 100 : null;
   const winPercentage = record.matches ? (record.wins / record.matches) * 100 : null;
-  const eventSplits = new Map();
-  matches
-    .filter((match) => match.player === player.name)
-    .forEach((match) => {
-      if (!eventSplits.has(match.event)) {
-        eventSplits.set(match.event, { event: match.event, matches: 0, wins: 0, draws: 0, losses: 0, points: 0 });
-      }
-      const split = eventSplits.get(match.event);
-      split.matches += 1;
-      split.points += Number(match.points || 0);
-      if (match.result === "win") split.wins += 1;
-      if (match.result === "halved") split.draws += 1;
-      if (match.result === "loss") split.losses += 1;
-    });
+  const eventBreakdown = buildEventBreakdown(matches, player.name);
 
   if (record.matches === 0 || recentMatches.length === 0) {
     renderEmpty(player);
@@ -406,31 +437,43 @@ const renderProfile = (player, matches, metadata) => {
       <section class="panel panel--sport">
         <div class="panel__header">
           <div class="panel__title-row">
-            <h2>Event Splits</h2>
+            <h2>Competition Records</h2>
           </div>
+          <p class="muted">Record by event type, including competitions where this player has no captured matches.</p>
         </div>
         <div class="table-wrap">
           <table class="rank-table">
             <thead>
               <tr>
-                <th>Event</th>
+                <th>Competition</th>
                 <th>Matches</th>
+                <th>Wins</th>
+                <th>Draws</th>
+                <th>Losses</th>
                 <th>Points</th>
-                <th>W-D-L</th>
+                <th>PPM</th>
+                <th>Points %</th>
               </tr>
             </thead>
             <tbody>
-              ${Array.from(eventSplits.values())
-                .sort((a, b) => b.matches - a.matches || a.event.localeCompare(b.event))
+              ${eventBreakdown
                 .map(
-                  (split) => `
-                    <tr>
+                  (split) => {
+                    const splitPointsPerMatch = split.matches ? split.points / split.matches : null;
+                    const splitPointsPercentage = split.matches ? (split.points / split.matches) * 100 : null;
+                    return `
+                    <tr class="${split.matches === 0 ? "is-empty-event" : ""}">
                       <td>${escapeHtml(split.event)}</td>
                       <td>${split.matches}</td>
+                      <td>${split.wins}</td>
+                      <td>${split.draws}</td>
+                      <td>${split.losses}</td>
                       <td>${split.points.toFixed(1)}</td>
-                      <td>${split.wins}-${split.draws}-${split.losses}</td>
+                      <td>${formatNumber(splitPointsPerMatch, 2)}</td>
+                      <td>${formatPercentage(splitPointsPercentage)}</td>
                     </tr>
-                  `
+                  `;
+                  }
                 )
                 .join("")}
             </tbody>

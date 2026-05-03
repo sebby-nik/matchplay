@@ -74,6 +74,16 @@ const formatUpdatedDate = (value) => {
   }).format(date);
 };
 
+const formatNumber = (value, digits = 0, fallback = "—") => {
+  if (!Number.isFinite(value)) return fallback;
+  return value.toFixed(digits);
+};
+
+const formatPercentage = (value) => {
+  if (!Number.isFinite(value)) return "—";
+  return `${Math.round(value)}%`;
+};
+
 const flagFromCountry = (code) => {
   code = asText(code);
   if (!code) return "";
@@ -270,24 +280,51 @@ const calculateRecord = (matches, playerName) => {
   );
 };
 
-const renderNotFound = () => {
+const renderState = ({ title, message, eyebrow = "Player Profile", actionLabel = "Back to player ratings" }) => {
   if (!profileRoot) return;
   profileRoot.innerHTML = `
     <section class="panel panel--sport player-profile__state">
-      <p class="sport-band__eyebrow">Player Profile</p>
-      <h1>Player not found</h1>
-      <p class="muted">We could not find that player in the matchplay archive.</p>
-      <a class="profile-back-link" href="../../index.html">Back to player ratings</a>
+      <p class="sport-band__eyebrow">${escapeHtml(eyebrow)}</p>
+      <h1>${escapeHtml(title)}</h1>
+      <p class="muted">${escapeHtml(message)}</p>
+      <a class="profile-back-link" href="../../index.html">${escapeHtml(actionLabel)}</a>
     </section>
   `;
 };
+
+const renderNotFound = () =>
+  renderState({
+    title: "Player not found",
+    message: "We could not find that player in the matchplay archive."
+  });
+
+const renderError = () =>
+  renderState({
+    title: "Profile unavailable",
+    message: "The player profile data could not be loaded. Please try again from the player ratings page.",
+    eyebrow: "Loading Error"
+  });
+
+const renderEmpty = (player) =>
+  renderState({
+    title: player?.name || "No profile data",
+    message: "This player exists in the archive, but there are no playable matches available for their profile yet.",
+    eyebrow: "Empty Profile"
+  });
 
 const renderProfile = (player, matches, metadata) => {
   const record = calculateRecord(matches, player.name);
   const { rating, timeline } = computePlayerRatingProfile(matches, player.name);
   const flag = flagFromCountry(player.country);
+  const countryLabel = player.country ? player.country.toUpperCase() : "Country unavailable";
   const updated = formatUpdatedDate(metadata?.dataUpdatedAt || metadata?.lastUpdated);
   const recentMatches = timeline.slice().reverse();
+  const latestArchiveYear = matches.reduce((latest, match) => Math.max(latest, Number(match.year) || 0), 0);
+  const activeCutoff = latestArchiveYear ? latestArchiveYear - 5 : 0;
+  const statusLabel = record.lastYear && activeCutoff && record.lastYear >= activeCutoff ? "Active" : "Inactive";
+  const pointsPerMatch = record.matches ? record.points / record.matches : null;
+  const pointsPercentage = record.matches ? (record.points / record.matches) * 100 : null;
+  const winPercentage = record.matches ? (record.wins / record.matches) * 100 : null;
   const eventSplits = new Map();
   matches
     .filter((match) => match.player === player.name)
@@ -303,13 +340,18 @@ const renderProfile = (player, matches, metadata) => {
       if (match.result === "loss") split.losses += 1;
     });
 
+  if (record.matches === 0 || recentMatches.length === 0) {
+    renderEmpty(player);
+    return;
+  }
+
   profileRoot.innerHTML = `
     <section class="sport-band player-profile-hero">
       <div class="sport-band__content player-profile-hero__content">
         <div class="sport-band__copy">
           <p class="sport-band__eyebrow">Player Profile</p>
           <h1>${flag ? `${flag} ` : ""}${escapeHtml(player.name)}</h1>
-          <p>${record.matches} singles matches captured in the Matchplay Rankings archive.${updated ? ` Last updated: ${updated}.` : ""}</p>
+          <p>${escapeHtml(countryLabel)} · ${statusLabel} · ${record.matches} singles matches captured in the Matchplay Rankings archive.${updated ? ` Last updated: ${updated}.` : ""}</p>
         </div>
         <div class="lineal-card lineal-card--gold player-profile-card">
           <p class="lineal-card__label">Profile Summary</p>
@@ -321,12 +363,46 @@ const renderProfile = (player, matches, metadata) => {
           <div class="lineal-card__stats">
             <span>${record.matches} matches</span>
             <span>Peak ${rating ? Math.round(rating.peak) : "—"}</span>
-            <span>PPM ${record.matches ? (record.points / record.matches).toFixed(2) : "—"}</span>
+            <span>PPM ${formatNumber(pointsPerMatch, 2)}</span>
           </div>
         </div>
       </div>
     </section>
     <main class="layout layout--sport player-profile-layout">
+      <section class="player-profile-summary-grid" aria-label="Player summary statistics">
+        <article class="player-profile-stat">
+          <span>Current Elo</span>
+          <strong>${rating ? Math.round(rating.rating) : "—"}</strong>
+        </article>
+        <article class="player-profile-stat">
+          <span>Peak Elo</span>
+          <strong>${rating ? Math.round(rating.peak) : "—"}</strong>
+        </article>
+        <article class="player-profile-stat">
+          <span>Record</span>
+          <strong>${record.wins}-${record.draws}-${record.losses}</strong>
+        </article>
+        <article class="player-profile-stat">
+          <span>Points</span>
+          <strong>${record.points.toFixed(1)}</strong>
+        </article>
+        <article class="player-profile-stat">
+          <span>Points per match</span>
+          <strong>${formatNumber(pointsPerMatch, 2)}</strong>
+        </article>
+        <article class="player-profile-stat">
+          <span>Points percentage</span>
+          <strong>${formatPercentage(pointsPercentage)}</strong>
+        </article>
+        <article class="player-profile-stat">
+          <span>Win percentage</span>
+          <strong>${formatPercentage(winPercentage)}</strong>
+        </article>
+        <article class="player-profile-stat">
+          <span>Status</span>
+          <strong>${statusLabel}</strong>
+        </article>
+      </section>
       <section class="panel panel--sport">
         <div class="panel__header">
           <div class="panel__title-row">
@@ -419,11 +495,13 @@ Promise.all([
       renderNotFound();
       return;
     }
-    const matches = (matchData.matches || []).filter((match) => match.result !== "not played");
+    const matches = Array.isArray(matchData?.matches)
+      ? matchData.matches.filter((match) => match && match.result !== "not played")
+      : [];
     renderProfile(player, matches, metadata);
   })
   .catch(() => {
-    renderNotFound();
+    renderError();
   });
 
 const navToggle = document.querySelector(".site-nav__toggle");

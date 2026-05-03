@@ -1776,6 +1776,37 @@ input[type="range"] {
   gap: 1.25rem;
 }
 
+.player-profile-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.player-profile-stat {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: var(--shadow-soft);
+  padding: 1rem;
+}
+
+.player-profile-stat span {
+  display: block;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.player-profile-stat strong {
+  display: block;
+  margin-top: 0.45rem;
+  color: var(--ink);
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
+  line-height: 1;
+}
+
 .player-profile-matches {
   display: grid;
   gap: 0.75rem;
@@ -3689,6 +3720,14 @@ input[type="search"] {
 
   .player-profile-hero__content {
     grid-template-columns: 1fr;
+  }
+
+  .player-profile-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .player-profile-stat {
+    padding: 0.9rem;
   }
 
   .player-profile-matches {

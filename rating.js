@@ -100,6 +100,7 @@ let currentSort = { key: "rating", direction: "desc" };
 let ratingsCache = new Map();
 let outcomeCalibration = null;
 let siteMetadata = null;
+let playerSlugMap = new Map();
 
 const normalize = (value) => {
   if (!value) return "";
@@ -152,6 +153,11 @@ const renderLastUpdatedNote = () => {
   lastUpdatedNote.textContent = updated
     ? `Last updated: ${updated}`
     : "Last updated unavailable";
+};
+
+const getPlayerProfileHref = (name) => {
+  const slug = playerSlugMap.get(name);
+  return slug ? `players/${slug}/` : "";
 };
 
 const asText = (value, fallback = "") => {
@@ -731,9 +737,13 @@ const renderTable = (players) => {
     const flag = flagFromCountry(player.country);
     const rating = Number.isFinite(player.rating) ? Math.round(player.rating) : "—";
     const peak = Number.isFinite(player.peak) ? Math.round(player.peak) : "—";
+    const profileHref = getPlayerProfileHref(player.name);
+    const playerNameHtml = profileHref
+      ? `<a class="player-link" href="${profileHref}">${escapeHtml(player.name)}</a>`
+      : escapeHtml(player.name);
     row.innerHTML = `
       <td>${player.rank || "—"}</td>
-      <td>${escapeHtml(player.name)}${flag ? ` <span class="flag">${flag}</span>` : ""}</td>
+      <td>${playerNameHtml}${flag ? ` <span class="flag">${flag}</span>` : ""}</td>
       <td>${rating}</td>
       <td>${player.displayMatches ?? player.matches}</td>
       <td>${player.displayWins ?? player.wins}-${player.displayDraws ?? player.draws}-${player.displayLosses ?? player.losses}</td>
@@ -743,6 +753,10 @@ const renderTable = (players) => {
         </div>
       </td>
     `;
+    const profileLink = row.querySelector(".player-link");
+    if (profileLink) {
+      profileLink.addEventListener("click", (event) => event.stopPropagation());
+    }
     row.addEventListener("click", () => renderPlayerDetail(player, row));
     ratingBody.append(row);
   });
@@ -1117,12 +1131,16 @@ Promise.all([
     if (!res.ok) throw new Error("Unable to load ratings data");
     return res.json();
   }),
+  fetch("players-data.json")
+    .then((res) => (res.ok ? res.json() : null))
+    .catch(() => null),
   fetch("site-data.json")
     .then((res) => (res.ok ? res.json() : null))
     .catch(() => null)
 ])
-  .then(([data, metadata]) => {
+  .then(([data, playersData, metadata]) => {
     siteMetadata = metadata && typeof metadata === "object" ? metadata : null;
+    playerSlugMap = new Map((playersData?.players || []).map((player) => [player.name, player.slug]));
     renderLastUpdatedNote();
     allMatches = normalizeMatches(data);
     if (allMatches.length === 0) {

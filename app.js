@@ -47,6 +47,7 @@ let selectedPlayers = new Set();
 let availablePlayers = [];
 let allPlayers = [];
 let siteMetadata = null;
+let playerSlugMap = new Map();
 
 const normalize = (value) => {
   if (!value) return "";
@@ -100,6 +101,19 @@ const renderLastUpdatedNote = () => {
     ? `Last updated: ${updated}`
     : "Last updated unavailable";
 };
+
+const getPlayerProfileHref = (name) => {
+  const slug = playerSlugMap.get(name);
+  return slug ? `players/${slug}/` : "";
+};
+
+const escapeHtml = (value) =>
+  String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 
 const flagFromCountry = (code) => {
   if (!code) return "";
@@ -231,6 +245,10 @@ const renderTable = (players) => {
     row.dataset.player = player.name;
 
     const flag = flagFromCountry(player.country);
+    const profileHref = getPlayerProfileHref(player.name);
+    const playerNameHtml = profileHref
+      ? `<a class="player-link" href="${profileHref}">${escapeHtml(player.name)}</a>`
+      : escapeHtml(player.name);
     const ppmValue = player.matches < 3 ? null : player.ppm;
     const ppmPercent =
       ppmValue === null
@@ -250,7 +268,7 @@ const renderTable = (players) => {
             : "ppm-bar__fill--low";
     row.innerHTML = `
       <td>${player.rank ?? index + 1}</td>
-      <td>${player.name}${flag ? ` <span class="flag">${flag}</span>` : ""}</td>
+      <td>${playerNameHtml}${flag ? ` <span class="flag">${flag}</span>` : ""}</td>
       <td>${player.matches}</td>
       <td>${player.points.toFixed(1)}</td>
       <td>${player.wins}-${player.draws}-${player.losses}</td>
@@ -264,6 +282,10 @@ const renderTable = (players) => {
       </td>
     `;
 
+    const profileLink = row.querySelector(".player-link");
+    if (profileLink) {
+      profileLink.addEventListener("click", (event) => event.stopPropagation());
+    }
     row.addEventListener("click", () => renderPlayerDetail(player, row));
     rankBody.append(row);
   });
@@ -650,12 +672,16 @@ Promise.all([
     if (!res.ok) throw new Error("Unable to load records data");
     return res.json();
   }),
+  fetch("players-data.json")
+    .then((res) => (res.ok ? res.json() : null))
+    .catch(() => null),
   fetch("site-data.json")
     .then((res) => (res.ok ? res.json() : null))
     .catch(() => null)
 ])
-  .then(([data, metadata]) => {
+  .then(([data, playersData, metadata]) => {
     siteMetadata = metadata;
+    playerSlugMap = new Map((playersData?.players || []).map((player) => [player.name, player.slug]));
     renderLastUpdatedNote();
     allMatches = (data.matches || []).filter((match) => match.result !== "not played");
     if (allMatches.length === 0) {

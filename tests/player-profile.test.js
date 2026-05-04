@@ -144,6 +144,8 @@ test("known player profile pages are generated and render populated profile cont
   assert.match(root.innerHTML, /Rating Timeline/);
   assert.match(root.innerHTML, /head-to-head\/rory-mcilroy\/vs\/scottie-scheffler\//);
   assert.match(root.innerHTML, /head-to-head-inline-link/);
+  assert.match(root.innerHTML, /compare\/\?players=rory-mcilroy/);
+  assert.match(root.innerHTML, /Compare this player/);
 });
 
 test("unknown player slugs show a useful not-found state", () => {
@@ -350,6 +352,10 @@ test("comparison tool page exists and reuses shared statistics", () => {
   assert.match(compareSource, /calculateHeadToHeadRecord/);
   assert.match(compareSource, /URLSearchParams/);
   assert.match(compareSource, /players/);
+  assert.match(compareSource, /POPULAR_COMPARISONS/);
+  assert.match(compareSource, /tiger-woods/);
+  assert.match(compareSource, /rory-mcilroy/);
+  assert.match(compareSource, /compare-suggestion-card/);
 
   const rory = playerStats.buildPlayerProfileStats(playableMatches, "Rory McIlroy", { activeCutoff: 2020 });
   const scottie = playerStats.buildPlayerProfileStats(playableMatches, "Scottie Scheffler", { activeCutoff: 2020 });
@@ -359,6 +365,85 @@ test("comparison tool page exists and reuses shared statistics", () => {
   assert.strictEqual(h2h.matches, 2);
   assert.strictEqual(h2h.playerA.points, 1);
   assert.strictEqual(h2h.playerB.points, 1);
+});
+
+test("event series pages are generated from archive data", () => {
+  const eventSeriesHtml = fs.readFileSync(path.join(rootDir, "events", "ryder-cup", "index.html"), "utf8");
+  const eventSeriesSource = fs.readFileSync(path.join(rootDir, "event-series.js"), "utf8");
+  const eventUtilsSource = fs.readFileSync(path.join(rootDir, "event-utils.js"), "utf8");
+  const eventDiscoverySource = fs.readFileSync(path.join(rootDir, "events-discovery.js"), "utf8");
+  const eventsHtml = fs.readFileSync(path.join(rootDir, "events.html"), "utf8");
+
+  assert.match(eventSeriesHtml, /data-event-series-slug="ryder-cup"/);
+  assert.match(eventSeriesHtml, /Ryder Cup Matchplay Records &amp; Rankings \| Matchplay Rankings/);
+  assert.match(
+    eventSeriesHtml,
+    /Explore Ryder Cup singles matchplay records, player rankings, match results, and historical performance data\./
+  );
+  assert.match(eventSeriesHtml, /<link rel="canonical" href="https:\/\/www\.matchplayrankings\.com\/events\/ryder-cup\/" \/>/);
+  assert.match(eventSeriesHtml, /<meta property="og:title" content="Ryder Cup Matchplay Records &amp; Rankings \| Matchplay Rankings" \/>/);
+  assert.match(eventSeriesHtml, /<meta name="twitter:title" content="Ryder Cup Matchplay Records &amp; Rankings \| Matchplay Rankings" \/>/);
+  assert.match(eventSeriesHtml, /src="\/player-stats\.js"/);
+  assert.match(eventSeriesHtml, /src="\/event-utils\.js"/);
+  assert.match(eventSeriesHtml, /src="\/event-series\.js"/);
+  assert.match(eventSeriesSource, /SERIES_CONFIG/);
+  assert.match(eventUtilsSource, /coverage: "In progress"/);
+  assert.match(eventSeriesSource, /uniqueMatches/);
+  assert.match(eventSeriesSource, /Top Performers/);
+  assert.match(eventSeriesSource, /Best Records/);
+  assert.match(eventSeriesSource, /Most Matches Played/);
+  assert.match(eventSeriesSource, /Highest Points Per Match/);
+  assert.match(eventSeriesSource, /View edition/);
+  assert.match(eventsHtml, /Matchplay event discovery/);
+  assert.match(eventsHtml, /id="eventDiscoveryRoot"/);
+  assert.match(eventsHtml, /id="eventEditionDiscoveryRoot"/);
+  assert.match(eventsHtml, /id="eventDiscoverySearch"/);
+  assert.match(eventsHtml, /src="events-discovery\.js"/);
+  assert.match(eventDiscoverySource, /buildSeries/);
+  assert.match(eventDiscoverySource, /Coverage/);
+  assert.match(eventDiscoverySource, /latestYear/);
+  assert.match(eventDiscoverySource, /buildFeaturedEditions/);
+
+  const ryderRows = playableMatches.filter((match) => match.event === "Ryder Cup");
+  const ryderUniqueMatches = playerStats.uniqueMatches(ryderRows);
+  const ryderPlayers = new Set();
+  ryderRows.forEach((match) => {
+    ryderPlayers.add(match.player);
+    ryderPlayers.add(match.opponent);
+  });
+  assert.strictEqual(ryderUniqueMatches.length, 517);
+  assert.strictEqual(ryderPlayers.size, 350);
+});
+
+test("event edition pages are generated from archive data", () => {
+  const editionHtml = fs.readFileSync(path.join(rootDir, "events", "ryder-cup", "2023", "index.html"), "utf8");
+  const editionSource = fs.readFileSync(path.join(rootDir, "event-edition.js"), "utf8");
+
+  assert.match(editionHtml, /data-event-series-slug="ryder-cup"/);
+  assert.match(editionHtml, /data-event-edition-year="2023"/);
+  assert.match(editionHtml, /2023 Ryder Cup Matchplay Results \| Matchplay Rankings/);
+  assert.match(
+    editionHtml,
+    /View singles matchplay results, player records, and rating changes from the 2023 Ryder Cup\./
+  );
+  assert.match(editionHtml, /<link rel="canonical" href="https:\/\/www\.matchplayrankings\.com\/events\/ryder-cup\/2023\/" \/>/);
+  assert.match(editionHtml, /<meta property="og:title" content="2023 Ryder Cup Matchplay Results \| Matchplay Rankings" \/>/);
+  assert.match(editionHtml, /<meta name="twitter:title" content="2023 Ryder Cup Matchplay Results \| Matchplay Rankings" \/>/);
+  assert.match(editionHtml, /src="\/event-utils\.js"/);
+  assert.match(editionHtml, /src="\/event-edition\.js"/);
+  assert.match(editionSource, /Singles Match Results/);
+  assert.match(editionSource, /Biggest Rating Gains/);
+  assert.match(editionSource, /getHeadToHeadHref/);
+  assert.match(editionSource, /computePlayerRatingProfile/);
+
+  const ryder2023Rows = playableMatches.filter((match) => match.event === "Ryder Cup" && match.year === 2023);
+  const ryder2023Players = new Set();
+  ryder2023Rows.forEach((match) => {
+    ryder2023Players.add(match.player);
+    ryder2023Players.add(match.opponent);
+  });
+  assert.strictEqual(playerStats.uniqueMatches(ryder2023Rows).length, 12);
+  assert.strictEqual(ryder2023Players.size, 24);
 });
 
 test("404 page can fall back to the head-to-head renderer for non-generated pairs", () => {
@@ -408,17 +493,21 @@ test("rankings and records player links resolve to generated profile routes", ()
   assert.match(ratingSource, /renderPlayerLink/);
   assert.match(ratingSource, /class="player-link"/);
   assert.match(ratingSource, /renderHeadToHeadLink/);
+  assert.match(ratingSource, /renderCompareLink/);
   assert.match(ratingSource, /head-to-head-inline-link/);
   assert.match(recordsSource, /renderPlayerLink/);
   assert.match(recordsSource, /class="player-link"/);
   assert.match(recordsSource, /renderHeadToHeadLink/);
+  assert.match(recordsSource, /renderCompareLink/);
   assert.match(recordsSource, /head-to-head-inline-link/);
   assert.match(playerSource, /renderHeadToHeadInlineLink/);
+  assert.match(playerSource, /renderCompareInlineLink/);
   assert.match(playerSource, /head-to-head-inline-link/);
   assert.match(linealSource, /renderHeadToHeadLink/);
   assert.match(linealHtml, /<th>Matchup<\/th>/);
   const indexHtml = fs.readFileSync(path.join(rootDir, "index.html"), "utf8");
   assert.match(indexHtml, /href="compare\/">Compare Players/);
+  assert.match(indexHtml, /href="compare\/">Compare players/);
 });
 
 (async () => {

@@ -75,6 +75,12 @@ const getPlayerProfileHref = (playerSlugMap, name) => {
   return slug ? `../${slug}/` : "";
 };
 
+const getCompareHref = (playerSlug, opponentSlug = "") => {
+  if (!playerSlug) return "";
+  const slugs = [playerSlug, opponentSlug].filter(Boolean);
+  return `../../compare/?players=${slugs.map(encodeURIComponent).join(",")}`;
+};
+
 const formatRatingDelta = (value) => {
   if (!Number.isFinite(value)) return "—";
   const rounded = Math.round(value);
@@ -103,6 +109,14 @@ const renderHeadToHeadInlineLink = (opponentName, playerSlugMap, label = "H2H") 
     : "";
 };
 
+const renderCompareInlineLink = (opponentName, playerSlugMap, label = "Compare") => {
+  const opponentSlug = playerSlugMap.get(opponentName);
+  const href = getCompareHref(currentSlug, opponentSlug);
+  return href
+    ? `<a class="head-to-head-inline-link compare-inline-link" href="${href}" aria-label="Compare full careers">${escapeHtml(label)}</a>`
+    : "";
+};
+
 const renderNotableMatchesSection = ({ title, description, matches, playerSlugMap }) => `
   <section class="panel panel--sport">
     <div class="panel__header">
@@ -125,6 +139,7 @@ const renderNotableMatchesSection = ({ title, description, matches, playerSlugMa
                   <th>Opponent Elo</th>
                   <th>Elo change</th>
                   <th>Matchup</th>
+                  <th>Compare</th>
                 </tr>
               </thead>
               <tbody>
@@ -139,6 +154,7 @@ const renderNotableMatchesSection = ({ title, description, matches, playerSlugMa
                         <td>${Math.round(match.opponentRatingBefore)}</td>
                         <td>${formatRatingDelta(match.ratingDelta)}</td>
                         <td>${renderHeadToHeadInlineLink(match.opponent, playerSlugMap, "View") || "—"}</td>
+                        <td>${renderCompareInlineLink(match.opponent, playerSlugMap, "Compare") || "—"}</td>
                       </tr>
                     `
                   )
@@ -428,6 +444,7 @@ const renderMatchHistorySection = (recentMatches, playerSlugMap) => `
                   <th>Elo</th>
                   <th>Change</th>
                   <th>Matchup</th>
+                  <th>Compare</th>
                 </tr>
               </thead>
               <tbody>
@@ -453,6 +470,7 @@ const renderMatchHistorySection = (recentMatches, playerSlugMap) => `
                         <td>${Math.round(match.ratingBefore)} → ${Math.round(match.ratingAfter)}</td>
                         <td><span class="rating-delta ${delta > 0 ? "rating-delta--pos" : delta < 0 ? "rating-delta--neg" : "rating-delta--even"}">${delta > 0 ? `+${delta}` : delta}</span></td>
                         <td>${renderHeadToHeadInlineLink(match.opponent, playerSlugMap, "View") || "—"}</td>
+                        <td>${renderCompareInlineLink(match.opponent, playerSlugMap, "Compare") || "—"}</td>
                       </tr>
                     `;
                   })
@@ -551,6 +569,9 @@ const renderProfile = (player, matches, metadata, players = []) => {
             <span>${rating ? Math.round(rating.rating) : "—"} current Elo</span>
             <span>${rating ? Math.round(rating.peak) : "—"} peak Elo</span>
             <span>${statusLabel}</span>
+          </div>
+          <div class="profile-actions">
+            <a class="head-to-head-inline-link compare-inline-link" href="${getCompareHref(player.slug)}">Compare this player</a>
           </div>
         </div>
         <div class="lineal-card lineal-card--gold player-profile-card">

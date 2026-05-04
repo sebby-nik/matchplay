@@ -45,6 +45,9 @@ const formatPoints = (value) => formatNumber(value, Number.isInteger(value) ? 0 
 
 const profileHref = (slug) => `/players/${encodeURIComponent(slug)}/`;
 
+const compareHref = (playerA, playerB) =>
+  `/compare/?players=${encodeURIComponent(playerA.slug)},${encodeURIComponent(playerB.slug)}`;
+
 const setMetaContent = (selector, content) => {
   const element = document.querySelector(selector);
   if (element && content) element.setAttribute("content", content);
@@ -261,6 +264,7 @@ const renderHeadToHead = (playerA, playerB, matches) => {
           <div class="head-to-head-actions">
             <a class="btn btn--secondary" href="${profileHref(playerA.slug)}">${escapeHtml(playerA.name)} profile</a>
             <a class="btn btn--secondary" href="${profileHref(playerB.slug)}">${escapeHtml(playerB.name)} profile</a>
+            <a class="btn btn--secondary" href="${compareHref(playerA, playerB)}">Compare full careers</a>
           </div>
         </div>
         <div class="head-to-head-versus">

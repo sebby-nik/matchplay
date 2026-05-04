@@ -171,6 +171,13 @@ const getHeadToHeadHref = (playerName, opponentName) => {
   return `head-to-head/${playerA}/vs/${playerB}/`;
 };
 
+const getCompareHref = (playerName, opponentName = "") => {
+  const playerSlug = playerSlugMap.get(playerName);
+  const opponentSlug = opponentName ? playerSlugMap.get(opponentName) : "";
+  if (!playerSlug) return "";
+  return `compare/?players=${[playerSlug, opponentSlug].filter(Boolean).map(encodeURIComponent).join(",")}`;
+};
+
 const renderPlayerLink = (name) => {
   const href = getPlayerProfileHref(name);
   return href
@@ -182,6 +189,13 @@ const renderHeadToHeadLink = (playerName, opponentName) => {
   const href = getHeadToHeadHref(playerName, opponentName);
   return href
     ? `<a class="head-to-head-inline-link" href="${href}" aria-label="View head-to-head record for ${escapeHtml(playerName)} and ${escapeHtml(opponentName)}">H2H</a>`
+    : "";
+};
+
+const renderCompareLink = (playerName, opponentName = "", label = "Compare") => {
+  const href = getCompareHref(playerName, opponentName);
+  return href
+    ? `<a class="head-to-head-inline-link compare-inline-link" href="${href}" aria-label="Compare full careers">${escapeHtml(label)}</a>`
     : "";
 };
 
@@ -788,6 +802,7 @@ const renderPlayerDetailContent = (player) => {
     <div class="player-detail">
       <h3>${flag ? `${flag} ` : ""}${escapeHtml(player.name)}</h3>
       <div class="detail-meta">${player.displayMatches ?? player.matches} matches • ${player.displayWins ?? player.wins}-${player.displayDraws ?? player.draws}-${player.displayLosses ?? player.losses}</div>
+      <div class="detail-actions">${renderCompareLink(player.name, "", "Compare this player")}</div>
       <div class="match-list">${matches || "<p class=\"muted\">No matches yet.</p>"}</div>
     </div>
   `;

@@ -23,6 +23,13 @@ let matches = [];
 let playerBySlug = new Map();
 let selectedSlugs = ["", ""];
 
+const POPULAR_COMPARISONS = [
+  ["tiger-woods", "rory-mcilroy"],
+  ["ian-poulter", "sergio-garcia"],
+  ["scottie-scheffler", "jon-rahm"],
+  ["seve-ballesteros", "nick-faldo"]
+];
+
 const escapeHtml = (value) =>
   asText(value)
     .replace(/&/g, "&amp;")
@@ -60,6 +67,9 @@ const getCanonicalHeadToHeadHref = (playerA, playerB) => {
   const [slugA, slugB] = [playerA.slug, playerB.slug].sort((a, b) => a.localeCompare(b));
   return `/head-to-head/${slugA}/vs/${slugB}/`;
 };
+
+const getCompareUrl = (slugA, slugB = "") =>
+  `/compare/?players=${[slugA, slugB].filter(Boolean).map(encodeURIComponent).join(",")}`;
 
 const getPlayerLabel = (player) =>
   `${player.name}${player.country ? ` (${player.country.toUpperCase()})` : ""}`;
@@ -110,12 +120,40 @@ const getMetricRows = (playerAStats, playerBStats) => {
   ];
 };
 
-const renderState = (title, message) => {
+const renderSuggestedComparisons = () => {
+  const suggestions = POPULAR_COMPARISONS
+    .map(([slugA, slugB]) => [playerBySlug.get(slugA), playerBySlug.get(slugB)])
+    .filter(([playerA, playerB]) => playerA && playerB);
+
+  if (suggestions.length === 0) return "";
+
+  return `
+    <div class="compare-suggestions">
+      <span class="player-profile-related-card__label">Popular comparisons</span>
+      <div class="compare-suggestions__grid">
+        ${suggestions
+          .map(
+            ([playerA, playerB]) => `
+              <a class="compare-suggestion-card" href="${getCompareUrl(playerA.slug, playerB.slug)}">
+                <span>${escapeHtml(playerA.name)}</span>
+                <strong>vs</strong>
+                <span>${escapeHtml(playerB.name)}</span>
+              </a>
+            `
+          )
+          .join("")}
+      </div>
+    </div>
+  `;
+};
+
+const renderState = (title, message, showSuggestions = false) => {
   compareRoot.innerHTML = `
     <section class="panel panel--sport compare-state">
       <p class="sport-band__eyebrow">Compare</p>
       <h2>${escapeHtml(title)}</h2>
       <p class="muted">${escapeHtml(message)}</p>
+      ${showSuggestions ? renderSuggestedComparisons() : ""}
     </section>
   `;
 };
@@ -240,7 +278,7 @@ const renderCurrentState = () => {
   const playerB = playerBySlug.get(selectedSlugs[1]);
 
   if (!playerA && !playerB) {
-    renderState("Select two players", "Choose players above to compare their matchplay records and direct head-to-head.");
+    renderState("Select two players", "Choose players above to compare their matchplay records and direct head-to-head.", true);
     return;
   }
 

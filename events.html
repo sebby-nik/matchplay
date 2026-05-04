@@ -8,17 +8,17 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7875248389384117"
       crossorigin="anonymous"
     ></script>
-    <title>Events</title>
+    <title>Matchplay Golf Events | Matchplay Rankings</title>
     <meta
       name="description"
-      content="Upcoming matchplay team events, including Ryder Cup and Presidents Cup schedules, venues, and dates."
+      content="Browse matchplay golf event series, editions, coverage status, singles results, and historical player performance data."
     />
     <meta property="og:site_name" content="Matchplay Rankings" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Events | Matchplay Rankings" />
+    <meta property="og:title" content="Matchplay Golf Events | Matchplay Rankings" />
     <meta
       property="og:description"
-      content="Upcoming matchplay team events, including Ryder Cup and Presidents Cup schedules, venues, and dates."
+      content="Browse matchplay golf event series, editions, coverage status, singles results, and historical player performance data."
     />
     <meta property="og:url" content="https://www.matchplayrankings.com/events.html" />
     <meta
@@ -28,10 +28,10 @@
     <meta property="og:image:width" content="640" />
     <meta property="og:image:height" content="637" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Events | Matchplay Rankings" />
+    <meta name="twitter:title" content="Matchplay Golf Events | Matchplay Rankings" />
     <meta
       name="twitter:description"
-      content="Upcoming matchplay team events, including Ryder Cup and Presidents Cup schedules, venues, and dates."
+      content="Browse matchplay golf event series, editions, coverage status, singles results, and historical player performance data."
     />
     <meta
       name="twitter:image"
@@ -78,16 +78,59 @@
 
     <header class="hero hero--sport">
       <div class="hero__content hero__content--wide">
-        <p class="eyebrow">Past & Future Events</p>
+        <p class="eyebrow">Event Archive</p>
         <div class="hero__title-row">
-          <h1>Matchplay Event Schedule</h1>
+          <h1>Matchplay event discovery</h1>
         </div>
         <p class="lede">
-          The calendar below tracks the next Ryder Cup and Presidents Cup, sorted by date with venues and event
-          details in one place.
+          Browse event series, edition pages, coverage status, and singles matchplay results from the archive.
         </p>
       </div>
     </header>
+
+    <section class="event-discovery layout layout--sport" aria-label="Event discovery">
+      <div class="panel panel--sport">
+        <div class="panel__header">
+          <div class="panel__title-row">
+            <h2>Event Series</h2>
+          </div>
+          <p class="muted">Coverage, match counts, editions, and latest available year are derived from the current match archive.</p>
+        </div>
+        <div class="event-discovery-controls">
+          <label class="event-discovery-search" for="eventDiscoverySearch">
+            <span>Search events</span>
+            <input id="eventDiscoverySearch" type="search" placeholder="Search Ryder Cup, WGC, PGA…" autocomplete="off" />
+          </label>
+          <label class="event-discovery-filter" for="eventDiscoveryStatus">
+            <span>Coverage</span>
+            <select id="eventDiscoveryStatus">
+              <option value="">All coverage</option>
+              <option value="complete">Complete</option>
+              <option value="partial">Partial</option>
+              <option value="in-progress">In progress</option>
+              <option value="planned">Planned</option>
+            </select>
+          </label>
+        </div>
+        <div id="eventDiscoveryRoot" class="event-discovery-grid">
+          <div class="schedule__loading">Loading event series…</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="event-discovery layout layout--sport" aria-label="Featured event editions">
+      <div class="panel panel--sport">
+        <div class="panel__header">
+          <div class="panel__title-row">
+            <h2>Recent Editions</h2>
+          </div>
+          <p class="muted">Quick links into the latest year-level pages for match results, rating changes, and player links.</p>
+        </div>
+        <div id="eventEditionDiscoveryRoot" class="event-edition-feature-grid">
+          <div class="schedule__loading">Loading event editions…</div>
+        </div>
+      </div>
+    </section>
 
     <section class="schedule">
       <div class="schedule__controls">
@@ -130,6 +173,9 @@
       </div>
     </footer>
 
+    <script src="player-stats.js"></script>
+    <script src="event-utils.js"></script>
+    <script src="events-discovery.js"></script>
     <script>
       (() => {
         try {

@@ -142,6 +142,8 @@ test("known player profile pages are generated and render populated profile cont
   assert.match(root.innerHTML, /Competition Records/);
   assert.match(root.innerHTML, /Head-to-Head Records/);
   assert.match(root.innerHTML, /Rating Timeline/);
+  assert.match(root.innerHTML, /head-to-head\/rory-mcilroy\/vs\/scottie-scheffler\//);
+  assert.match(root.innerHTML, /head-to-head-inline-link/);
 });
 
 test("unknown player slugs show a useful not-found state", () => {
@@ -272,6 +274,77 @@ test("head-to-head records are derived from player rating timeline", () => {
   );
 });
 
+test("shared head-to-head helpers derive two-player pages consistently", () => {
+  const matches = playerStats.buildHeadToHeadMatches(playableMatches, "Rory McIlroy", "Scottie Scheffler");
+  const record = playerStats.calculateHeadToHeadRecord(playableMatches, "Rory McIlroy", "Scottie Scheffler");
+  const events = playerStats.buildHeadToHeadEventBreakdown(playableMatches, "Rory McIlroy", "Scottie Scheffler");
+
+  assert.strictEqual(matches.length, 2);
+  assert.deepStrictEqual(
+    {
+      matches: record.matches,
+      roryWins: record.playerA.wins,
+      roryDraws: record.playerA.draws,
+      roryLosses: record.playerA.losses,
+      roryPoints: record.playerA.points,
+      scottieWins: record.playerB.wins,
+      scottiePoints: record.playerB.points
+    },
+    {
+      matches: 2,
+      roryWins: 1,
+      roryDraws: 0,
+      roryLosses: 1,
+      roryPoints: 1,
+      scottieWins: 1,
+      scottiePoints: 1
+    }
+  );
+  assert.ok(events.some((event) => event.event === "Ryder Cup" && event.matches === 1));
+  assert.ok(events.some((event) => event.event === "WGC / Dell Match Play" && event.matches === 1));
+});
+
+test("head-to-head helpers handle players who have never faced each other", () => {
+  const matches = playerStats.buildHeadToHeadMatches(playableMatches, "Tiger Woods", "Scottie Scheffler");
+  const record = playerStats.calculateHeadToHeadRecord(playableMatches, "Tiger Woods", "Scottie Scheffler");
+  const events = playerStats.buildHeadToHeadEventBreakdown(playableMatches, "Tiger Woods", "Scottie Scheffler");
+
+  assert.deepStrictEqual(matches, []);
+  assert.strictEqual(record.matches, 0);
+  assert.strictEqual(record.playerA.points, 0);
+  assert.strictEqual(record.playerB.points, 0);
+  assert.deepStrictEqual(events, []);
+});
+
+test("generated head-to-head pages use canonical static routes", () => {
+  const canonical = path.join(rootDir, "head-to-head", "rory-mcilroy", "vs", "scottie-scheffler", "index.html");
+  const reverse = path.join(rootDir, "head-to-head", "scottie-scheffler", "vs", "rory-mcilroy", "index.html");
+  const canonicalHtml = fs.readFileSync(canonical, "utf8");
+  const reverseHtml = fs.readFileSync(reverse, "utf8");
+
+  assert.match(canonicalHtml, /data-player-a="rory-mcilroy"/);
+  assert.match(canonicalHtml, /data-player-b="scottie-scheffler"/);
+  assert.match(canonicalHtml, /Rory McIlroy vs Scottie Scheffler Head-to-Head Matchplay Record \| Matchplay Rankings/);
+  assert.match(
+    canonicalHtml,
+    /View the professional golf matchplay head-to-head record between Rory McIlroy and Scottie Scheffler, including results, events, scores, and match history\./
+  );
+  assert.match(canonicalHtml, /<link rel="canonical" href="https:\/\/www\.matchplayrankings\.com\/head-to-head\/rory-mcilroy\/vs\/scottie-scheffler\/" \/>/);
+  assert.match(canonicalHtml, /src="\.\.\/\.\.\/\.\.\/\.\.\/player-stats\.js"/);
+  assert.match(canonicalHtml, /src="\.\.\/\.\.\/\.\.\/\.\.\/head-to-head\.js"/);
+  assert.match(reverseHtml, /noindex, follow/);
+  assert.match(reverseHtml, /Rory McIlroy vs Scottie Scheffler Head-to-Head Matchplay Record \| Matchplay Rankings/);
+  assert.match(reverseHtml, /url=\/head-to-head\/rory-mcilroy\/vs\/scottie-scheffler\//);
+});
+
+test("404 page can fall back to the head-to-head renderer for non-generated pairs", () => {
+  const notFoundHtml = fs.readFileSync(path.join(rootDir, "404.html"), "utf8");
+  assert.match(notFoundHtml, /head-to-head\\\/\(\[\^\/\]\+\)\\\/vs\\\/\(\[\^\/\]\+\)/);
+  assert.match(notFoundHtml, /document\.body\.dataset\.playerA/);
+  assert.match(notFoundHtml, /\/player-stats\.js/);
+  assert.match(notFoundHtml, /\/head-to-head\.js/);
+});
+
 test("best wins and worst losses skip entries without opponent ratings", () => {
   const { api } = loadPlayerApi();
   assert.deepStrictEqual(api.buildBestWins([{ result: "win", opponent: "Missing Rating" }]), []);
@@ -305,10 +378,21 @@ test("rankings and records player links resolve to generated profile routes", ()
 
   const ratingSource = fs.readFileSync(path.join(rootDir, "rating.js"), "utf8");
   const recordsSource = fs.readFileSync(path.join(rootDir, "app.js"), "utf8");
+  const playerSource = fs.readFileSync(path.join(rootDir, "player.js"), "utf8");
+  const linealSource = fs.readFileSync(path.join(rootDir, "lineal.js"), "utf8");
+  const linealHtml = fs.readFileSync(path.join(rootDir, "lineal.html"), "utf8");
   assert.match(ratingSource, /renderPlayerLink/);
   assert.match(ratingSource, /class="player-link"/);
+  assert.match(ratingSource, /renderHeadToHeadLink/);
+  assert.match(ratingSource, /head-to-head-inline-link/);
   assert.match(recordsSource, /renderPlayerLink/);
   assert.match(recordsSource, /class="player-link"/);
+  assert.match(recordsSource, /renderHeadToHeadLink/);
+  assert.match(recordsSource, /head-to-head-inline-link/);
+  assert.match(playerSource, /renderHeadToHeadInlineLink/);
+  assert.match(playerSource, /head-to-head-inline-link/);
+  assert.match(linealSource, /renderHeadToHeadLink/);
+  assert.match(linealHtml, /<th>Matchup<\/th>/);
 });
 
 (async () => {

@@ -197,11 +197,26 @@ const getPlayerProfileHref = (name) => {
   return slug ? `players/${slug}/` : "";
 };
 
+const getHeadToHeadHref = (playerName, opponentName) => {
+  const playerSlug = playerSlugMap.get(playerName);
+  const opponentSlug = playerSlugMap.get(opponentName);
+  if (!playerSlug || !opponentSlug) return "";
+  const [playerA, playerB] = [playerSlug, opponentSlug].sort((a, b) => a.localeCompare(b));
+  return `head-to-head/${playerA}/vs/${playerB}/`;
+};
+
 const renderPlayerLink = (name) => {
   const href = getPlayerProfileHref(name);
   return href
     ? `<a class="player-link" href="${href}">${escapeHtml(name)}</a>`
     : escapeHtml(name);
+};
+
+const renderHeadToHeadLink = (playerName, opponentName) => {
+  const href = getHeadToHeadHref(playerName, opponentName);
+  return href
+    ? `<a class="head-to-head-inline-link" href="${href}" aria-label="View head-to-head record for ${escapeHtml(playerName)} and ${escapeHtml(opponentName)}">H2H</a>`
+    : "—";
 };
 
 const normalizeResult = (value) => {
@@ -736,6 +751,7 @@ const renderMatchLog = (entries) => {
       <td><span class="lineal-result lineal-result--${resultClass}">${escapeHtml(result)}</span></td>
       <td>${escapeHtml(entry.score || "-")}</td>
       <td>${escapeHtml(entry.round)}</td>
+      <td>${renderHeadToHeadLink(entry.championBefore, entry.opponent)}</td>
     `;
     linealMatches.append(row);
   });

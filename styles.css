@@ -1812,6 +1812,32 @@ input[type="range"] {
   outline-offset: 3px;
 }
 
+.head-to-head-inline-link {
+  align-items: center;
+  border: 1px solid rgba(37, 99, 235, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--ink);
+  display: inline-flex;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  margin-left: 0.35rem;
+  min-height: 28px;
+  padding: 0.3rem 0.5rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.head-to-head-inline-link:hover,
+.head-to-head-inline-link:focus-visible {
+  border-color: rgba(37, 99, 235, 0.6);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+  outline: none;
+}
+
 .ppm-cell {
   display: flex;
   align-items: center;
@@ -2128,6 +2154,147 @@ input[type="range"] {
   display: grid;
   gap: 0.75rem;
   padding: 0 1.5rem 1.5rem;
+}
+
+.head-to-head-shell {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.head-to-head-state {
+  max-width: 760px;
+  padding: 3rem 0;
+}
+
+.head-to-head-state h1,
+.head-to-head-hero h1 {
+  color: var(--ink);
+  font-size: clamp(2rem, 5vw, 4.2rem);
+  line-height: 0.98;
+  margin: 0.45rem 0 0.8rem;
+}
+
+.head-to-head-state p,
+.head-to-head-hero p {
+  color: var(--ink-soft);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.section-kicker,
+.head-to-head-player-card__eyebrow {
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.head-to-head-hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding-top: 2rem;
+}
+
+.head-to-head-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: flex-end;
+}
+
+.head-to-head-actions a,
+.head-to-head-state a {
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--ink);
+  display: inline-flex;
+  font-weight: 900;
+  min-height: 44px;
+  padding: 0.65rem 0.9rem;
+  text-decoration: none;
+}
+
+.head-to-head-actions a:hover,
+.head-to-head-actions a:focus-visible,
+.head-to-head-state a:hover,
+.head-to-head-state a:focus-visible {
+  border-color: rgba(37, 99, 235, 0.55);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16);
+  outline: none;
+}
+
+.head-to-head-versus {
+  align-items: stretch;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+}
+
+.head-to-head-player-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: var(--shadow-soft);
+  display: grid;
+  gap: 0.7rem;
+  padding: 1.1rem;
+}
+
+.head-to-head-player-card h2 {
+  color: var(--ink);
+  font-size: clamp(1.45rem, 3vw, 2.6rem);
+  line-height: 1;
+  margin: 0;
+}
+
+.head-to-head-vs {
+  align-self: center;
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  padding: 0.65rem 0.7rem;
+  text-transform: uppercase;
+}
+
+.head-to-head-points {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: auto;
+}
+
+.head-to-head-points strong {
+  color: var(--ink);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.head-to-head-points span {
+  color: var(--ink-soft);
+  font-weight: 800;
+}
+
+.head-to-head-summary-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.head-to-head-table th,
+.head-to-head-table td {
+  white-space: nowrap;
 }
 
 .detail-meta {
@@ -4136,6 +4303,36 @@ input[type="search"] {
 
   .player-profile-matches {
     padding: 0 1rem 1rem;
+  }
+
+  .head-to-head-state {
+    padding: 1.5rem 0;
+  }
+
+  .head-to-head-hero {
+    align-items: flex-start;
+    display: grid;
+    padding-top: 1rem;
+  }
+
+  .head-to-head-actions {
+    justify-content: flex-start;
+  }
+
+  .head-to-head-versus {
+    grid-template-columns: 1fr;
+  }
+
+  .head-to-head-vs {
+    justify-self: start;
+  }
+
+  .head-to-head-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .head-to-head-player-card {
+    padding: 1rem;
   }
 
   .lineal-card.lineal-card--gold {

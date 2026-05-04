@@ -163,11 +163,26 @@ const getPlayerProfileHref = (name) => {
   return slug ? `players/${slug}/` : "";
 };
 
+const getHeadToHeadHref = (playerName, opponentName) => {
+  const playerSlug = playerSlugMap.get(playerName);
+  const opponentSlug = playerSlugMap.get(opponentName);
+  if (!playerSlug || !opponentSlug) return "";
+  const [playerA, playerB] = [playerSlug, opponentSlug].sort((a, b) => a.localeCompare(b));
+  return `head-to-head/${playerA}/vs/${playerB}/`;
+};
+
 const renderPlayerLink = (name) => {
   const href = getPlayerProfileHref(name);
   return href
     ? `<a class="player-link" href="${href}">${escapeHtml(name)}</a>`
     : escapeHtml(name);
+};
+
+const renderHeadToHeadLink = (playerName, opponentName) => {
+  const href = getHeadToHeadHref(playerName, opponentName);
+  return href
+    ? `<a class="head-to-head-inline-link" href="${href}" aria-label="View head-to-head record for ${escapeHtml(playerName)} and ${escapeHtml(opponentName)}">H2H</a>`
+    : "";
 };
 
 const getPlayerCountry = (player) => {
@@ -757,7 +772,7 @@ const renderPlayerDetailContent = (player) => {
         <div class="match-row ${resultClass}">
           <div>
             <strong>${escapeHtml(match.event)} ${escapeHtml(match.year)}</strong> — ${renderPlayerLink(match.opponent)}
-            <div class="meta">${escapeHtml(match.round || "Singles")}</div>
+            <div class="meta">${escapeHtml(match.round || "Singles")} ${renderHeadToHeadLink(player.name, match.opponent)}</div>
           </div>
           <div>
             <span class="rating-delta ${deltaClass}">${deltaValue}</span>

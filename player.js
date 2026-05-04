@@ -89,6 +89,20 @@ const renderOpponentLink = (match, playerSlugMap) => {
     : escapeHtml(label);
 };
 
+const getCanonicalHeadToHeadHref = (playerSlug, opponentSlug) => {
+  if (!playerSlug || !opponentSlug) return "";
+  const [playerA, playerB] = [playerSlug, opponentSlug].sort((a, b) => a.localeCompare(b));
+  return `../../head-to-head/${playerA}/vs/${playerB}/`;
+};
+
+const renderHeadToHeadInlineLink = (opponentName, playerSlugMap, label = "H2H") => {
+  const opponentSlug = playerSlugMap.get(opponentName);
+  const href = getCanonicalHeadToHeadHref(currentSlug, opponentSlug);
+  return href
+    ? `<a class="head-to-head-inline-link" href="${href}" aria-label="View head-to-head record">${escapeHtml(label)}</a>`
+    : "";
+};
+
 const renderNotableMatchesSection = ({ title, description, matches, playerSlugMap }) => `
   <section class="panel panel--sport">
     <div class="panel__header">
@@ -110,6 +124,7 @@ const renderNotableMatchesSection = ({ title, description, matches, playerSlugMa
                   <th>Score</th>
                   <th>Opponent Elo</th>
                   <th>Elo change</th>
+                  <th>Matchup</th>
                 </tr>
               </thead>
               <tbody>
@@ -123,6 +138,7 @@ const renderNotableMatchesSection = ({ title, description, matches, playerSlugMa
                         <td>${escapeHtml(match.score || (match.result === "win" ? "Win" : "Loss"))}</td>
                         <td>${Math.round(match.opponentRatingBefore)}</td>
                         <td>${formatRatingDelta(match.ratingDelta)}</td>
+                        <td>${renderHeadToHeadInlineLink(match.opponent, playerSlugMap, "View") || "—"}</td>
                       </tr>
                     `
                   )
@@ -240,10 +256,17 @@ const getHeadToHeadOpponentLink = (record, playerSlugMap) => {
     : escapeHtml(label);
 };
 
+const getHeadToHeadHref = (record, playerSlugMap) => {
+  const opponentSlug = playerSlugMap.get(record.opponent);
+  return getCanonicalHeadToHeadHref(currentSlug, opponentSlug);
+};
+
 const renderHeadToHeadRows = (records, playerSlugMap) =>
   records
     .map(
-      (record) => `
+      (record) => {
+        const headToHeadHref = getHeadToHeadHref(record, playerSlugMap);
+        return `
         <tr>
           <td>${getHeadToHeadOpponentLink(record, playerSlugMap)}</td>
           <td>${record.matches}</td>
@@ -253,8 +276,14 @@ const renderHeadToHeadRows = (records, playerSlugMap) =>
           <td>${record.points.toFixed(1)}</td>
           <td>${formatNumber(record.pointsPerMatch, 2)}</td>
           <td>${escapeHtml(record.latestMeeting || "—")}</td>
+          <td>${
+            headToHeadHref
+              ? `<a class="player-link" href="${headToHeadHref}">View matchup</a>`
+              : "—"
+          }</td>
         </tr>
-      `
+      `;
+      }
     )
     .join("");
 
@@ -310,6 +339,7 @@ const renderHeadToHeadSection = (records, playerSlugMap) => {
               <th>Points</th>
               <th>PPM</th>
               <th>Latest</th>
+              <th>Matchup</th>
             </tr>
           </thead>
           <tbody id="headToHeadBody">
@@ -397,6 +427,7 @@ const renderMatchHistorySection = (recentMatches, playerSlugMap) => `
                   <th>Opponent Elo</th>
                   <th>Elo</th>
                   <th>Change</th>
+                  <th>Matchup</th>
                 </tr>
               </thead>
               <tbody>
@@ -421,6 +452,7 @@ const renderMatchHistorySection = (recentMatches, playerSlugMap) => `
                         <td>${Math.round(match.opponentRatingBefore)}</td>
                         <td>${Math.round(match.ratingBefore)} → ${Math.round(match.ratingAfter)}</td>
                         <td><span class="rating-delta ${delta > 0 ? "rating-delta--pos" : delta < 0 ? "rating-delta--neg" : "rating-delta--even"}">${delta > 0 ? `+${delta}` : delta}</span></td>
+                        <td>${renderHeadToHeadInlineLink(match.opponent, playerSlugMap, "View") || "—"}</td>
                       </tr>
                     `;
                   })

@@ -91,6 +91,12 @@
     };
   };
 
+  const invertResult = (result) => {
+    if (result === "win") return "loss";
+    if (result === "loss") return "win";
+    return result === "halved" ? "halved" : "";
+  };
+
   const uniqueMatches = (matches) => {
     const seen = new Set();
     const result = [];
@@ -362,6 +368,109 @@
     }));
   };
 
+  const isMatchBetweenPlayers = (match, playerAName, playerBName) => {
+    if (!match?.player || !match?.opponent || !playerAName || !playerBName) return false;
+    return (
+      (match.player === playerAName && match.opponent === playerBName) ||
+      (match.player === playerBName && match.opponent === playerAName)
+    );
+  };
+
+  const orientHeadToHeadMatch = (match, playerAName, playerBName) => {
+    const playerAIsListedPlayer = match.player === playerAName;
+    const resultForA = playerAIsListedPlayer ? match.result : invertResult(match.result);
+    const playerAPoints = resultForA === "win" ? 1 : resultForA === "halved" ? 0.5 : 0;
+    const playerBPoints = resultForA === "loss" ? 1 : resultForA === "halved" ? 0.5 : 0;
+
+    return {
+      event: match.event,
+      normalizedEvent: normalizeEventLabel(match.event),
+      year: match.year,
+      month: match.month,
+      round: match.round,
+      score: match.score,
+      playerA: playerAName,
+      playerB: playerBName,
+      playerACountry: playerAIsListedPlayer ? match.player_country : match.opponent_country,
+      playerBCountry: playerAIsListedPlayer ? match.opponent_country : match.player_country,
+      resultForA,
+      resultForB: invertResult(resultForA),
+      playerAPoints,
+      playerBPoints,
+      sortValue: getMatchSortValue(match)
+    };
+  };
+
+  const buildHeadToHeadMatches = (matches, playerAName, playerBName) =>
+    sortMatches(matches)
+      .filter((match) => isMatchBetweenPlayers(match, playerAName, playerBName))
+      .map((match) => orientHeadToHeadMatch(match, playerAName, playerBName));
+
+  const calculateHeadToHeadRecord = (matches, playerAName, playerBName) => {
+    const h2hMatches = buildHeadToHeadMatches(matches, playerAName, playerBName);
+    const playerARecord = { matches: 0, wins: 0, draws: 0, losses: 0, points: 0 };
+    const playerBRecord = { matches: 0, wins: 0, draws: 0, losses: 0, points: 0 };
+
+    h2hMatches.forEach((match) => {
+      playerARecord.matches += 1;
+      playerBRecord.matches += 1;
+      playerARecord.points += match.playerAPoints;
+      playerBRecord.points += match.playerBPoints;
+
+      if (match.resultForA === "win") {
+        playerARecord.wins += 1;
+        playerBRecord.losses += 1;
+      } else if (match.resultForA === "loss") {
+        playerARecord.losses += 1;
+        playerBRecord.wins += 1;
+      } else {
+        playerARecord.draws += 1;
+        playerBRecord.draws += 1;
+      }
+    });
+
+    return {
+      matches: h2hMatches.length,
+      playerA: { ...playerARecord, ...getRecordRates(playerARecord) },
+      playerB: { ...playerBRecord, ...getRecordRates(playerBRecord) }
+    };
+  };
+
+  const buildHeadToHeadEventBreakdown = (matches, playerAName, playerBName) => {
+    const breakdown = new Map();
+
+    buildHeadToHeadMatches(matches, playerAName, playerBName).forEach((match) => {
+      const event = match.normalizedEvent;
+      if (!breakdown.has(event)) {
+        breakdown.set(event, {
+          event,
+          matches: 0,
+          playerAWins: 0,
+          playerBWins: 0,
+          draws: 0,
+          playerAPoints: 0,
+          playerBPoints: 0
+        });
+      }
+
+      const record = breakdown.get(event);
+      record.matches += 1;
+      record.playerAPoints += match.playerAPoints;
+      record.playerBPoints += match.playerBPoints;
+      if (match.resultForA === "win") record.playerAWins += 1;
+      else if (match.resultForA === "loss") record.playerBWins += 1;
+      else record.draws += 1;
+    });
+
+    return Array.from(breakdown.values())
+      .map((record) => ({
+        ...record,
+        playerAPointsPerMatch: record.matches ? record.playerAPoints / record.matches : null,
+        playerBPointsPerMatch: record.matches ? record.playerBPoints / record.matches : null
+      }))
+      .sort(sortEventRecords);
+  };
+
   const buildBestWins = (timeline, limit = 5) =>
     (Array.isArray(timeline) ? timeline : [])
       .filter((match) => match.result === "win" && Number.isFinite(match.opponentRatingBefore))
@@ -434,6 +543,9 @@
     buildEventRecords,
     buildEventBreakdown: buildEventRecords,
     buildHeadToHeadRecords,
+    buildHeadToHeadMatches,
+    calculateHeadToHeadRecord,
+    buildHeadToHeadEventBreakdown,
     buildBestWins,
     buildWorstLosses,
     formatMatchDate,

@@ -41,7 +41,7 @@
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <main class="player-profile-shell">
+    <main id="notFoundRoot" class="player-profile-shell">
       <section class="panel panel--sport player-profile__state">
         <p class="sport-band__eyebrow">Matchplay Rankings</p>
         <h1>Page not found</h1>
@@ -51,5 +51,29 @@
         <a class="profile-back-link" href="/index.html">Back to player ratings</a>
       </section>
     </main>
+    <script>
+      const headToHeadMatch = window.location.pathname.match(/^\/head-to-head\/([^/]+)\/vs\/([^/]+)\/?$/);
+      if (headToHeadMatch) {
+        document.body.dataset.playerA = decodeURIComponent(headToHeadMatch[1]);
+        document.body.dataset.playerB = decodeURIComponent(headToHeadMatch[2]);
+        const root = document.getElementById("notFoundRoot");
+        root.id = "headToHeadRoot";
+        root.innerHTML = `
+          <section class="panel panel--sport player-profile__state">
+            <p class="sport-band__eyebrow">Head-to-head</p>
+            <h1>Loading matchup</h1>
+            <p class="muted">Building this head-to-head record from the matchplay archive.</p>
+          </section>
+        `;
+        const statsScript = document.createElement("script");
+        statsScript.src = "/player-stats.js";
+        statsScript.onload = () => {
+          const pageScript = document.createElement("script");
+          pageScript.src = "/head-to-head.js";
+          document.body.appendChild(pageScript);
+        };
+        document.body.appendChild(statsScript);
+      }
+    </script>
   </body>
 </html>

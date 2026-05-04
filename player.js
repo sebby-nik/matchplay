@@ -1,58 +1,28 @@
 const profileRoot = document.getElementById("playerProfileRoot");
 const currentSlug = document.body.dataset.playerSlug || "";
 
-const EVENT_ORDER = [
-  "WGC Match Play",
-  "The World Match Play Championship",
-  "World Match Play Championship",
-  "Paul Lawrie Match Play",
-  "Olympics",
-  "PGA Championship",
-  "Presidents Cup",
-  "Seve Trophy",
-  "Eurasia Cup",
-  "The Royal Trophy",
-  "Ryder Cup"
-];
-const MONTH_ORDER = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December"
-];
-const ROUND_ORDER = [
-  "Pool Play",
-  "Round of 64",
-  "Round of 32",
-  "Round of 16",
-  "Quarterfinals",
-  "Semifinals",
-  "Third Place",
-  "Final",
-  "Singles"
-];
+const PlayerStats = globalThis.MatchplayStats;
 
-const BASE_RATING = 1000;
-const YEAR_DECAY = 0.99;
-const MOV_MARGIN_CAP = 10;
-const MOV_MULTIPLIER_MIN = 0.75;
-const MOV_MULTIPLIER_MAX = 1.8;
-const MOV_NEUTRAL_SCORES = new Set(["ret", "wd", "won", "by default", "conceded"]);
-const FEATURED_EVENT_LABELS = ["Ryder Cup", "Presidents Cup", "WGC / Dell Match Play", "Seve Trophy"];
+if (!PlayerStats) {
+  throw new Error("Player statistics helpers failed to load.");
+}
 
-const asText = (value, fallback = "") => {
-  if (value === null || value === undefined) return fallback;
-  const text = String(value).trim();
-  return text || fallback;
-};
+const {
+  asText,
+  buildBestWins,
+  buildEventRecords,
+  buildHeadToHeadRecords,
+  buildPlayerProfileStats,
+  buildWorstLosses,
+  calculateOverallRecord,
+  computePlayerRatingProfile,
+  formatMatchDate,
+  getCurrentRanking,
+  normalizeEventLabel
+} = PlayerStats;
+
+const calculateRecord = calculateOverallRecord;
+const buildEventBreakdown = buildEventRecords;
 
 const escapeHtml = (value) =>
   asText(value)
@@ -97,233 +67,6 @@ const flagFromCountry = (code) => {
     .join("");
 };
 
-const getIndex = (list, value) => {
-  const index = list.indexOf(value);
-  return index === -1 ? list.length : index;
-};
-
-const normalizeEventLabel = (event) => {
-  const label = asText(event, "Unknown event");
-  if (/\b(wgc|dell)\b/i.test(label) && /match play/i.test(label)) {
-    return "WGC / Dell Match Play";
-  }
-  return label;
-};
-
-const sortEventBreakdown = (a, b) => {
-  const featuredDiff = getIndex(FEATURED_EVENT_LABELS, a.event) - getIndex(FEATURED_EVENT_LABELS, b.event);
-  if (featuredDiff !== 0) return featuredDiff;
-  const orderDiff = getIndex(EVENT_ORDER.map(normalizeEventLabel), a.event) - getIndex(EVENT_ORDER.map(normalizeEventLabel), b.event);
-  if (orderDiff !== 0) return orderDiff;
-  return a.event.localeCompare(b.event);
-};
-
-const uniqueMatches = (matches) => {
-  const seen = new Set();
-  const result = [];
-  matches.forEach((match) => {
-    const players = [match.player, match.opponent].sort().join(" vs ");
-    const key = `${match.event}|${match.year}|${match.round}|${players}|${match.score}`;
-    if (seen.has(key)) return;
-    seen.add(key);
-    result.push(match);
-  });
-  return result;
-};
-
-const sortMatches = (matches) =>
-  uniqueMatches(matches)
-    .slice()
-    .sort((a, b) => {
-      if (a.year !== b.year) return a.year - b.year;
-      const monthDiff = getIndex(MONTH_ORDER, a.month) - getIndex(MONTH_ORDER, b.month);
-      if (monthDiff !== 0) return monthDiff;
-      const eventDiff = getIndex(EVENT_ORDER, a.event) - getIndex(EVENT_ORDER, b.event);
-      if (eventDiff !== 0) return eventDiff;
-      const roundDiff = getIndex(ROUND_ORDER, a.round) - getIndex(ROUND_ORDER, b.round);
-      if (roundDiff !== 0) return roundDiff;
-      return asText(a.player).localeCompare(asText(b.player));
-    });
-
-const expectedScore = (rating, opponentRating) =>
-  1 / (1 + Math.pow(10, (opponentRating - rating) / 400));
-
-const kFactor = (matchesPlayed) => {
-  if (matchesPlayed < 10) return 40;
-  if (matchesPlayed < 30) return 30;
-  return 20;
-};
-
-const normalizeScoreText = (value) =>
-  (value || "")
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, " ");
-
-const parseMarginFromScore = (scoreText) => {
-  const score = normalizeScoreText(scoreText);
-  if (!score || score === "halved" || MOV_NEUTRAL_SCORES.has(score)) return null;
-  if (/^\d+h$/.test(score)) return 1;
-  const andMatch = score.match(/^(\d+)\s*(?:&|and)\s*(\d+)$/);
-  if (andMatch) return Number(andMatch[1]);
-  const andUpMatch = score.match(/^(\d+)\s+and\s+up$/);
-  if (andUpMatch) return Number(andUpMatch[1]);
-  const upMatch = score.match(/^(\d+)\s*-?\s*up(?:\s*\(\d+\))?$/);
-  if (upMatch) return Number(upMatch[1]);
-  return null;
-};
-
-const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
-
-const computeMovMultiplier = (result, scoreText, playerRating, opponentRating) => {
-  if (result === "halved") return 1;
-  const parsedMargin = parseMarginFromScore(scoreText);
-  if (!Number.isFinite(parsedMargin) || parsedMargin <= 0) return 1;
-  const margin = clamp(parsedMargin, 1, MOV_MARGIN_CAP);
-  const winnerRating = result === "win" ? playerRating : opponentRating;
-  const loserRating = result === "win" ? opponentRating : playerRating;
-  const winnerDelta = winnerRating - loserRating;
-  const rawMultiplier = Math.log(margin + 1) * (2.2 / (winnerDelta * 0.001 + 2.2));
-  if (!Number.isFinite(rawMultiplier) || rawMultiplier <= 0) return 1;
-  return clamp(rawMultiplier, MOV_MULTIPLIER_MIN, MOV_MULTIPLIER_MAX);
-};
-
-const ensureRatingPlayer = (ratings, name, country) => {
-  if (!ratings.has(name)) {
-    ratings.set(name, {
-      name,
-      country: country || "",
-      rating: BASE_RATING,
-      peak: BASE_RATING,
-      matches: 0,
-      wins: 0,
-      draws: 0,
-      losses: 0
-    });
-  } else if (country && !ratings.get(name).country) {
-    ratings.get(name).country = country;
-  }
-  return ratings.get(name);
-};
-
-const computePlayerRatingProfile = (matches, playerName) => {
-  const ratings = new Map();
-  const timeline = [];
-  let currentYear = null;
-
-  sortMatches(matches).forEach((match) => {
-    if (currentYear === null) currentYear = match.year;
-    if (match.year !== currentYear) {
-      ratings.forEach((entry) => {
-        entry.rating = BASE_RATING + (entry.rating - BASE_RATING) * YEAR_DECAY;
-      });
-      currentYear = match.year;
-    }
-
-    const player = ensureRatingPlayer(ratings, match.player, match.player_country);
-    const opponent = ensureRatingPlayer(ratings, match.opponent, match.opponent_country);
-    const playerBefore = player.rating;
-    const opponentBefore = opponent.rating;
-    const playerExpected = expectedScore(player.rating, opponent.rating);
-    const opponentExpected = expectedScore(opponent.rating, player.rating);
-    let score = 0.5;
-    if (match.result === "win") score = 1;
-    if (match.result === "loss") score = 0;
-
-    const multiplier = computeMovMultiplier(match.result, match.score, player.rating, opponent.rating);
-    player.rating += kFactor(player.matches) * multiplier * (score - playerExpected);
-    opponent.rating += kFactor(opponent.matches) * multiplier * ((1 - score) - opponentExpected);
-
-    player.matches += 1;
-    opponent.matches += 1;
-    if (score === 1) {
-      player.wins += 1;
-      opponent.losses += 1;
-    } else if (score === 0) {
-      player.losses += 1;
-      opponent.wins += 1;
-    } else {
-      player.draws += 1;
-      opponent.draws += 1;
-    }
-    if (player.rating > player.peak) player.peak = player.rating;
-    if (opponent.rating > opponent.peak) opponent.peak = opponent.rating;
-
-    if (match.player === playerName || match.opponent === playerName) {
-      const isPlayerSide = match.player === playerName;
-      const before = isPlayerSide ? playerBefore : opponentBefore;
-      const after = isPlayerSide ? player.rating : opponent.rating;
-      const opponentBeforeRating = isPlayerSide ? opponentBefore : playerBefore;
-      const result = isPlayerSide
-        ? match.result
-        : match.result === "win"
-          ? "loss"
-          : match.result === "loss"
-            ? "win"
-            : "halved";
-      timeline.push({
-        event: match.event,
-        year: match.year,
-        month: match.month,
-        round: match.round,
-        opponent: isPlayerSide ? match.opponent : match.player,
-        opponentCountry: isPlayerSide ? match.opponent_country : match.player_country,
-        result,
-        score: match.score,
-        ratingBefore: before,
-        ratingAfter: after,
-        ratingDelta: after - before,
-        opponentRatingBefore: opponentBeforeRating
-      });
-    }
-  });
-
-  return { rating: ratings.get(playerName) || null, timeline };
-};
-
-const calculateRecord = (matches, playerName) => {
-  const playerMatches = matches.filter((match) => match.player === playerName);
-  return playerMatches.reduce(
-    (record, match) => {
-      record.matches += 1;
-      record.points += Number(match.points || 0);
-      if (match.result === "win") record.wins += 1;
-      if (match.result === "halved") record.draws += 1;
-      if (match.result === "loss") record.losses += 1;
-      record.lastYear = Math.max(record.lastYear, Number(match.year) || 0);
-      return record;
-    },
-    { matches: 0, points: 0, wins: 0, draws: 0, losses: 0, lastYear: 0 }
-  );
-};
-
-const buildEventBreakdown = (matches, playerName) => {
-  const eventTypes = new Set(matches.map((match) => normalizeEventLabel(match.event)));
-  const breakdown = new Map(
-    Array.from(eventTypes).map((event) => [
-      event,
-      { event, matches: 0, wins: 0, draws: 0, losses: 0, points: 0 }
-    ])
-  );
-
-  matches
-    .filter((match) => match.player === playerName)
-    .forEach((match) => {
-      const event = normalizeEventLabel(match.event);
-      if (!breakdown.has(event)) {
-        breakdown.set(event, { event, matches: 0, wins: 0, draws: 0, losses: 0, points: 0 });
-      }
-      const split = breakdown.get(event);
-      split.matches += 1;
-      split.points += Number(match.points || 0);
-      if (match.result === "win") split.wins += 1;
-      if (match.result === "halved") split.draws += 1;
-      if (match.result === "loss") split.losses += 1;
-    });
-
-  return Array.from(breakdown.values()).sort(sortEventBreakdown);
-};
-
 const buildPlayerSlugMap = (players) =>
   new Map((Array.isArray(players) ? players : []).map((entry) => [entry.name, entry.slug]));
 
@@ -332,36 +75,11 @@ const getPlayerProfileHref = (playerSlugMap, name) => {
   return slug ? `../${slug}/` : "";
 };
 
-const formatMatchDate = (match) => {
-  const month = asText(match.month);
-  const year = asText(match.year);
-  return month && year ? `${month} ${year}` : year || "Date unavailable";
-};
-
-const getMatchSortValue = (match) => {
-  const year = Number(match.year) || 0;
-  return year * 100 + getIndex(MONTH_ORDER, match.month);
-};
-
 const formatRatingDelta = (value) => {
   if (!Number.isFinite(value)) return "—";
   const rounded = Math.round(value);
   return rounded > 0 ? `+${rounded}` : String(rounded);
 };
-
-const buildBestWins = (timeline) =>
-  timeline
-    .filter((match) => match.result === "win" && Number.isFinite(match.opponentRatingBefore))
-    .slice()
-    .sort((a, b) => b.opponentRatingBefore - a.opponentRatingBefore || b.ratingDelta - a.ratingDelta)
-    .slice(0, 5);
-
-const buildWorstLosses = (timeline) =>
-  timeline
-    .filter((match) => match.result === "loss" && Number.isFinite(match.opponentRatingBefore))
-    .slice()
-    .sort((a, b) => a.ratingDelta - b.ratingDelta || a.opponentRatingBefore - b.opponentRatingBefore)
-    .slice(0, 5);
 
 const renderOpponentLink = (match, playerSlugMap) => {
   const href = getPlayerProfileHref(playerSlugMap, match.opponent);
@@ -501,51 +219,6 @@ const renderRatingTimelineSection = (timeline, rating) => {
   `;
 };
 
-const buildHeadToHeadRecords = (timeline) => {
-  const records = new Map();
-
-  timeline.forEach((match) => {
-    const opponent = asText(match.opponent);
-    if (!opponent) return;
-    if (!records.has(opponent)) {
-      records.set(opponent, {
-        opponent,
-        opponentCountry: match.opponentCountry || "",
-        matches: 0,
-        wins: 0,
-        draws: 0,
-        losses: 0,
-        points: 0,
-        latestMeeting: "",
-        latestSortValue: 0
-      });
-    }
-
-    const record = records.get(opponent);
-    record.matches += 1;
-    if (match.result === "win") {
-      record.wins += 1;
-      record.points += 1;
-    } else if (match.result === "loss") {
-      record.losses += 1;
-    } else {
-      record.draws += 1;
-      record.points += 0.5;
-    }
-
-    const sortValue = getMatchSortValue(match);
-    if (sortValue >= record.latestSortValue) {
-      record.latestSortValue = sortValue;
-      record.latestMeeting = formatMatchDate(match);
-    }
-  });
-
-  return Array.from(records.values()).map((record) => ({
-    ...record,
-    pointsPerMatch: record.matches ? record.points / record.matches : null
-  }));
-};
-
 const compareHeadToHeadRecords = (a, b, sortKey) => {
   if (sortKey === "wins") {
     return b.wins - a.wins || b.matches - a.matches || b.points - a.points || a.opponent.localeCompare(b.opponent);
@@ -651,6 +324,116 @@ const renderHeadToHeadSection = (records, playerSlugMap) => {
   `;
 };
 
+const renderRelatedPlayersSection = (records, playerSlugMap) => {
+  const notable = records
+    .slice()
+    .sort(
+      (a, b) =>
+        b.matches - a.matches ||
+        b.points - a.points ||
+        b.latestSortValue - a.latestSortValue ||
+        a.opponent.localeCompare(b.opponent)
+    )
+    .slice(0, 6);
+
+  return `
+    <section class="panel panel--sport">
+      <div class="panel__header">
+        <div class="panel__title-row">
+          <h2>Notable Opponents</h2>
+        </div>
+        <p class="muted">Most frequent captured opponents, with profile links where available.</p>
+      </div>
+      ${
+        notable.length
+          ? `
+            <div class="player-profile-related-grid">
+              ${notable
+                .map(
+                  (record) => `
+                    <article class="player-profile-related-card">
+                      <div>
+                        <span class="player-profile-related-card__label">${record.matches} match${record.matches === 1 ? "" : "es"}</span>
+                        <h3>${getHeadToHeadOpponentLink(record, playerSlugMap)}</h3>
+                      </div>
+                      <div class="player-profile-related-card__meta">
+                        <span>${record.wins}-${record.draws}-${record.losses} W-D-L</span>
+                        <span>${record.points.toFixed(1)} pts</span>
+                        <span>${escapeHtml(record.latestMeeting || "Latest unavailable")}</span>
+                      </div>
+                    </article>
+                  `
+                )
+                .join("")}
+            </div>
+          `
+          : `<div class="player-profile-unavailable"><p class="muted">No related opponents are available for this player yet.</p></div>`
+      }
+    </section>
+  `;
+};
+
+const renderMatchHistorySection = (recentMatches, playerSlugMap) => `
+  <section class="panel panel--sport">
+    <div class="panel__header">
+      <div class="panel__title-row">
+        <h2>Match History</h2>
+      </div>
+      <p class="muted">Full captured singles match history. Rating values are shown before and after each match.</p>
+    </div>
+    ${
+      recentMatches.length
+        ? `
+          <div class="table-wrap">
+            <table class="rank-table player-profile-history-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Event</th>
+                  <th>Round</th>
+                  <th>Opponent</th>
+                  <th>Result</th>
+                  <th>Score</th>
+                  <th>Opponent Elo</th>
+                  <th>Elo</th>
+                  <th>Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${recentMatches
+                  .map((match) => {
+                    const resultClass =
+                      match.result === "win"
+                        ? "result-win"
+                        : match.result === "loss"
+                          ? "result-loss"
+                          : "result-halved";
+                    const resultLabel = match.result === "halved" ? "Draw" : match.result.toUpperCase();
+                    const delta = Math.round(match.ratingDelta);
+                    return `
+                      <tr>
+                        <td>${escapeHtml(formatMatchDate(match))}</td>
+                        <td>${escapeHtml(match.event)}</td>
+                        <td>${escapeHtml(match.round || "Singles")}</td>
+                        <td>${renderOpponentLink(match, playerSlugMap)}</td>
+                        <td><span class="match-result-pill ${resultClass}">${resultLabel}</span></td>
+                        <td>${escapeHtml(match.score || "—")}</td>
+                        <td>${Math.round(match.opponentRatingBefore)}</td>
+                        <td>${Math.round(match.ratingBefore)} → ${Math.round(match.ratingAfter)}</td>
+                        <td><span class="rating-delta ${delta > 0 ? "rating-delta--pos" : delta < 0 ? "rating-delta--neg" : "rating-delta--even"}">${delta > 0 ? `+${delta}` : delta}</span></td>
+                      </tr>
+                    `;
+                  })
+                  .join("")}
+              </tbody>
+            </table>
+          </div>
+        `
+        : `<div class="player-profile-unavailable"><p class="muted">No match history is available for this player yet.</p></div>`
+    }
+  </section>
+`;
+
 const setupHeadToHeadControls = (records, playerSlugMap) => {
   const body = document.getElementById("headToHeadBody");
   const empty = document.getElementById("headToHeadEmpty");
@@ -704,23 +487,20 @@ const renderEmpty = (player) =>
   });
 
 const renderProfile = (player, matches, metadata, players = []) => {
-  const record = calculateRecord(matches, player.name);
-  const { rating, timeline } = computePlayerRatingProfile(matches, player.name);
   const playerSlugMap = buildPlayerSlugMap(players);
   const flag = flagFromCountry(player.country);
   const countryLabel = player.country ? player.country.toUpperCase() : "Country unavailable";
   const updated = formatUpdatedDate(metadata?.dataUpdatedAt || metadata?.lastUpdated);
-  const recentMatches = timeline.slice().reverse();
   const latestArchiveYear = matches.reduce((latest, match) => Math.max(latest, Number(match.year) || 0), 0);
   const activeCutoff = latestArchiveYear ? latestArchiveYear - 5 : 0;
+  const profileStats = buildPlayerProfileStats(matches, player.name, { activeCutoff });
+  const { record, rating, timeline, eventRecords, bestWins, worstLosses, headToHeadRecords, currentRanking } = profileStats;
+  const recentMatches = timeline.slice().reverse();
   const statusLabel = record.lastYear && activeCutoff && record.lastYear >= activeCutoff ? "Active" : "Inactive";
   const pointsPerMatch = record.matches ? record.points / record.matches : null;
   const pointsPercentage = record.matches ? (record.points / record.matches) * 100 : null;
   const winPercentage = record.matches ? (record.wins / record.matches) * 100 : null;
-  const eventBreakdown = buildEventBreakdown(matches, player.name);
-  const bestWins = buildBestWins(timeline);
-  const worstLosses = buildWorstLosses(timeline);
-  const headToHeadRecords = buildHeadToHeadRecords(timeline);
+  const eventBreakdown = eventRecords;
 
   if (record.matches === 0 || recentMatches.length === 0) {
     renderEmpty(player);
@@ -734,6 +514,12 @@ const renderProfile = (player, matches, metadata, players = []) => {
           <p class="sport-band__eyebrow">Player Profile</p>
           <h1>${flag ? `${flag} ` : ""}${escapeHtml(player.name)}</h1>
           <p>${escapeHtml(countryLabel)} · ${statusLabel} · ${record.matches} singles matches captured in the Matchplay Rankings archive.${updated ? ` Last updated: ${updated}.` : ""}</p>
+          <div class="player-profile-identity-tags" aria-label="Player identity summary">
+            ${currentRanking ? `<span>#${currentRanking} current ranking</span>` : ""}
+            <span>${rating ? Math.round(rating.rating) : "—"} current Elo</span>
+            <span>${rating ? Math.round(rating.peak) : "—"} peak Elo</span>
+            <span>${statusLabel}</span>
+          </div>
         </div>
         <div class="lineal-card lineal-card--gold player-profile-card">
           <p class="lineal-card__label">Profile Summary</p>
@@ -743,6 +529,7 @@ const renderProfile = (player, matches, metadata, players = []) => {
           </div>
           <div class="lineal-card__meta">${record.wins}-${record.draws}-${record.losses} W-D-L · ${record.points.toFixed(1)} points</div>
           <div class="lineal-card__stats">
+            ${currentRanking ? `<span>Rank #${currentRanking}</span>` : ""}
             <span>${record.matches} matches</span>
             <span>Peak ${rating ? Math.round(rating.peak) : "—"}</span>
             <span>PPM ${formatNumber(pointsPerMatch, 2)}</span>
@@ -752,6 +539,10 @@ const renderProfile = (player, matches, metadata, players = []) => {
     </section>
     <main class="layout layout--sport player-profile-layout">
       <section class="player-profile-summary-grid" aria-label="Player summary statistics">
+        <article class="player-profile-stat">
+          <span>Current ranking</span>
+          <strong>${currentRanking ? `#${currentRanking}` : "—"}</strong>
+        </article>
         <article class="player-profile-stat">
           <span>Current Elo</span>
           <strong>${rating ? Math.round(rating.rating) : "—"}</strong>
@@ -763,6 +554,22 @@ const renderProfile = (player, matches, metadata, players = []) => {
         <article class="player-profile-stat">
           <span>Record</span>
           <strong>${record.wins}-${record.draws}-${record.losses}</strong>
+        </article>
+        <article class="player-profile-stat">
+          <span>Matches</span>
+          <strong>${record.matches}</strong>
+        </article>
+        <article class="player-profile-stat">
+          <span>Wins</span>
+          <strong>${record.wins}</strong>
+        </article>
+        <article class="player-profile-stat">
+          <span>Draws / halves</span>
+          <strong>${record.draws}</strong>
+        </article>
+        <article class="player-profile-stat">
+          <span>Losses</span>
+          <strong>${record.losses}</strong>
         </article>
         <article class="player-profile-stat">
           <span>Points</span>
@@ -800,6 +607,7 @@ const renderProfile = (player, matches, metadata, players = []) => {
           playerSlugMap
         })}
       </div>
+      ${renderRelatedPlayersSection(headToHeadRecords, playerSlugMap)}
       ${renderHeadToHeadSection(headToHeadRecords, playerSlugMap)}
       <section class="panel panel--sport">
         <div class="panel__header">
@@ -847,41 +655,7 @@ const renderProfile = (player, matches, metadata, players = []) => {
           </table>
         </div>
       </section>
-      <section class="panel panel--sport">
-        <div class="panel__header">
-          <div class="panel__title-row">
-            <h2>Match History</h2>
-          </div>
-          <p class="muted">Rating values are shown before and after each match.</p>
-        </div>
-        <div class="player-profile-matches">
-          ${recentMatches
-            .map((match) => {
-              const resultClass =
-                match.result === "win"
-                  ? "result-win"
-                  : match.result === "loss"
-                    ? "result-loss"
-                    : "result-halved";
-              const resultLabel = match.result === "halved" ? "Draw" : match.result.toUpperCase();
-              const delta = Math.round(match.ratingDelta);
-              return `
-                <article class="match-row ${resultClass}">
-                  <div>
-                    <strong>${escapeHtml(match.event)} ${escapeHtml(match.year)}</strong> — ${renderOpponentLink(match, playerSlugMap)}
-                    <div class="meta">${escapeHtml(match.round || "Singles")} · Opponent rating ${Math.round(match.opponentRatingBefore)}</div>
-                  </div>
-                  <div>
-                    <span class="rating-delta ${delta > 0 ? "rating-delta--pos" : delta < 0 ? "rating-delta--neg" : "rating-delta--even"}">${delta > 0 ? `+${delta}` : delta}</span>
-                    <div class="match-result">${resultLabel}</div>
-                    <span class="meta">${Math.round(match.ratingBefore)} → ${Math.round(match.ratingAfter)} · ${escapeHtml(match.score || "")}</span>
-                  </div>
-                </article>
-              `;
-            })
-            .join("")}
-        </div>
-      </section>
+      ${renderMatchHistorySection(recentMatches, playerSlugMap)}
     </main>
   `;
   setupHeadToHeadControls(headToHeadRecords, playerSlugMap);

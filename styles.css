@@ -1893,6 +1893,23 @@ input[type="range"] {
   align-self: stretch;
 }
 
+.player-profile-identity-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 1.2rem;
+}
+
+.player-profile-identity-tags span {
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.76);
+  color: var(--ink);
+  font-size: 0.82rem;
+  font-weight: 800;
+  padding: 0.45rem 0.7rem;
+}
+
 .player-profile-layout {
   display: grid;
   gap: 1.25rem;
@@ -2006,6 +2023,56 @@ input[type="range"] {
   display: grid;
   gap: 1.25rem;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.player-profile-related-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  padding: 0 1.5rem 1.5rem;
+}
+
+.player-profile-related-card {
+  display: grid;
+  gap: 0.75rem;
+  align-content: space-between;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: var(--shadow-soft);
+  padding: 1rem;
+}
+
+.player-profile-related-card__label {
+  display: block;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.player-profile-related-card h3 {
+  margin: 0.35rem 0 0;
+  color: var(--ink);
+  font-size: 1.05rem;
+  line-height: 1.2;
+}
+
+.player-profile-related-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.player-profile-related-card__meta span {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #f8fafc;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 0.3rem 0.5rem;
 }
 
 .player-profile-unavailable {
@@ -2181,6 +2248,34 @@ input[type="range"] {
 
 .rating-delta--even {
   color: var(--ink-soft);
+}
+
+.match-result-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.2rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 0.28rem 0.55rem;
+  text-transform: uppercase;
+}
+
+.match-result-pill.result-win {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.match-result-pill.result-halved {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.match-result-pill.result-loss {
+  background: #fee2e2;
+  color: #991b1b;
 }
 
 .match-row.result-win {
@@ -4014,6 +4109,11 @@ input[type="search"] {
 
   .player-profile-notables {
     grid-template-columns: 1fr;
+  }
+
+  .player-profile-related-grid {
+    grid-template-columns: 1fr;
+    padding: 0 1rem 1rem;
   }
 
   .player-profile-unavailable {

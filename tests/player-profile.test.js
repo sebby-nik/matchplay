@@ -5,6 +5,7 @@ const vm = require("vm");
 
 const rootDir = path.resolve(__dirname, "..");
 const readJson = (file) => JSON.parse(fs.readFileSync(path.join(rootDir, file), "utf8"));
+const playerStats = require(path.join(rootDir, "player-stats.js"));
 
 const playersData = readJson("players-data.json");
 const matchData = readJson("data.json");
@@ -61,7 +62,9 @@ const loadPlayerApi = (slug = "rory-mcilroy") => {
     Promise,
     Error
   });
+  const statsSource = fs.readFileSync(path.join(rootDir, "player-stats.js"), "utf8");
   const source = fs.readFileSync(path.join(rootDir, "player.js"), "utf8");
+  vm.runInContext(statsSource, context, { filename: "player-stats.js" });
   vm.runInContext(`${source}\n${exposePlayerApi}`, context, { filename: "player.js" });
   root.innerHTML = "";
   return { api: context.__profileTestApi, root };
@@ -130,6 +133,7 @@ test("known player profile pages are generated and render populated profile cont
 
   assert.match(profileHtml, /data-player-slug="rory-mcilroy"/);
   assert.match(profileHtml, /Rory McIlroy Matchplay Record &amp; Ranking \| Matchplay Rankings/);
+  assert.match(profileHtml, /src="\.\.\/\.\.\/player-stats\.js"/);
   assert.match(profileHtml, /src="\.\.\/\.\.\/player\.js"/);
 
   api.renderProfile(rory, playableMatches, siteData, playersData.players);
@@ -172,6 +176,39 @@ test("overall record calculations are correct for trust-critical players", () =>
     },
     { matches: 65, wins: 47, draws: 2, losses: 16, points: 48 }
   );
+});
+
+test("shared player stat helpers expose reusable profile calculations", () => {
+  const profile = playerStats.buildPlayerProfileStats(playableMatches, "Rory McIlroy", { activeCutoff: 2020 });
+
+  assert.deepStrictEqual(
+    {
+      matches: profile.record.matches,
+      wins: profile.record.wins,
+      draws: profile.record.draws,
+      losses: profile.record.losses,
+      points: profile.record.points,
+      pointsPerMatch: Number(profile.record.pointsPerMatch.toFixed(2)),
+      pointsPercentage: Math.round(profile.record.pointsPercentage)
+    },
+    {
+      matches: 60,
+      wins: 39,
+      draws: 4,
+      losses: 17,
+      points: 41,
+      pointsPerMatch: 0.68,
+      pointsPercentage: 68
+    }
+  );
+  assert.strictEqual(Math.round(profile.currentRating), 1176);
+  assert.strictEqual(Math.round(profile.peakRating), 1243);
+  assert.strictEqual(profile.currentRanking, 1);
+  assert.ok(profile.eventRecords.some((event) => event.event === "WGC / Dell Match Play" && event.matches === 51));
+  assert.ok(profile.headToHeadRecords.some((record) => record.opponent === "Scottie Scheffler" && record.matches === 2));
+  assert.ok(profile.bestWins.length > 0);
+  assert.ok(profile.worstLosses.length > 0);
+  assert.strictEqual(profile.timeline.length, 60);
 });
 
 test("event-specific records include normalized marquee competitions", () => {

@@ -337,6 +337,30 @@ test("generated head-to-head pages use canonical static routes", () => {
   assert.match(reverseHtml, /url=\/head-to-head\/rory-mcilroy\/vs\/scottie-scheffler\//);
 });
 
+test("comparison tool page exists and reuses shared statistics", () => {
+  const compareHtml = fs.readFileSync(path.join(rootDir, "compare", "index.html"), "utf8");
+  const compareSource = fs.readFileSync(path.join(rootDir, "compare.js"), "utf8");
+
+  assert.match(compareHtml, /Compare Players \| Matchplay Rankings/);
+  assert.match(compareHtml, /id="comparePlayerA"/);
+  assert.match(compareHtml, /id="comparePlayerB"/);
+  assert.match(compareHtml, /src="\/player-stats\.js"/);
+  assert.match(compareHtml, /src="\/compare\.js"/);
+  assert.match(compareSource, /buildPlayerProfileStats/);
+  assert.match(compareSource, /calculateHeadToHeadRecord/);
+  assert.match(compareSource, /URLSearchParams/);
+  assert.match(compareSource, /players/);
+
+  const rory = playerStats.buildPlayerProfileStats(playableMatches, "Rory McIlroy", { activeCutoff: 2020 });
+  const scottie = playerStats.buildPlayerProfileStats(playableMatches, "Scottie Scheffler", { activeCutoff: 2020 });
+  const h2h = playerStats.calculateHeadToHeadRecord(playableMatches, "Rory McIlroy", "Scottie Scheffler");
+  assert.strictEqual(Math.round(rory.currentRating), 1176);
+  assert.ok(scottie.record.matches > 0);
+  assert.strictEqual(h2h.matches, 2);
+  assert.strictEqual(h2h.playerA.points, 1);
+  assert.strictEqual(h2h.playerB.points, 1);
+});
+
 test("404 page can fall back to the head-to-head renderer for non-generated pairs", () => {
   const notFoundHtml = fs.readFileSync(path.join(rootDir, "404.html"), "utf8");
   assert.match(notFoundHtml, /head-to-head\\\/\(\[\^\/\]\+\)\\\/vs\\\/\(\[\^\/\]\+\)/);
@@ -393,6 +417,8 @@ test("rankings and records player links resolve to generated profile routes", ()
   assert.match(playerSource, /head-to-head-inline-link/);
   assert.match(linealSource, /renderHeadToHeadLink/);
   assert.match(linealHtml, /<th>Matchup<\/th>/);
+  const indexHtml = fs.readFileSync(path.join(rootDir, "index.html"), "utf8");
+  assert.match(indexHtml, /href="compare\/">Compare Players/);
 });
 
 (async () => {

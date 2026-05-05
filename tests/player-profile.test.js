@@ -507,7 +507,8 @@ test("rankings and records player links resolve to generated profile routes", ()
   assert.match(linealHtml, /<th>Matchup<\/th>/);
   const indexHtml = fs.readFileSync(path.join(rootDir, "index.html"), "utf8");
   assert.match(indexHtml, /href="compare\/">Compare Players/);
-  assert.match(indexHtml, /href="compare\/">Compare players/);
+  assert.doesNotMatch(indexHtml, /class="head-to-head-inline-link compare-inline-link" href="compare\/">Compare players/);
+  assert.doesNotMatch(indexHtml, /class="profile-finder"/);
 });
 
 (async () => {

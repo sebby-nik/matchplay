@@ -70,6 +70,51 @@ const flagFromCountry = (code) => {
 const buildPlayerSlugMap = (players) =>
   new Map((Array.isArray(players) ? players : []).map((entry) => [entry.name, entry.slug]));
 
+const LINEAL_CHAMPION_NAMES = new Set([
+  "Tiger Woods",
+  "Jeff Maggert",
+  "Paul Lawrie",
+  "Darren Clarke",
+  "Matt Gogel",
+  "Tom Lehman",
+  "Scott McCarron",
+  "Kevin Sutherland",
+  "Adam Scott",
+  "Nick O'Hern",
+  "Ian Poulter",
+  "David Toms",
+  "Geoff Ogilvy",
+  "Henrik Stenson",
+  "Tim Clark",
+  "Rory McIlroy",
+  "Camilo Villegas",
+  "Paul Casey",
+  "Stewart Cink",
+  "Yang Yong-eun",
+  "Matt Kuchar",
+  "Luke Donald",
+  "Ernie Els",
+  "Peter Hanson",
+  "Mark Wilson",
+  "Hunter Mahan",
+  "Jordan Spieth",
+  "Victor Dubuisson",
+  "Jason Day",
+  "Charley Hoffman",
+  "Branden Grace",
+  "Tommy Fleetwood",
+  "Danny Willett",
+  "Gary Woodland",
+  "Pat Perez",
+  "Lee Westwood",
+  "Xander Schauffele",
+  "Rafa Cabrera-Bello",
+  "Kevin Kisner",
+  "Billy Horschel",
+  "Scottie Scheffler",
+  "Sam Burns"
+]);
+
 const getPlayerProfileHref = (playerSlugMap, name) => {
   const slug = playerSlugMap.get(name);
   return slug ? `../${slug}/` : "";
@@ -551,6 +596,10 @@ const renderProfile = (player, matches, metadata, players = []) => {
   const pointsPercentage = record.matches ? (record.points / record.matches) * 100 : null;
   const winPercentage = record.matches ? (record.wins / record.matches) * 100 : null;
   const eventBreakdown = eventRecords;
+  const hasFeaturedSummary = currentRanking === 1 || LINEAL_CHAMPION_NAMES.has(player.name);
+  const summaryCardClass = hasFeaturedSummary
+    ? "lineal-card lineal-card--gold player-profile-card"
+    : "lineal-card player-profile-card player-profile-card--standard";
 
   if (record.matches === 0 || recentMatches.length === 0) {
     renderEmpty(player);
@@ -574,7 +623,7 @@ const renderProfile = (player, matches, metadata, players = []) => {
             <a class="head-to-head-inline-link compare-inline-link" href="${getCompareHref(player.slug)}">Compare this player</a>
           </div>
         </div>
-        <div class="lineal-card lineal-card--gold player-profile-card">
+        <div class="${summaryCardClass}">
           <p class="lineal-card__label">Profile Summary</p>
           <div class="lineal-card__title-row">
             <h2 class="lineal-card__name">${rating ? Math.round(rating.rating) : "—"}</h2>

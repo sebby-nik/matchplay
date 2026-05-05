@@ -2458,50 +2458,6 @@ input[type="range"] {
   outline: none;
 }
 
-.event-series-coverage {
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem;
-  margin-top: 1rem;
-}
-
-.event-series-status {
-  border: 1px solid rgba(37, 99, 235, 0.22);
-  border-radius: 999px;
-  background: rgba(37, 99, 235, 0.08);
-  color: var(--ink);
-  display: inline-flex;
-  font-size: 0.76rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  line-height: 1;
-  padding: 0.4rem 0.6rem;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.event-series-status--complete {
-  background: rgba(22, 163, 74, 0.1);
-  border-color: rgba(22, 163, 74, 0.24);
-}
-
-.event-series-status--partial,
-.event-series-status--in-progress {
-  background: rgba(234, 179, 8, 0.14);
-  border-color: rgba(234, 179, 8, 0.28);
-}
-
-.event-series-status--planned {
-  background: rgba(100, 116, 139, 0.1);
-  border-color: rgba(100, 116, 139, 0.24);
-}
-
-.event-series-coverage span:last-child {
-  color: var(--ink-soft);
-  font-weight: 700;
-}
-
 .event-series-grid {
   display: grid;
   gap: 1.25rem;
@@ -4698,11 +4654,6 @@ input[type="search"] {
 
   .event-series-link-grid {
     padding: 0 1rem 1rem;
-  }
-
-  .event-series-coverage {
-    align-items: flex-start;
-    display: grid;
   }
 
   .event-edition-meta {

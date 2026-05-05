@@ -392,7 +392,9 @@ test("event series pages are generated from archive data", () => {
   assert.match(eventSeriesSource, /Best Records/);
   assert.match(eventSeriesSource, /Most Matches Played/);
   assert.match(eventSeriesSource, /Highest Points Per Match/);
-  assert.match(eventSeriesSource, /View edition/);
+  assert.doesNotMatch(eventSeriesSource, /event-series-coverage/);
+  assert.doesNotMatch(eventSeriesSource, /renderEditionList/);
+  assert.doesNotMatch(eventSeriesSource, /Editions Covered/);
   assert.match(eventsHtml, /Matchplay event discovery/);
   assert.doesNotMatch(eventsHtml, /id="eventDiscoveryRoot"/);
   assert.doesNotMatch(eventsHtml, /id="eventEditionDiscoveryRoot"/);
@@ -432,6 +434,9 @@ test("event edition pages are generated from archive data", () => {
   assert.match(editionSource, /Biggest Rating Gains/);
   assert.match(editionSource, /getHeadToHeadHref/);
   assert.match(editionSource, /computePlayerRatingProfile/);
+  assert.doesNotMatch(editionSource, /event-series-coverage/);
+  assert.doesNotMatch(editionSource, /event-series-status/);
+  assert.doesNotMatch(editionSource, /Venue:/);
 
   const ryder2023Rows = playableMatches.filter((match) => match.event === "Ryder Cup" && match.year === 2023);
   const ryder2023Players = new Set();

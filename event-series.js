@@ -9,7 +9,7 @@ if (!EventStats || !EventUtils) {
 }
 
 const { asText, uniqueMatches } = EventStats;
-const { SERIES_CONFIG, getSeriesSlug, slugify } = EventUtils;
+const { SERIES_CONFIG, getSeriesSlug } = EventUtils;
 
 const escapeHtml = (value) =>
   asText(value)
@@ -161,45 +161,6 @@ const renderPlayerTable = ({ title, description, rows, playerSlugMap, valueLabel
   </section>
 `;
 
-const renderEditionList = (editionRows, seriesSlug) => `
-  <section class="panel panel--sport">
-    <div class="panel__header">
-      <div class="panel__title-row">
-        <h2>Editions Covered</h2>
-      </div>
-      <p class="muted">Year-level pages show the singles matches and rating movement currently available in the dataset.</p>
-    </div>
-    <div class="table-wrap">
-      <table class="rank-table event-series-table">
-        <thead>
-          <tr>
-            <th>Edition</th>
-            <th>Month</th>
-            <th>Matches</th>
-            <th>Players</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${editionRows
-            .map(
-              (edition) => `
-                <tr>
-                  <td><a class="player-link" href="/events/${encodeURIComponent(seriesSlug)}/${edition.year}/">${edition.year}</a></td>
-                  <td>${escapeHtml(edition.month || "—")}</td>
-                  <td>${edition.matches}</td>
-                  <td>${edition.players}</td>
-                  <td><a class="event-series-status event-series-status--complete" href="/events/${encodeURIComponent(seriesSlug)}/${edition.year}/">View edition</a></td>
-                </tr>
-              `
-            )
-            .join("")}
-        </tbody>
-      </table>
-    </div>
-  </section>
-`;
-
 const renderSeriesPage = (seriesConfig, eventMatches, playerSlugMap) => {
   const unique = uniqueMatches(eventMatches);
   const editionRows = buildEditionRows(eventMatches);
@@ -246,10 +207,6 @@ const renderSeriesPage = (seriesConfig, eventMatches, playerSlugMap) => {
           <p class="sport-band__eyebrow">Event Series</p>
           <h1>${escapeHtml(seriesConfig.name)}</h1>
           <p>${escapeHtml(seriesConfig.description)}</p>
-          <div class="event-series-coverage">
-            <span class="event-series-status event-series-status--${slugify(seriesConfig.coverage)}">${escapeHtml(seriesConfig.coverage)}</span>
-            <span>${escapeHtml(seriesConfig.coverageNote)}</span>
-          </div>
         </div>
       </div>
     </section>
@@ -294,7 +251,6 @@ const renderSeriesPage = (seriesConfig, eventMatches, playerSlugMap) => {
           valueFor: (record) => formatNumber(record.pointsPerMatch, 2)
         })}
       </div>
-      ${renderEditionList(editionRows, eventSeriesSlug)}
     </main>
   `;
 };

@@ -16,7 +16,7 @@ const {
   sortMatches,
   uniqueMatches
 } = EditionStats;
-const { SERIES_CONFIG, getSeriesSlug, slugify } = EditionUtils;
+const { SERIES_CONFIG, getSeriesSlug } = EditionUtils;
 
 const escapeHtml = (value) =>
   asText(value)
@@ -365,13 +365,8 @@ const renderEditionPage = ({ seriesConfig, metadata, editionMatches, matchRows, 
           <p class="sport-band__eyebrow">Event Edition</p>
           <h1>${escapeHtml(`${seriesConfig.name} ${eventEditionYear}`)}</h1>
           <p>${escapeHtml(seriesConfig.description)}</p>
-          <div class="event-series-coverage">
-            <span class="event-series-status event-series-status--${slugify(seriesConfig.coverage)}">${escapeHtml(seriesConfig.coverage)}</span>
-            <span>${escapeHtml(metadata.dateLabel || `${eventEditionYear}`)}</span>
-          </div>
           <div class="event-edition-meta">
             <span>Date: ${escapeHtml(metadata.dateLabel || "Unavailable")}</span>
-            <span>Venue: ${escapeHtml(metadata.venue || "Unavailable")}</span>
           </div>
           <a class="profile-back-link" href="/events/${encodeURIComponent(eventSeriesSlug)}/">Back to ${escapeHtml(seriesConfig.name)}</a>
         </div>

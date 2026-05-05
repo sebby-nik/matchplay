@@ -337,6 +337,20 @@ p {
   gap: 0.4rem;
 }
 
+.schedule__title-link {
+  color: inherit;
+  text-decoration-color: rgba(37, 99, 235, 0.28);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.16em;
+}
+
+.schedule__title-link:hover,
+.schedule__title-link:focus-visible {
+  color: var(--highlight);
+  outline: none;
+  text-decoration-color: currentColor;
+}
+
 .schedule__winner {
   display: inline-flex;
   align-items: center;
@@ -2442,157 +2456,6 @@ input[type="range"] {
   border-color: rgba(37, 99, 235, 0.55);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
   outline: none;
-}
-
-.event-discovery {
-  padding-top: 1.25rem;
-}
-
-.event-discovery-controls {
-  align-items: end;
-  display: grid;
-  gap: 0.75rem;
-  grid-template-columns: minmax(0, 1fr) minmax(12rem, 0.28fr);
-  padding: 0 1.5rem 1rem;
-}
-
-.event-discovery-search,
-.event-discovery-filter {
-  display: grid;
-  gap: 0.4rem;
-}
-
-.event-discovery-search span,
-.event-discovery-filter span {
-  color: var(--ink-soft);
-  font-size: 0.78rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.event-discovery-search input,
-.event-discovery-filter select {
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: #ffffff;
-  color: var(--ink);
-  font: inherit;
-  min-height: 46px;
-  padding: 0.7rem 0.85rem;
-}
-
-.event-discovery-search input:focus,
-.event-discovery-filter select:focus {
-  border-color: rgba(37, 99, 235, 0.55);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
-  outline: none;
-}
-
-.event-discovery-grid {
-  display: grid;
-  gap: 0.9rem;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  padding: 0 1.5rem 1.5rem;
-}
-
-.event-discovery-card {
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: #ffffff;
-  box-shadow: var(--shadow-soft);
-  color: var(--ink);
-  display: grid;
-  gap: 0.85rem;
-  padding: 1rem;
-  text-decoration: none;
-}
-
-.event-discovery-card:hover,
-.event-discovery-card:focus-visible,
-.event-edition-feature-card:hover,
-.event-edition-feature-card:focus-visible {
-  border-color: rgba(37, 99, 235, 0.55);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
-  outline: none;
-}
-
-.event-discovery-card__header {
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem;
-  justify-content: space-between;
-}
-
-.event-discovery-card__header > span:last-child {
-  color: var(--ink-soft);
-  font-size: 0.78rem;
-  font-weight: 900;
-}
-
-.event-discovery-card h3,
-.event-edition-feature-card h3 {
-  color: var(--ink);
-  font-size: 1.2rem;
-  line-height: 1.1;
-  margin: 0;
-}
-
-.event-discovery-card p,
-.event-edition-feature-card p {
-  color: var(--ink-soft);
-  line-height: 1.45;
-  margin: 0;
-}
-
-.event-discovery-card__stats {
-  display: grid;
-  gap: 0.6rem;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin: 0;
-}
-
-.event-discovery-card__stats div {
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  border-radius: 8px;
-  background: #f8fafc;
-  padding: 0.65rem;
-}
-
-.event-discovery-card__stats dt {
-  color: var(--muted);
-  font-size: 0.68rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  margin: 0 0 0.25rem;
-  text-transform: uppercase;
-}
-
-.event-discovery-card__stats dd {
-  color: var(--ink);
-  font-size: 1.05rem;
-  font-weight: 950;
-  margin: 0;
-}
-
-.event-edition-feature-grid {
-  display: grid;
-  gap: 0.75rem;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  padding: 0 1.5rem 1.5rem;
-}
-
-.event-edition-feature-card {
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: #ffffff;
-  color: var(--ink);
-  display: grid;
-  gap: 0.65rem;
-  min-height: 132px;
-  padding: 1rem;
-  text-decoration: none;
 }
 
 .event-series-coverage {
@@ -4829,25 +4692,12 @@ input[type="search"] {
   }
 
   .event-series-link-grid,
-  .event-series-grid,
-  .event-discovery-grid,
-  .event-edition-feature-grid {
+  .event-series-grid {
     grid-template-columns: 1fr;
   }
 
-  .event-series-link-grid,
-  .event-discovery-grid,
-  .event-edition-feature-grid {
+  .event-series-link-grid {
     padding: 0 1rem 1rem;
-  }
-
-  .event-discovery-controls {
-    grid-template-columns: 1fr;
-    padding: 0 1rem 1rem;
-  }
-
-  .event-discovery-card__stats {
-    grid-template-columns: 1fr;
   }
 
   .event-series-coverage {

@@ -371,7 +371,6 @@ test("event series pages are generated from archive data", () => {
   const eventSeriesHtml = fs.readFileSync(path.join(rootDir, "events", "ryder-cup", "index.html"), "utf8");
   const eventSeriesSource = fs.readFileSync(path.join(rootDir, "event-series.js"), "utf8");
   const eventUtilsSource = fs.readFileSync(path.join(rootDir, "event-utils.js"), "utf8");
-  const eventDiscoverySource = fs.readFileSync(path.join(rootDir, "events-discovery.js"), "utf8");
   const eventsHtml = fs.readFileSync(path.join(rootDir, "events.html"), "utf8");
 
   assert.match(eventSeriesHtml, /data-event-series-slug="ryder-cup"/);
@@ -395,14 +394,12 @@ test("event series pages are generated from archive data", () => {
   assert.match(eventSeriesSource, /Highest Points Per Match/);
   assert.match(eventSeriesSource, /View edition/);
   assert.match(eventsHtml, /Matchplay event discovery/);
-  assert.match(eventsHtml, /id="eventDiscoveryRoot"/);
-  assert.match(eventsHtml, /id="eventEditionDiscoveryRoot"/);
-  assert.match(eventsHtml, /id="eventDiscoverySearch"/);
-  assert.match(eventsHtml, /src="events-discovery\.js"/);
-  assert.match(eventDiscoverySource, /buildSeries/);
-  assert.match(eventDiscoverySource, /Coverage/);
-  assert.match(eventDiscoverySource, /latestYear/);
-  assert.match(eventDiscoverySource, /buildFeaturedEditions/);
+  assert.doesNotMatch(eventsHtml, /id="eventDiscoveryRoot"/);
+  assert.doesNotMatch(eventsHtml, /id="eventEditionDiscoveryRoot"/);
+  assert.doesNotMatch(eventsHtml, /id="eventDiscoverySearch"/);
+  assert.doesNotMatch(eventsHtml, /src="events-discovery\.js"/);
+  assert.match(eventsHtml, /getEditionHref/);
+  assert.match(eventsHtml, /class="schedule__title-link"/);
 
   const ryderRows = playableMatches.filter((match) => match.event === "Ryder Cup");
   const ryderUniqueMatches = playerStats.uniqueMatches(ryderRows);

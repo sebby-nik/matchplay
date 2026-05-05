@@ -88,50 +88,6 @@
       </div>
     </header>
 
-    <section class="event-discovery layout layout--sport" aria-label="Event discovery">
-      <div class="panel panel--sport">
-        <div class="panel__header">
-          <div class="panel__title-row">
-            <h2>Event Series</h2>
-          </div>
-          <p class="muted">Coverage, match counts, editions, and latest available year are derived from the current match archive.</p>
-        </div>
-        <div class="event-discovery-controls">
-          <label class="event-discovery-search" for="eventDiscoverySearch">
-            <span>Search events</span>
-            <input id="eventDiscoverySearch" type="search" placeholder="Search Ryder Cup, WGC, PGA…" autocomplete="off" />
-          </label>
-          <label class="event-discovery-filter" for="eventDiscoveryStatus">
-            <span>Coverage</span>
-            <select id="eventDiscoveryStatus">
-              <option value="">All coverage</option>
-              <option value="complete">Complete</option>
-              <option value="partial">Partial</option>
-              <option value="in-progress">In progress</option>
-              <option value="planned">Planned</option>
-            </select>
-          </label>
-        </div>
-        <div id="eventDiscoveryRoot" class="event-discovery-grid">
-          <div class="schedule__loading">Loading event series…</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="event-discovery layout layout--sport" aria-label="Featured event editions">
-      <div class="panel panel--sport">
-        <div class="panel__header">
-          <div class="panel__title-row">
-            <h2>Recent Editions</h2>
-          </div>
-          <p class="muted">Quick links into the latest year-level pages for match results, rating changes, and player links.</p>
-        </div>
-        <div id="eventEditionDiscoveryRoot" class="event-edition-feature-grid">
-          <div class="schedule__loading">Loading event editions…</div>
-        </div>
-      </div>
-    </section>
-
     <section class="schedule">
       <div class="schedule__controls">
         <div class="schedule__toggle" role="tablist" aria-label="Events view">
@@ -175,7 +131,6 @@
 
     <script src="player-stats.js"></script>
     <script src="event-utils.js"></script>
-    <script src="events-discovery.js"></script>
     <script>
       (() => {
         try {
@@ -894,6 +849,11 @@
         return daysUntil >= 0 ? daysUntil : null;
       };
 
+      const getEditionHref = (item) => {
+        const seriesSlug = window.MatchplayEvents?.getSeriesSlug?.(item.event);
+        return seriesSlug && item.year ? `events/${encodeURIComponent(seriesSlug)}/${encodeURIComponent(item.year)}/` : "";
+      };
+
       const renderSchedule = (panelKey, items, emptyMessage, showWinner) => {
         const panel = document.querySelector(`.schedule__panel[data-panel='${panelKey}']`);
         panel.innerHTML = "";
@@ -981,6 +941,11 @@
           const isSeveEuWin =
             item.event === "Seve Trophy" &&
             (winnerLabel === "Continental Europe" || winnerLabel === "Europe");
+          const editionHref = showWinner ? getEditionHref(item) : "";
+          const titleText = `${item.event} ${item.year}`;
+          const titleMarkup = editionHref
+            ? `<a class="schedule__title-link" href="${editionHref}">${escapeHtml(titleText)}</a>`
+            : escapeHtml(titleText);
 
           card.className = `schedule__card schedule__card--logo ${eventClass} ${
             isSeveEuWin ? "winner-seve-eu" : isPresidentsTie ? "winner-usa" : winnerClass
@@ -990,7 +955,7 @@
               ${logo ? `<img src="${logo}" alt="${item.event} logo" />` : `<span class="schedule__logo-text">${initialsForEvent(item.event)}</span>`}
             </div>
             <div class="schedule__content">
-              <h3>${item.event} ${item.year}</h3>
+              <h3>${titleMarkup}</h3>
               <p class="schedule__meta schedule__meta--empty">${venueLabel || "&nbsp;"}</p>
               <div class="schedule__date">${dateLabel}</div>
               ${countdownLabel ? `<div class="schedule__countdown">${countdownLabel}</div>` : ""}

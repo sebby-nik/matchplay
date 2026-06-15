@@ -737,7 +737,12 @@ Promise.all([
   });
 
 const toggleFilters = (open) => {
-  document.body.classList.toggle("filters-open", open);
+  const isOpen = Boolean(open);
+  document.body.classList.toggle("filters-open", isOpen);
+  [mobileFilterToggle, mobileFilterToggleBar].forEach((btn) => {
+    if (!btn) return;
+    btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+  });
 };
 
 const openFilters = () => toggleFilters(true);
@@ -916,13 +921,25 @@ if (clearAllFilters) {
 }
 
 document.querySelectorAll("th[data-sort]").forEach((th) => {
+  th.tabIndex = 0;
+  th.setAttribute("role", "button");
   th.addEventListener("click", () => handleSort(th.dataset.sort));
+  th.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    handleSort(th.dataset.sort);
+  });
 });
 
 const updateSortIndicators = () => {
   document.querySelectorAll("th[data-sort]").forEach((th) => {
     th.classList.remove("is-sorted", "is-sorted-asc", "is-sorted-desc");
-    if (th.dataset.sort === currentSort.key) {
+    const isCurrentSort = th.dataset.sort === currentSort.key;
+    th.setAttribute(
+      "aria-sort",
+      isCurrentSort ? (currentSort.direction === "asc" ? "ascending" : "descending") : "none"
+    );
+    if (isCurrentSort) {
       th.classList.add("is-sorted");
       th.classList.add(currentSort.direction === "asc" ? "is-sorted-asc" : "is-sorted-desc");
     }
@@ -982,7 +999,7 @@ const showPlayerSuggestions = (query) => {
     return;
   }
   playerSuggestions.innerHTML = matches
-    .map((name) => `<div class="player-suggestion" data-name="${escapeHtml(name)}">${renderPlayerLink(name)}</div>`)
+    .map((name) => `<div class="player-suggestion" data-name="${escapeHtml(name)}">${escapeHtml(name)}</div>`)
     .join("");
   playerSuggestions.classList.add("is-open");
 };
@@ -1010,21 +1027,23 @@ if (searchInput) {
     if (event.key !== "Enter") return;
     event.preventDefault();
     const query = normalize(searchInput.value.trim());
-    const exact = availablePlayers.find((name) => name.toLowerCase() === query);
+    const exact = availablePlayers.find((name) => normalize(name) === query);
     if (exact) {
       addPlayerSelection(exact);
     }
   });
 }
 
-if (playerSuggestions) {
-  playerSuggestions.addEventListener("mousedown", (event) => {
-    if (event.target.closest("a")) return;
+const handlePlayerSuggestionPick = (event) => {
+  if (!playerSuggestions?.classList.contains("is-open")) return;
     const target = event.target.closest(".player-suggestion");
     if (!target) return;
     event.preventDefault();
     addPlayerSelection(target.dataset.name);
-  });
+};
+
+if (playerSuggestions) {
+  playerSuggestions.addEventListener("click", handlePlayerSuggestionPick);
 }
 
 document.addEventListener("click", (event) => {
@@ -1042,6 +1061,7 @@ const closeNav = () => {
   navLinks.classList.remove("is-open");
   navBackdrop.classList.remove("is-open");
   navToggle.setAttribute("aria-expanded", "false");
+  navToggle.setAttribute("aria-label", "Open navigation");
   document.querySelectorAll(".site-nav__dropdown[open]").forEach((dropdown) => {
     dropdown.removeAttribute("open");
   });
@@ -1052,9 +1072,11 @@ if (navToggle && navLinks && navBackdrop) {
     const isOpen = navLinks.classList.toggle("is-open");
     navBackdrop.classList.toggle("is-open", isOpen);
     navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    navToggle.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
   });
 
   navBackdrop.addEventListener("click", closeNav);
+  navLinks.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeNav));
 
   window.addEventListener("resize", () => {
     if (window.innerWidth > 720) closeNav();

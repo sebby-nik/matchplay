@@ -100,18 +100,13 @@
         <div class="sport-band__copy">
           <p class="sport-band__eyebrow">Lineal Legacy</p>
           <h1>Winner stays on...</h1>
-          <p>
-            In order to be the man you've got to beat the man.
-            <br />
-            <br />
-            The lineal championship moves only when the reigning champion is beaten in a singles matchplay game. Every defence, every upset and every reign is tracked here below.
-            <br />
-            <br />
-            The record starts from Tiger Woods (the man) who we have awarded the inaugural title from the 1998 Presidents Cup. The only other instance of the title being awarded is to Kevin Kisner who won the 2019 WGC Match Play tournament. This is because that tournament marked the then Lineal Champion Rafa Cabrera-Bello's final Matchplay game, exiting at the Pool Stage and leaving the title vacant.
-            <br />
-            <br />
-            <span id="linealCurrentIntro">The current lineal champion is calculated from the match log below.</span>
-          </p>
+          <p>The title changes hands only when the reigning champion loses a singles match. Follow every defence, upset, and reign.</p>
+          <p id="linealCurrentIntro">The current champion is calculated from the match log below.</p>
+          <div class="hero-actions"><a class="hero-action" href="#championship-history">Explore the lineage</a></div>
+          <details class="intro-details">
+            <summary>Where the story begins</summary>
+            <p>Tiger Woods received the inaugural title at the 1998 Presidents Cup. The only other awarded title went to Kevin Kisner, winner of the 2019 WGC Match Play, after reigning champion Rafa Cabrera-Bello’s final matchplay appearance left the title vacant.</p>
+          </details>
         </div>
         <div class="sport-band__media">
           <div class="lineal-card lineal-card--gold" id="linealCurrentCard">
@@ -137,7 +132,7 @@
       </div>
     </section>
 
-    <main class="layout layout--sport lineal-layout">
+    <main class="layout layout--sport lineal-layout" id="championship-history">
       <section class="panel panel--lineal">
         <div class="lineal-champions__body" id="linealChampionsBody">
           <div class="honours-board">
@@ -154,7 +149,7 @@
         <div class="panel__header">
           <div class="panel__title-row">
             <h2>Champion Match Log</h2>
-            <button class="toggle-button is-collapsed" type="button" id="linealLogToggle" aria-label="Toggle champion match log">
+            <button class="toggle-button is-collapsed" type="button" id="linealLogToggle" aria-expanded="false" aria-controls="linealLogBody" aria-label="Toggle champion match log">
               <span class="toggle-button__icon">▾</span>
             </button>
           </div>

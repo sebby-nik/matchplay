@@ -1,3 +1,7 @@
+if (document.currentScript?.src) {
+  import(new URL("site-ui.js", document.currentScript.src).href);
+}
+
 const headToHeadRoot = document.getElementById("headToHeadRoot");
 const pagePlayerASlug = document.body.dataset.playerA || "";
 const pagePlayerBSlug = document.body.dataset.playerB || "";

@@ -80,15 +80,15 @@
       <div class="hero__content hero__content--wide">
         <p class="eyebrow">Event Archive</p>
         <div class="hero__title-row">
-          <h1>Matchplay event discovery</h1>
+          <h1>Every event. Every result.</h1>
         </div>
         <p class="lede">
-          Browse event series, edition pages, coverage status, and singles matchplay results from the archive.
+          Follow the matchplay calendar and revisit singles results from the game’s biggest team competitions.
         </p>
       </div>
     </header>
 
-    <section class="schedule">
+    <main class="schedule">
       <div class="schedule__controls">
         <div class="schedule__toggle" role="tablist" aria-label="Events view">
           <button class="schedule__toggle-btn is-active" type="button" data-view="upcoming" role="tab" aria-selected="true">
@@ -108,7 +108,7 @@
       <div class="schedule__panel" data-panel="results" role="tabpanel" aria-live="polite">
         <div class="schedule__loading">Loading results…</div>
       </div>
-    </section>
+    </main>
 
     <div class="footer-ad">
       <ins
@@ -1057,6 +1057,7 @@
           const active = btn.dataset.view === view;
           btn.classList.toggle("is-active", active);
           btn.setAttribute("aria-selected", active ? "true" : "false");
+          btn.tabIndex = active ? 0 : -1;
         });
         schedulePanels.forEach((panel) => {
           panel.classList.toggle("is-active", panel.dataset.panel === view);
@@ -1080,27 +1081,6 @@
 
       // no event type filter
 
-      // Ensure mobile nav works even if app.js doesn't bind on this page.
-      const navToggle = document.querySelector(".site-nav__toggle");
-      const navLinks = document.getElementById("siteNavLinks");
-      const navBackdrop = document.getElementById("siteNavBackdrop");
-      if (navToggle && navLinks && navBackdrop && !navToggle.dataset.bound) {
-        navToggle.dataset.bound = "true";
-        const closeNav = () => {
-          navLinks.classList.remove("is-open");
-          navBackdrop.classList.remove("is-open");
-          navToggle.setAttribute("aria-expanded", "false");
-        };
-        navToggle.addEventListener("click", () => {
-          const isOpen = navLinks.classList.toggle("is-open");
-          navBackdrop.classList.toggle("is-open", isOpen);
-          navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
-        });
-        navBackdrop.addEventListener("click", closeNav);
-        window.addEventListener("resize", () => {
-          if (window.innerWidth > 720) closeNav();
-        });
-      }
         } catch (error) {
           const upcomingPanel = document.querySelector(".schedule__panel[data-panel='upcoming']");
           const resultsPanel = document.querySelector(".schedule__panel[data-panel='results']");
@@ -1113,5 +1093,6 @@
         }
       })();
     </script>
+    <script type="module" src="site-ui.js"></script>
   </body>
 </html>

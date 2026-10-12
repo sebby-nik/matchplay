@@ -1,3 +1,7 @@
+if (document.currentScript?.src) {
+  import(new URL("site-ui.js", document.currentScript.src).href);
+}
+
 const compareRoot = document.getElementById("compareRoot");
 const playerAInput = document.getElementById("comparePlayerA");
 const playerBInput = document.getElementById("comparePlayerB");
@@ -224,7 +228,7 @@ const renderComparison = (playerA, playerB) => {
         <div class="panel__title-row">
           <h2>Summary Comparison</h2>
         </div>
-        <p class="muted">Metrics are derived from the same match and Elo logic used on player profiles.</p>
+        <p class="muted">Ratings, wins, and matchplay records at a glance.</p>
       </div>
       <div class="table-wrap">
         <table class="rank-table compare-table">
@@ -310,29 +314,10 @@ const setupInputs = () => {
   playerBInput.addEventListener("blur", () => handleInputChange(1, playerBInput.value));
 };
 
-const setupNav = () => {
-  const navToggle = document.querySelector(".site-nav__toggle");
-  const navLinks = document.getElementById("siteNavLinks");
-  const navBackdrop = document.getElementById("siteNavBackdrop");
-  if (!navToggle || !navLinks || !navBackdrop) return;
-
-  const closeNav = () => {
-    navLinks.classList.remove("is-open");
-    navBackdrop.classList.remove("is-open");
-    navToggle.setAttribute("aria-expanded", "false");
-  };
-
-  navToggle.addEventListener("click", () => {
-    const isOpen = navLinks.classList.toggle("is-open");
-    navBackdrop.classList.toggle("is-open", isOpen);
-    navToggle.setAttribute("aria-expanded", String(isOpen));
-  });
-  navBackdrop.addEventListener("click", closeNav);
-  navLinks.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeNav));
-};
 
 const initCompare = async () => {
-  setupNav();
+  playerAInput.disabled = true;
+  playerBInput.disabled = true;
   setupInputs();
 
   try {
@@ -362,6 +347,8 @@ const initCompare = async () => {
     selectedSlugs = [requested[0] || "", requested[1] || ""].map((slug) => (playerBySlug.has(slug) ? slug : ""));
     syncInputs();
     renderCurrentState();
+    playerAInput.disabled = false;
+    playerBInput.disabled = false;
   } catch (error) {
     console.error(error);
     renderState("Comparison unavailable", "The comparison data could not be loaded. Please try again later.");

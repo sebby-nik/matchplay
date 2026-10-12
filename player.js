@@ -1,3 +1,7 @@
+if (document.currentScript?.src) {
+  import(new URL("site-ui.js", document.currentScript.src).href);
+}
+
 const profileRoot = document.getElementById("playerProfileRoot");
 const currentSlug = document.body.dataset.playerSlug || "";
 
@@ -642,22 +646,6 @@ const renderProfile = (player, matches, metadata, players = []) => {
     <main class="layout layout--sport player-profile-layout">
       <section class="player-profile-summary-grid" aria-label="Player summary statistics">
         <article class="player-profile-stat">
-          <span>Current ranking</span>
-          <strong>${currentRanking ? `#${currentRanking}` : "—"}</strong>
-        </article>
-        <article class="player-profile-stat">
-          <span>Current Elo</span>
-          <strong>${rating ? Math.round(rating.rating) : "—"}</strong>
-        </article>
-        <article class="player-profile-stat">
-          <span>Peak Elo</span>
-          <strong>${rating ? Math.round(rating.peak) : "—"}</strong>
-        </article>
-        <article class="player-profile-stat">
-          <span>Record</span>
-          <strong>${record.wins}-${record.draws}-${record.losses}</strong>
-        </article>
-        <article class="player-profile-stat">
           <span>Matches</span>
           <strong>${record.matches}</strong>
         </article>
@@ -688,10 +676,6 @@ const renderProfile = (player, matches, metadata, players = []) => {
         <article class="player-profile-stat">
           <span>Win percentage</span>
           <strong>${formatPercentage(winPercentage)}</strong>
-        </article>
-        <article class="player-profile-stat">
-          <span>Status</span>
-          <strong>${statusLabel}</strong>
         </article>
       </section>
       ${renderRatingTimelineSection(timeline, rating)}
@@ -790,28 +774,3 @@ Promise.all([
   .catch(() => {
     renderError();
   });
-
-const navToggle = document.querySelector(".site-nav__toggle");
-const navLinks = document.getElementById("siteNavLinks");
-const navBackdrop = document.getElementById("siteNavBackdrop");
-
-const closeNav = () => {
-  if (!navLinks || !navToggle || !navBackdrop) return;
-  navLinks.classList.remove("is-open");
-  navBackdrop.classList.remove("is-open");
-  navToggle.setAttribute("aria-expanded", "false");
-};
-
-if (navToggle && navLinks && navBackdrop) {
-  navToggle.addEventListener("click", () => {
-    const isOpen = navLinks.classList.toggle("is-open");
-    navBackdrop.classList.toggle("is-open", isOpen);
-    navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
-  });
-
-  navBackdrop.addEventListener("click", closeNav);
-
-  window.addEventListener("resize", () => {
-    if (window.innerWidth > 720) closeNav();
-  });
-}

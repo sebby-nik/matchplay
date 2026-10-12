@@ -1,3 +1,7 @@
+if (document.currentScript?.src) {
+  import(new URL("site-ui.js", document.currentScript.src).href);
+}
+
 const ratingBody = document.getElementById("ratingBody");
 const eventFilter = document.getElementById("eventFilter");
 const eventSummary = document.getElementById("eventSummary");
@@ -9,7 +13,6 @@ const playerChips = document.getElementById("playerChips");
 const playerSuggestions = document.getElementById("playerSuggestions");
 const minMatchesInput = document.getElementById("minMatches");
 const minMatchesValue = document.getElementById("minMatchesValue");
-const activeOnlyToggle = document.getElementById("activeOnlyToggle");
 const summary = document.getElementById("summary");
 const filterChips = document.getElementById("filterChips");
 const clearAllFilters = document.getElementById("clearAllFilters");
@@ -18,12 +21,6 @@ const countrySummary = document.getElementById("countrySummary");
 const countrySearch = document.getElementById("countrySearch");
 const countrySelectAll = document.getElementById("countrySelectAll");
 const countryDropdown = document.getElementById("countryDropdown");
-const mobileFilterToggle = document.getElementById("mobileFilterToggle");
-const mobileFilterToggleBar = document.getElementById("mobileFilterToggleBar");
-const mobileFilterBar = document.getElementById("mobileFilterBar");
-const mobileFilterOverlay = document.getElementById("mobileFilterOverlay");
-const controlsPanel = document.getElementById("controlsPanel");
-const controlsPanelClose = document.getElementById("controlsPanelClose");
 const tableHeaders = document.querySelectorAll(".rank-table th[data-sort]");
 const ratingLeaderName = document.getElementById("ratingLeaderName");
 const ratingLeaderRating = document.getElementById("ratingLeaderRating");
@@ -953,6 +950,10 @@ const renderFilterChips = () => {
   filterChips.innerHTML = "";
 
   const chips = [];
+  selectedPlayers.forEach((name) => chips.push({ type: "player", label: name, value: name }));
+  if (Number(minMatchesInput.value) > 1) {
+    chips.push({ type: "minimum", label: `${minMatchesInput.value}+ matches` });
+  }
 
   selectedEvents.forEach((event) => {
     chips.push({ type: "event", label: event, value: event });
@@ -976,8 +977,17 @@ const renderFilterChips = () => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "filter-chip";
+    button.setAttribute("aria-label", `Remove ${chip.label} filter`);
     button.innerHTML = `<span>${escapeHtml(chip.label)}</span><span class="filter-chip__close">×</span>`;
     button.addEventListener("click", () => {
+      if (chip.type === "player") {
+        selectedPlayers.delete(chip.value);
+        renderPlayerChips();
+      }
+      if (chip.type === "minimum") {
+        minMatchesInput.value = "1";
+        minMatchesValue.textContent = "1+";
+      }
       if (chip.type === "event") {
         selectedEvents.delete(chip.value);
         updateEventSummary();
@@ -1030,7 +1040,7 @@ const showPlayerSuggestions = (query) => {
     return;
   }
   playerSuggestions.innerHTML = matches
-    .map((name) => `<div class="player-suggestion" data-name="${escapeHtml(name)}">${escapeHtml(name)}</div>`)
+    .map((name) => `<button type="button" class="player-suggestion" data-name="${escapeHtml(name)}">${escapeHtml(name)}</button>`)
     .join("");
   playerSuggestions.classList.add("is-open");
 };
@@ -1068,7 +1078,7 @@ const applyFilters = () => {
       if (selectedCountries.size > 0 && !selectedCountries.has(player.country)) {
         return false;
       }
-      return activeOnlyToggle && activeOnlyToggle.checked ? player.lastYear >= activeCutoff : true;
+      return player.lastYear >= activeCutoff;
     });
 
     const minFiltered = filteredPlayers.filter(
@@ -1087,7 +1097,7 @@ const applyFilters = () => {
         : sorted;
 
     currentPlayers = searched;
-    if (summary) summary.textContent = `${searched.length} players`;
+    if (summary) summary.textContent = `${searched.length} ${searched.length === 1 ? "player" : "players"}`;
     updateLeaderCard(baseRanked[0] || searched[0] || null);
     renderFilterChips();
     renderPlayerChips();
@@ -1278,47 +1288,6 @@ Promise.all([
     setRatingTableState(error.message || "Unable to load ratings data.", true);
   });
 
-const toggleFilters = (open) => {
-  const isOpen = Boolean(open);
-  document.body.classList.toggle("filters-open", isOpen);
-  [mobileFilterToggle, mobileFilterToggleBar].forEach((btn) => {
-    if (!btn) return;
-    btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
-  });
-};
-
-const openFilters = () => toggleFilters(true);
-const closeFilters = () => toggleFilters(false);
-
-[mobileFilterToggle, mobileFilterToggleBar].forEach((btn) => {
-  if (!btn) return;
-  btn.addEventListener("click", () => openFilters());
-});
-
-if (controlsPanelClose) {
-  controlsPanelClose.addEventListener("click", () => closeFilters());
-}
-
-if (mobileFilterOverlay) {
-  mobileFilterOverlay.addEventListener("click", () => closeFilters());
-}
-
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") closeFilters();
-});
-
-const handleMobileFilterBar = () => {
-  if (!mobileFilterBar) return;
-  if (window.scrollY > 240) {
-    mobileFilterBar.classList.add("is-visible");
-  } else {
-    mobileFilterBar.classList.remove("is-visible");
-  }
-};
-
-window.addEventListener("scroll", handleMobileFilterBar);
-window.addEventListener("load", handleMobileFilterBar);
-
 [eventDropdown, countryDropdown].forEach((dropdown) => {
   if (!dropdown) return;
   dropdown.addEventListener("toggle", () => {
@@ -1474,23 +1443,21 @@ if (minMatchesInput) {
   });
 }
 
-if (activeOnlyToggle) {
-  activeOnlyToggle.addEventListener("change", applyFilters);
+if (clearAllFilters) {
+  clearAllFilters.addEventListener("click", () => {
+    selectedEvents = new Set();
+    selectedCountries = new Set();
+    selectedPlayers = new Set();
+    minMatchesInput.value = "1";
+    minMatchesValue.textContent = "1+";
+    updateEventSummary();
+    updateCountrySummary();
+    syncEventCheckboxes();
+    syncCountryCheckboxes();
+    renderPlayerChips();
+    applyFilters();
+  });
 }
-
-  if (clearAllFilters) {
-    clearAllFilters.addEventListener("click", () => {
-      selectedEvents = new Set();
-      selectedCountries = new Set();
-      selectedPlayers = new Set();
-      updateEventSummary();
-      updateCountrySummary();
-      syncEventCheckboxes();
-      syncCountryCheckboxes();
-      renderPlayerChips();
-      applyFilters();
-    });
-  }
 
 tableHeaders.forEach((th) => {
   th.tabIndex = 0;
@@ -1521,34 +1488,3 @@ document.addEventListener("keydown", (event) => {
     dropdown.open = false;
   });
 });
-
-const navToggle = document.querySelector(".site-nav__toggle");
-const navLinks = document.getElementById("siteNavLinks");
-const navBackdrop = document.getElementById("siteNavBackdrop");
-
-const closeNav = () => {
-  if (!navLinks || !navToggle || !navBackdrop) return;
-  navLinks.classList.remove("is-open");
-  navBackdrop.classList.remove("is-open");
-  navToggle.setAttribute("aria-expanded", "false");
-  navToggle.setAttribute("aria-label", "Open navigation");
-  document.querySelectorAll(".site-nav__dropdown[open]").forEach((dropdown) => {
-    dropdown.removeAttribute("open");
-  });
-};
-
-if (navToggle && navLinks && navBackdrop) {
-  navToggle.addEventListener("click", () => {
-    const isOpen = navLinks.classList.toggle("is-open");
-    navBackdrop.classList.toggle("is-open", isOpen);
-    navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
-    navToggle.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
-  });
-
-  navBackdrop.addEventListener("click", closeNav);
-  navLinks.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeNav));
-
-  window.addEventListener("resize", () => {
-    if (window.innerWidth > 720) closeNav();
-  });
-}

@@ -1,3 +1,7 @@
+if (document.currentScript?.src) {
+  import(new URL("site-ui.js", document.currentScript.src).href);
+}
+
 const eventFilter = document.getElementById("eventFilter");
 const eventSummary = document.getElementById("eventSummary");
 const eventSearch = document.getElementById("eventSearch");
@@ -23,12 +27,6 @@ const countrySummary = document.getElementById("countrySummary");
 const countrySearch = document.getElementById("countrySearch");
 const countrySelectAll = document.getElementById("countrySelectAll");
 const countryDropdown = document.getElementById("countryDropdown");
-const mobileFilterToggle = document.getElementById("mobileFilterToggle");
-const mobileFilterToggleBar = document.getElementById("mobileFilterToggleBar");
-const mobileFilterBar = document.getElementById("mobileFilterBar");
-const mobileFilterOverlay = document.getElementById("mobileFilterOverlay");
-const controlsPanel = document.getElementById("controlsPanel");
-const controlsPanelClose = document.getElementById("controlsPanelClose");
 const recordsPlayersStat = document.getElementById("recordsPlayersStat");
 const recordsEventsStat = document.getElementById("recordsEventsStat");
 const recordsMatchesStat = document.getElementById("recordsMatchesStat");
@@ -495,7 +493,7 @@ const applyFilters = () => {
       : sorted;
 
   currentPlayers = searched;
-  summary.textContent = `${searched.length} players`;
+  summary.textContent = `${searched.length} ${searched.length === 1 ? "player" : "players"}`;
   renderFilterChips();
   renderPlayerChips();
   renderTable(searched);
@@ -510,6 +508,10 @@ const renderFilterChips = () => {
   filterChips.innerHTML = "";
 
   const chips = [];
+  selectedPlayers.forEach((name) => chips.push({ type: "player", label: name, value: name }));
+  if (Number(minMatchesInput.value) > 1) {
+    chips.push({ type: "minimum", label: `${minMatchesInput.value}+ matches` });
+  }
 
   selectedEvents.forEach((event) => {
     chips.push({ type: "event", label: event, value: event });
@@ -537,8 +539,17 @@ const renderFilterChips = () => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "filter-chip";
-    button.innerHTML = `<span>${chip.label}</span><span class=\"filter-chip__close\">×</span>`;
+    button.setAttribute("aria-label", `Remove ${chip.label} filter`);
+    button.innerHTML = `<span>${escapeHtml(chip.label)}</span><span class=\"filter-chip__close\">×</span>`;
     button.addEventListener("click", () => {
+      if (chip.type === "player") {
+        selectedPlayers.delete(chip.value);
+        renderPlayerChips();
+      }
+      if (chip.type === "minimum") {
+        minMatchesInput.value = "1";
+        minMatchesValue.textContent = "1+";
+      }
       if (chip.type === "event") {
         selectedEvents.delete(chip.value);
         updateEventSummary();
@@ -736,47 +747,6 @@ Promise.all([
     setRecordsTableState(error.message || "Unable to load records data.", true);
   });
 
-const toggleFilters = (open) => {
-  const isOpen = Boolean(open);
-  document.body.classList.toggle("filters-open", isOpen);
-  [mobileFilterToggle, mobileFilterToggleBar].forEach((btn) => {
-    if (!btn) return;
-    btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
-  });
-};
-
-const openFilters = () => toggleFilters(true);
-const closeFilters = () => toggleFilters(false);
-
-[mobileFilterToggle, mobileFilterToggleBar].forEach((btn) => {
-  if (!btn) return;
-  btn.addEventListener("click", () => openFilters());
-});
-
-if (controlsPanelClose) {
-  controlsPanelClose.addEventListener("click", () => closeFilters());
-}
-
-if (mobileFilterOverlay) {
-  mobileFilterOverlay.addEventListener("click", () => closeFilters());
-}
-
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") closeFilters();
-});
-
-const handleMobileFilterBar = () => {
-  if (!mobileFilterBar) return;
-  if (window.scrollY > 240) {
-    mobileFilterBar.classList.add("is-visible");
-  } else {
-    mobileFilterBar.classList.remove("is-visible");
-  }
-};
-
-window.addEventListener("scroll", handleMobileFilterBar);
-window.addEventListener("load", handleMobileFilterBar);
-
 [eventDropdown, yearDropdown, countryDropdown].forEach((dropdown) => {
   dropdown.addEventListener("toggle", () => {
     if (dropdown.open) {
@@ -909,6 +879,8 @@ if (clearAllFilters) {
     selectedYears = new Set();
     selectedCountries = new Set();
     selectedPlayers = new Set();
+    minMatchesInput.value = "1";
+    minMatchesValue.textContent = "1+";
     updateEventSummary();
     updateYearSummary();
     updateCountrySummary();
@@ -999,7 +971,7 @@ const showPlayerSuggestions = (query) => {
     return;
   }
   playerSuggestions.innerHTML = matches
-    .map((name) => `<div class="player-suggestion" data-name="${escapeHtml(name)}">${escapeHtml(name)}</div>`)
+    .map((name) => `<button type="button" class="player-suggestion" data-name="${escapeHtml(name)}">${escapeHtml(name)}</button>`)
     .join("");
   playerSuggestions.classList.add("is-open");
 };
@@ -1051,34 +1023,3 @@ document.addEventListener("click", (event) => {
   if (event.target.closest(".player-search")) return;
   playerSuggestions.classList.remove("is-open");
 });
-
-const navToggle = document.querySelector(".site-nav__toggle");
-const navLinks = document.getElementById("siteNavLinks");
-const navBackdrop = document.getElementById("siteNavBackdrop");
-
-const closeNav = () => {
-  if (!navLinks || !navToggle || !navBackdrop) return;
-  navLinks.classList.remove("is-open");
-  navBackdrop.classList.remove("is-open");
-  navToggle.setAttribute("aria-expanded", "false");
-  navToggle.setAttribute("aria-label", "Open navigation");
-  document.querySelectorAll(".site-nav__dropdown[open]").forEach((dropdown) => {
-    dropdown.removeAttribute("open");
-  });
-};
-
-if (navToggle && navLinks && navBackdrop) {
-  navToggle.addEventListener("click", () => {
-    const isOpen = navLinks.classList.toggle("is-open");
-    navBackdrop.classList.toggle("is-open", isOpen);
-    navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
-    navToggle.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
-  });
-
-  navBackdrop.addEventListener("click", closeNav);
-  navLinks.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeNav));
-
-  window.addEventListener("resize", () => {
-    if (window.innerWidth > 720) closeNav();
-  });
-}

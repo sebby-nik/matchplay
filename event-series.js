@@ -1,3 +1,7 @@
+if (document.currentScript?.src) {
+  import(new URL("site-ui.js", document.currentScript.src).href);
+}
+
 const eventSeriesRoot = document.getElementById("eventSeriesRoot");
 const eventSeriesSlug = document.body.dataset.eventSeriesSlug || "";
 
@@ -266,30 +270,9 @@ const renderState = (title, message) => {
   `;
 };
 
-const setupNav = () => {
-  const navToggle = document.querySelector(".site-nav__toggle");
-  const navLinks = document.getElementById("siteNavLinks");
-  const navBackdrop = document.getElementById("siteNavBackdrop");
-  if (!navToggle || !navLinks || !navBackdrop) return;
-
-  const closeNav = () => {
-    navLinks.classList.remove("is-open");
-    navBackdrop.classList.remove("is-open");
-    navToggle.setAttribute("aria-expanded", "false");
-  };
-
-  navToggle.addEventListener("click", () => {
-    const isOpen = navLinks.classList.toggle("is-open");
-    navBackdrop.classList.toggle("is-open", isOpen);
-    navToggle.setAttribute("aria-expanded", String(isOpen));
-  });
-  navBackdrop.addEventListener("click", closeNav);
-  navLinks.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeNav));
-};
 
 const initEventSeries = async () => {
   if (!eventSeriesRoot) return;
-  setupNav();
   const seriesConfig = SERIES_CONFIG[eventSeriesSlug];
   if (!seriesConfig) {
     renderState("Event not found", "This event series is not available in the matchplay archive yet.");

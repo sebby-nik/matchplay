@@ -1,3 +1,7 @@
+if (document.currentScript?.src) {
+  import(new URL("site-ui.js", document.currentScript.src).href);
+}
+
 const eventEditionRoot = document.getElementById("eventEditionRoot");
 const eventSeriesSlug = document.body.dataset.eventSeriesSlug || "";
 const eventEditionYear = Number(document.body.dataset.eventEditionYear);
@@ -412,30 +416,9 @@ const renderState = (title, message, seriesName = "events") => {
   `;
 };
 
-const setupNav = () => {
-  const navToggle = document.querySelector(".site-nav__toggle");
-  const navLinks = document.getElementById("siteNavLinks");
-  const navBackdrop = document.getElementById("siteNavBackdrop");
-  if (!navToggle || !navLinks || !navBackdrop) return;
-
-  const closeNav = () => {
-    navLinks.classList.remove("is-open");
-    navBackdrop.classList.remove("is-open");
-    navToggle.setAttribute("aria-expanded", "false");
-  };
-
-  navToggle.addEventListener("click", () => {
-    const isOpen = navLinks.classList.toggle("is-open");
-    navBackdrop.classList.toggle("is-open", isOpen);
-    navToggle.setAttribute("aria-expanded", String(isOpen));
-  });
-  navBackdrop.addEventListener("click", closeNav);
-  navLinks.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeNav));
-};
 
 const initEventEdition = async () => {
   if (!eventEditionRoot) return;
-  setupNav();
   const seriesConfig = SERIES_CONFIG[eventSeriesSlug];
   if (!seriesConfig || !Number.isFinite(eventEditionYear)) {
     renderState("Event edition not found", "This event edition is not available in the matchplay archive yet.");

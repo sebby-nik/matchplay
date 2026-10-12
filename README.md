@@ -17,11 +17,18 @@ A lightweight static site for browsing matchplay history and ratings across majo
 - `events.html` — upcoming/results schedule
 - `faq.html`, `about.html` — supporting content
 - `styles.css` — site styles
+- `site-ui.js` — shared navigation, mobile filter sheets, keyboard behaviour, and responsive tables; loaded by the page scripts
 - `app.js` — shared UI logic + filtering
 - `data.json` — match data source and upcoming events
 
 ## Run Locally
-Open `index.html` in your browser.
+Serve this directory over HTTP (the archive loads JSON files):
+
+```sh
+python3 -m http.server 4181 --bind 127.0.0.1
+```
+
+Then open `http://127.0.0.1:4181/` in your browser.
 
 ## Tests
 Run the lightweight player profile test suite with:

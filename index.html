@@ -126,15 +126,15 @@
         <div class="sport-band__copy">
           <p class="sport-band__eyebrow">Official Matchplay Ratings</p>
           <h1>A true measure of match play performance.</h1>
-          <p>
-            These Elo ratings capture performance across elite match play competition, accounting for strength of opposition and quality of results. Every match updates a player’s rating, ensuring rankings reflect not just outcomes, but the context in which they were achieved.
-            <br />
-            <br />
-            Every player debuts at a Rating of 1000 and then goes up and down depending on their results and the rating difference between them and their opponent at the time. This ensures that player ratings won't just be inflated by an easy run of matches and is how Chess Ratings are traditionally calculated.
-            <br />
-            <br />
-            The result is a definitive, data-driven ranking of match play ability.
-          </p>
+          <p>Every match matters. Explore singles matchplay ratings that account for the result, the opposition, and the strength of each performance.</p>
+          <div class="hero-actions">
+            <a class="hero-action" href="#ratings">Explore the rankings</a>
+            <a class="hero-action hero-action--quiet" href="compare/">Compare players</a>
+          </div>
+          <details class="intro-details">
+            <summary>How the ratings work</summary>
+            <p>Every player starts at 1,000. Their Elo rating rises or falls after each match, based on the result and their opponent’s rating. Beating a stronger opponent earns more points, so an easy run of matches does not inflate a player’s standing.</p>
+          </details>
         </div>
         <div class="sport-band__media">
           <div class="lineal-card lineal-card--gold" id="ratingLeaderCard">
@@ -164,22 +164,16 @@
     </section>
 
     <main class="layout layout--sport">
-      <section class="panel panel--sport">
+      <section class="panel panel--sport" id="ratings">
         <div class="panel__header">
           <div class="panel__title-row">
             <h2>Player Ratings</h2>
             <button class="mobile-filter-toggle" id="mobileFilterToggle" type="button" aria-expanded="false" aria-controls="controlsPanel">
               Filters
             </button>
-            <div class="status-toggle">
-              <span class="status-toggle__label">All-time</span>
-              <input id="activeOnlyToggle" type="checkbox" checked />
-              <span class="status-toggle__slider"></span>
-              <span class="status-toggle__label">Active</span>
-            </div>
           </div>
           <p class="muted">
-            Ratings are computed in chronological order by year, then event, then round.
+            Explore active player ratings. Select a player to view their match history.
           </p>
         </div>
 

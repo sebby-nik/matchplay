@@ -396,7 +396,7 @@ test("event series pages are generated from archive data", () => {
   assert.doesNotMatch(eventSeriesSource, /event-series-coverage/);
   assert.doesNotMatch(eventSeriesSource, /renderEditionList/);
   assert.doesNotMatch(eventSeriesSource, /Editions Covered/);
-  assert.match(eventsHtml, /Matchplay event discovery/);
+  assert.match(eventsHtml, /<h1>Every event\. Every result\.<\/h1>/);
   assert.doesNotMatch(eventsHtml, /id="eventDiscoveryRoot"/);
   assert.doesNotMatch(eventsHtml, /id="eventEditionDiscoveryRoot"/);
   assert.doesNotMatch(eventsHtml, /id="eventDiscoverySearch"/);

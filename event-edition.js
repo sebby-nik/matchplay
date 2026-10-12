@@ -194,6 +194,8 @@ const buildEditionMetadata = (eventsData, editionMatches) => {
   return {
     month: fromMetadata?.month || sample.month || "",
     venue: fromMetadata?.venue || sample.venue || "",
+    finalScore: fromMetadata?.finalScore || null,
+    sourceUrl: fromMetadata?.sourceUrl || "",
     dateLabel: fromMetadata?.dateLabel || (fromMetadata?.month || sample.month ? `${fromMetadata?.month || sample.month} ${eventEditionYear}` : `${eventEditionYear}`)
   };
 };
@@ -219,19 +221,28 @@ const renderMetricGrid = ({ matchCount, playerCount, roundCount, ratingCount }) 
   </section>
 `;
 
-const renderTeamPanel = (score) => {
+const renderTeamPanel = (score, metadata = {}) => {
   if (!score) return "";
+  const hasFinalScore = Array.isArray(metadata.finalScore) &&
+    metadata.finalScore.length === 2 && metadata.finalScore.every(Number.isFinite);
+  const totals = hasFinalScore ? metadata.finalScore : score.totals;
+  const formatScore = (values) => values
+    .map((value) => formatNumber(value, Number.isInteger(value) ? 0 : 1))
+    .join("–");
   return `
     <section class="panel panel--sport event-edition-team-panel">
       <div class="panel__header">
         <div class="panel__title-row">
-          <h2>Team Context</h2>
+          <h2>${hasFinalScore ? "Final Score" : "Team Context"}</h2>
         </div>
-        <p class="muted">Full event final score is not available in the archive yet; this is the singles points split from captured matches.</p>
+        <p class="muted">${hasFinalScore
+          ? `Singles: ${escapeHtml(score.labels[0])} ${formatScore(score.totals)} ${escapeHtml(score.labels[1])}.`
+          : "Full event final score is not available in the archive yet; this is the singles points split from captured matches."}</p>
+        ${/^https?:\/\//.test(metadata.sourceUrl || "") ? `<p class="muted"><a class="subtle-link" href="${escapeHtml(metadata.sourceUrl)}">Official results (PGA TOUR)</a></p>` : ""}
       </div>
       <div class="event-edition-scoreline">
         <span>${escapeHtml(score.labels[0])}</span>
-        <strong>${formatNumber(score.totals[0], Number.isInteger(score.totals[0]) ? 0 : 1)}-${formatNumber(score.totals[1], Number.isInteger(score.totals[1]) ? 0 : 1)}</strong>
+        <strong>${formatScore(totals)}</strong>
         <span>${escapeHtml(score.labels[1])}</span>
       </div>
     </section>
@@ -379,7 +390,7 @@ const renderEditionPage = ({ seriesConfig, metadata, editionMatches, matchRows, 
         roundCount: rounds.size,
         ratingCount: movement.length
       })}
-      ${renderTeamPanel(teamScore)}
+      ${renderTeamPanel(teamScore, metadata)}
       <div class="event-series-grid">
         ${renderMovementTable("Biggest Rating Gains", "Largest Elo gains across this edition, derived from the shared rating timeline.", gains, playerSlugMap)}
         ${renderMovementTable("Biggest Rating Losses", "Largest Elo drops across this edition, derived from the shared rating timeline.", losses, playerSlugMap)}

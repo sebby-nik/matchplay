@@ -205,9 +205,10 @@ test("shared player stat helpers expose reusable profile calculations", () => {
       pointsPercentage: 68
     }
   );
-  assert.strictEqual(Math.round(profile.currentRating), 1176);
+  // The 2026 edition advances the archive and applies the existing annual rating decay.
+  assert.strictEqual(Math.round(profile.currentRating), 1174);
   assert.strictEqual(Math.round(profile.peakRating), 1243);
-  assert.strictEqual(profile.currentRanking, 1);
+  assert.strictEqual(profile.currentRanking, 2);
   assert.ok(profile.eventRecords.some((event) => event.event === "WGC / Dell Match Play" && event.matches === 51));
   assert.ok(profile.headToHeadRecords.some((record) => record.opponent === "Scottie Scheffler" && record.matches === 2));
   assert.ok(profile.bestWins.length > 0);
@@ -360,7 +361,7 @@ test("comparison tool page exists and reuses shared statistics", () => {
   const rory = playerStats.buildPlayerProfileStats(playableMatches, "Rory McIlroy", { activeCutoff: 2020 });
   const scottie = playerStats.buildPlayerProfileStats(playableMatches, "Scottie Scheffler", { activeCutoff: 2020 });
   const h2h = playerStats.calculateHeadToHeadRecord(playableMatches, "Rory McIlroy", "Scottie Scheffler");
-  assert.strictEqual(Math.round(rory.currentRating), 1176);
+  assert.strictEqual(Math.round(rory.currentRating), 1174);
   assert.ok(scottie.record.matches > 0);
   assert.strictEqual(h2h.matches, 2);
   assert.strictEqual(h2h.playerA.points, 1);

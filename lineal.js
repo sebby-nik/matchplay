@@ -142,7 +142,8 @@ const LINEAL_PLAN = [
   { type: "match", year: 2023, event: "WGC Match Play", champion: "Scottie Scheffler", opponent: "Sam Burns", outcome: "loss" },
   { type: "defend", count: 1 },
   { type: "match", year: 2023, event: "Ryder Cup", champion: "Sam Burns", opponent: "Rory McIlroy", outcome: "loss" },
-  { type: "match", year: 2025, event: "Ryder Cup", champion: "Rory McIlroy", opponent: "Scottie Scheffler", outcome: "loss" }
+  { type: "match", year: 2025, event: "Ryder Cup", champion: "Rory McIlroy", opponent: "Scottie Scheffler", outcome: "loss" },
+  { type: "match", year: 2026, event: "Presidents Cup", champion: "Scottie Scheffler", opponent: "Nico Echavarria", outcome: "win" }
 ];
 
 const ALIASES = {

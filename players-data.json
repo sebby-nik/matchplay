@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-05",
+  "generatedAt": "2026-10-12",
   "slugPolicy": "lowercase ASCII, punctuation collapsed to hyphens, accent marks removed, collision-safe suffixes added from country/counter",
   "players": [
     {
@@ -100,7 +100,7 @@
       "countries": [
         "AU"
       ],
-      "matchRows": 100
+      "matchRows": 102
     },
     {
       "id": "adam-svensson",
@@ -2220,7 +2220,7 @@
       "countries": [
         "US"
       ],
-      "matchRows": 24
+      "matchRows": 26
     },
     {
       "id": "camilo-villegas",
@@ -2783,6 +2783,16 @@
       "matchRows": 4
     },
     {
+      "id": "chris-gotterup",
+      "slug": "chris-gotterup",
+      "name": "Chris Gotterup",
+      "country": "US",
+      "countries": [
+        "US"
+      ],
+      "matchRows": 2
+    },
+    {
       "id": "chris-hanson",
       "slug": "chris-hanson",
       "name": "Chris Hanson",
@@ -2850,7 +2860,7 @@
       "countries": [
         "ZA"
       ],
-      "matchRows": 22
+      "matchRows": 24
     },
     {
       "id": "christy-o-connor",
@@ -3100,7 +3110,7 @@
       "countries": [
         "US"
       ],
-      "matchRows": 30
+      "matchRows": 32
     },
     {
       "id": "corey-conners",
@@ -3110,7 +3120,7 @@
       "countries": [
         "CA"
       ],
-      "matchRows": 30
+      "matchRows": 32
     },
     {
       "id": "corey-pavin",
@@ -6330,7 +6340,7 @@
       "countries": [
         "JP"
       ],
-      "matchRows": 60
+      "matchRows": 62
     },
     {
       "id": "hidemichi-tanaka",
@@ -6520,7 +6530,7 @@
       "countries": [
         "KR"
       ],
-      "matchRows": 24
+      "matchRows": 26
     },
     {
       "id": "isaac-mackie",
@@ -6993,6 +7003,16 @@
       "matchRows": 38
     },
     {
+      "id": "jackson-koivun",
+      "slug": "jackson-koivun",
+      "name": "Jackson Koivun",
+      "country": "US",
+      "countries": [
+        "US"
+      ],
+      "matchRows": 2
+    },
+    {
       "id": "jaco-van-zyl",
       "slug": "jaco-van-zyl",
       "name": "Jaco van Zyl",
@@ -7001,6 +7021,16 @@
         "ZA"
       ],
       "matchRows": 6
+    },
+    {
+      "id": "jacob-bridgeman",
+      "slug": "jacob-bridgeman",
+      "name": "Jacob Bridgeman",
+      "country": "US",
+      "countries": [
+        "US"
+      ],
+      "matchRows": 2
     },
     {
       "id": "james-alcroft",
@@ -8580,7 +8610,7 @@
       "countries": [
         "US"
       ],
-      "matchRows": 58
+      "matchRows": 60
     },
     {
       "id": "justin-walters",
@@ -10340,7 +10370,7 @@
       "countries": [
         "AU"
       ],
-      "matchRows": 12
+      "matchRows": 14
     },
     {
       "id": "mito-pereira",
@@ -10560,7 +10590,7 @@
       "countries": [
         "CA"
       ],
-      "matchRows": 6
+      "matchRows": 8
     },
     {
       "id": "nick-watney",
@@ -10581,6 +10611,16 @@
         "SE"
       ],
       "matchRows": 36
+    },
+    {
+      "id": "nico-echavarria",
+      "slug": "nico-echavarria",
+      "name": "Nico Echavarria",
+      "country": "CO",
+      "countries": [
+        "CO"
+      ],
+      "matchRows": 2
     },
     {
       "id": "nicolai-hojgaard",
@@ -10930,7 +10970,7 @@
       "countries": [
         "US"
       ],
-      "matchRows": 44
+      "matchRows": 46
     },
     {
       "id": "patrick-reed",
@@ -12160,7 +12200,7 @@
       "countries": [
         "US"
       ],
-      "matchRows": 38
+      "matchRows": 40
     },
     {
       "id": "russell-knox",
@@ -12190,7 +12230,7 @@
       "countries": [
         "NZ"
       ],
-      "matchRows": 6
+      "matchRows": 8
     },
     {
       "id": "ryan-moore",
@@ -12211,6 +12251,16 @@
         "US"
       ],
       "matchRows": 16
+    },
+    {
+      "id": "ryo-hisatsune",
+      "slug": "ryo-hisatsune",
+      "name": "Ryo Hisatsune",
+      "country": "JP",
+      "countries": [
+        "JP"
+      ],
+      "matchRows": 2
     },
     {
       "id": "ryo-ishikawa",
@@ -12270,7 +12320,7 @@
       "countries": [
         "US"
       ],
-      "matchRows": 22
+      "matchRows": 24
     },
     {
       "id": "sam-byrd",
@@ -12480,7 +12530,7 @@
       "countries": [
         "US"
       ],
-      "matchRows": 52
+      "matchRows": 54
     },
     {
       "id": "seamus-power",
@@ -12640,7 +12690,7 @@
       "countries": [
         "KR"
       ],
-      "matchRows": 6
+      "matchRows": 8
     },
     {
       "id": "siddikur-rahman",
@@ -13440,7 +13490,7 @@
       "countries": [
         "KR"
       ],
-      "matchRows": 10
+      "matchRows": 12
     },
     {
       "id": "tom-kite",
@@ -14371,7 +14421,7 @@
       "countries": [
         "US"
       ],
-      "matchRows": 4
+      "matchRows": 6
     },
     {
       "id": "xander-schauffele",
@@ -14381,7 +14431,7 @@
       "countries": [
         "US"
       ],
-      "matchRows": 46
+      "matchRows": 48
     },
     {
       "id": "y-e-yang",

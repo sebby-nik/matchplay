@@ -94,6 +94,16 @@ if (navToggle && navLinks) {
     compare.textContent = 'Compare Players';
     menu.insertBefore(compare, menu.lastElementChild);
   }
+  // Keep the game available on generated archive pages without regenerating them.
+  if (![...navLinks.querySelectorAll('a')].some(link => new URL(link.href).pathname.replace(/index\.html$/, '').endsWith('/games/12-0/'))) {
+    const gameLink = document.createElement('a');
+    gameLink.className = 'site-nav__link';
+    gameLink.href = new URL('games/12-0/', import.meta.url).href;
+    gameLink.textContent = '12–0';
+    const eventsLink = [...navLinks.children].find(link => link.matches('a[href*="events.html"]'));
+    if (eventsLink) eventsLink.after(gameLink);
+    else navLinks.append(gameLink);
+  }
   const currentPath = location.pathname.replace(/index\.html$/, '');
   navLinks.querySelectorAll('a').forEach((link) => {
     const path = new URL(link.href).pathname.replace(/index\.html$/, '');

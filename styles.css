@@ -3803,3 +3803,11 @@ body.filters-open .mobile-filter-bar { visibility: hidden; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
+
+.game-invitation { display: flex; align-items: center; gap: 17px; padding: 19px 22px; color: #18332d; background: #eaf0df; border: 1px solid #d8e1cd; border-radius: 12px; text-decoration: none; }
+.game-invitation:hover { background: #e1ebd3; }
+.game-invitation__mark { font: 43px/1 "Instrument Serif", Georgia, serif; letter-spacing: -.06em; white-space: nowrap; }
+.game-invitation strong { display: block; font-size: 13px; }
+.game-invitation strong + span { display: block; font-size: 12px; line-height: 1.5; color: #62735a; margin-top: 4px; }
+.game-invitation__cta { margin-left: auto; flex-shrink: 0; font-size: 12px; font-weight: 600; }
+@media (max-width: 600px) { .game-invitation { flex-wrap: wrap; padding: 17px; gap: 12px; } .game-invitation > span:nth-child(2) { flex: 1; min-width: 150px; } .game-invitation__cta { flex-basis: 100%; padding-top: 6px; } }

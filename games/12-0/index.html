@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#18332d" />
+    <title>12–0: The Captain’s Challenge | Matchplay Rankings</title>
+    <meta name="description" content="Draft twelve golf greats, make your captain’s calls and chase a perfect singles session. Play the daily 12–0 challenge or practise as often as you like." />
+    <meta property="og:title" content="12–0: The Captain’s Challenge" />
+    <meta property="og:description" content="Twelve picks. One perfect session. Can your all-star golf team go 12–0?" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.matchplayrankings.com/games/12-0/" />
+    <meta property="og:image" content="https://www.matchplayrankings.com/assets/scottie-matchplay.jpg" />
+    <link rel="canonical" href="https://www.matchplayrankings.com/games/12-0/" />
+    <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:wght@400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <link rel="stylesheet" href="game.css" />
+    <script src="game-engine.js" defer></script>
+    <script src="game.js" defer></script>
+    <script type="module" src="../../site-ui.js"></script>
+  </head>
+  <body class="twelve-zero-page">
+    <nav class="site-nav">
+      <div class="site-nav__inner">
+        <a class="site-nav__brand" href="../../index.html" aria-label="Matchplay Rankings home"><img src="../../assets/logo.svg" alt="" width="36" height="36" /><span>Matchplay Rankings</span></a>
+        <button class="site-nav__toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="siteNavLinks"><span></span><span></span><span></span></button>
+        <div class="site-nav__links" id="siteNavLinks">
+          <details class="site-nav__dropdown"><summary class="site-nav__link site-nav__summary">Players</summary><div class="site-nav__menu">
+            <a class="site-nav__link" href="../../index.html">Player Ratings</a><a class="site-nav__link" href="../../records.html">Player Records</a><a class="site-nav__link" href="../../compare/">Compare Players</a><a class="site-nav__link" href="../../lineal.html">Lineal Championship</a>
+          </div></details>
+          <a class="site-nav__link" href="../../events.html">Events</a><a class="site-nav__link" href="./" aria-current="page">12–0</a><a class="site-nav__link" href="../../faq.html">FAQs</a><a class="site-nav__link" href="../../about.html">About Us</a>
+        </div>
+      </div>
+    </nav>
+    <div class="site-nav__backdrop" id="siteNavBackdrop"></div>
+    <main class="g-shell" id="gameMain">
+      <header class="g-masthead"><div class="g-brand"><h1>12<span>–</span>0</h1><div><p class="g-kicker">The Captain’s Challenge</p><p class="g-subtitle">Twelve picks. One perfect session.</p></div></div><button class="g-text-button" id="howToPlay" type="button">How to play <span aria-hidden="true">↗</span></button></header>
+      <div class="g-toolbar"><div class="g-modes" role="group" aria-label="Game mode"><button type="button" id="dailyMode" aria-pressed="true">Daily challenge</button><button type="button" id="practiceMode" aria-pressed="false">Practice</button></div><p class="g-date" id="gameDate"></p></div>
+      <p class="g-notice" id="storageNotice" role="status" hidden></p>
+      <p class="g-notice" id="dateNotice" hidden></p>
+      <p class="g-notice" id="actionNotice" role="alert" hidden></p>
+      <div class="g-sr-only" id="gameAnnouncement" role="status" aria-live="polite" aria-atomic="true"></div>
+      <div id="gameView" aria-busy="true"><div class="g-loading"><span class="g-loading-mark" aria-hidden="true">12–0</span><h2>Preparing the clubhouse…</h2><p>Finding your next twelve.</p></div></div>
+      <noscript><p class="g-notice">Please enable JavaScript to draft your team and play 12–0.</p></noscript>
+      <footer class="g-footnote"><span>Built from real singles matchplay history.</span><span>Game results are simulated.</span></footer>
+    </main>
+    <dialog class="g-dialog" id="rulesDialog" aria-labelledby="rulesTitle">
+      <div class="g-dialog-heading"><p class="g-kicker">The captain’s handbook</p><button class="g-icon-button" type="button" data-close-dialog aria-label="Close instructions">×</button></div>
+      <h2 id="rulesTitle">A perfect twelve.</h2>
+      <ol class="g-rules"><li><strong>Draft on instinct.</strong> Pick one of three golfers, twelve times. Each card represents a particular year. Ratings stay hidden until your team is complete.</li><li><strong>Trust your knowledge.</strong> You have two rerolls to replace an offer. Picks are permanent, and each golfer appears just once.</li><li><strong>Make your calls.</strong> See both teams’ ratings, then tap two of your players to swap their positions against the fixed opposition.</li><li><strong>Let the session unfold.</strong> Lock your lineup and reveal the matches. A win earns 1 point, a half earns ½. More than 6 wins the session. Twelve wins is the perfect sweep.</li></ol>
+      <p>Higher-rated golfers are more likely to win, but upsets and halves happen. Ratings reflect recorded singles matchplay, rather than overall career achievements. Cards use the final recorded rating of their year, after at least ten matches.</p>
+      <p>Everyone gets the same daily offers, opponents and simulation randomness. Your choices still matter. The daily resets at midnight UTC; progress is saved in this browser. Practice is unlimited and has its own personal best.</p>
+      <p class="g-small">Card collection v1 · Archive through <span id="sourceDate">12 October 2026</span>. Game results never change the real player records.</p>
+      <button class="g-button" type="button" data-close-dialog>Got it</button>
+    </dialog>
+    <dialog class="g-dialog g-dialog--small" id="restartDialog" aria-labelledby="restartTitle"><h2 id="restartTitle">A fresh twelve?</h2><p>Your current practice session will be replaced by a new draft. Your personal best stays saved.</p><div class="g-actions"><button class="g-button" type="button" id="confirmRestart">Start new practice</button><button class="g-button g-button--light" type="button" data-close-dialog>Keep playing</button></div></dialog>
+    <dialog class="g-dialog g-dialog--small" id="shareDialog" aria-labelledby="shareTitle"><div class="g-dialog-heading"><h2 id="shareTitle">Your scorecard</h2><button class="g-icon-button" type="button" data-close-dialog aria-label="Close scorecard">×</button></div><p>Copy this scorecard to challenge your friends.</p><label class="g-sr-only" for="shareContent">Scorecard text</label><textarea id="shareContent" rows="6" readonly></textarea><div class="g-actions"><button class="g-button" type="button" id="copyScorecard">Copy scorecard</button><button class="g-button g-button--light" type="button" id="nativeShare" hidden>Share…</button></div><p id="copyStatus" role="status" class="g-small"></p></dialog>
+  </body>
+</html>
